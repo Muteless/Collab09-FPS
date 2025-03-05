@@ -22,6 +22,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStartedMelee);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMelee);
 
+/**
+ * @class AWeaponBase
+ * @brief Represents an abstract base class for weapon functionality in the game.
+ *
+ * The AWeaponBase class provides core functionalities for weapons, including firing, reloading, and melee attacks.
+ * It includes properties for ammo, rate of fire, and reload speed, as well as delegate events for responding to
+ * weapon-related actions. The class is also designed to be used as a base for other weapon implementations.
+ */
 
 UCLASS(Abstract)
 class COLLAB09FPS_API AWeaponBase : public AActor
