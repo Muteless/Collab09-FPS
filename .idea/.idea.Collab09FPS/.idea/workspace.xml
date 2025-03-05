@@ -13,71 +13,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/GE_ElementFire.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GameMode/Level/GM_Level.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GameMode/Level/GS_Level.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/HUD_Level.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/PC_Level.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/PS_Level.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/Projectile/BP_ProjectileFire.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/.github/FUNDING.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Content/Materials/Box.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/FlatNodes.uplugin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/CollapsedNode_Body_ColorSpill.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/Linear_VarNode_Background.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_body.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_color_spill.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_heat_display.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_shadow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_shadow_selected.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_title_gloss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/RegularNode_title_highlight.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/TintedNode_body.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/VarNode_body.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/VarNode_color_spill.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/VarNode_gloss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/VarNode_heat_display.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/VarNode_shadow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Graph/VarNode_shadow_selected.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Icon128.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Old/Graph/ExecPin_Connected.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Resources/Old/Graph/ExecPin_Disconnected.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Source/FlatNodes/FlatNodes.Build.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Source/FlatNodes/Private/FlatNodes.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Source/FlatNodes/Private/FlatNodesSettings.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Source/FlatNodes/Public/FlatNodes.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/FlatNodes/Source/FlatNodes/Public/FlatNodesSettings.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/Abilities/MeleeAbilityBase.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/AttributeSets/HealthAttributeSet.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/AttributeSets/StaminaAttributeSet.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Player/HUDBase.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Player/PlayerStateBase.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/Abilities/MeleeAbilityBase.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/HealthAttributeSet.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/StaminaAttributeSet.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/HUDBase.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerStateBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementBlood.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementCurse.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementFire.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementIce.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayEffects.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayEffects.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Character/BP_Character.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Character/BP_Character.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Projectile/BP_ProjectileBase.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Map/MP_MapBase.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/MP_MapBase.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Ability/AbilitySystemComponentBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/AbilitySystemComponentBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Ability/CharacterAttributeSet.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Projectile/ProjectileBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Projectile/ProjectileBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Ability/AbilitySystemComponentBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Ability/CharacterAttributeSet.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerControllerBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerControllerBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Projectile/ProjectileBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Projectile/ProjectileBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Weapon/WeaponBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Weapon/WeaponBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/GE_ElementFire.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Projectile/BP_ProjectileFire.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Projectile/BP_ProjectileBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Weapon/BP_WeaponBase.uasset" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,27 +54,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.AutomationTool.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;C++ Project.Collab09FPS.executor&quot;: &quot;Run&quot;,
-    &quot;C/C++ Project.Collab09FPS.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;(C++)CharacterBase&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.AutomationTool.executor": "Run",
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "C++ Project.Collab09FPS.executor": "Run",
+    "C/C++ Project.Collab09FPS.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="C/C++ Project.Collab09FPS">
     <configuration name="Collab09FPS" type="CppProject" factoryName="C++ Project">
       <configuration_1 setup="1">
