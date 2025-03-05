@@ -44,13 +44,13 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite,
-		Category = "Weapon | Firing | Projectile")
+		Category = "Weapon | Firing | Projectile | ")
 	TSubclassOf<class AProjectileBase> ProjectileClass;
 
 	// Location used when spawning the projectile
 	UPROPERTY(VisibleAnywhere,
 		meta=(DisplayName="Projectile Spawn Location"),
-		Category="Weapon | Firing | Projectile")
+		Category="Weapon | Firing | Projectile | ")
 	UArrowComponent* ProjectileSpawnLocation;
 
 	// Skeletal mesh used by the weapon
@@ -62,37 +62,47 @@ protected:
 	// Rate of fire (per Second)
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Rate Of Fire"),
-		Category="Weapon | Firing |")
-	float BaseRateOfFire;
+		Category="Weapon | Firing | ")
+	float BaseRateOfFire = 1;
 	float RateOfFire;
 	
 	// Reloading speed in seconds
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Reload Speed"),
-		Category="Weapon | Firing |")
-	float BaseReloadSpeed;
+		Category="Weapon | Firing | Reloading | ")
+	float BaseReloadSpeed = 1;
 	float ReloadSpeed;
 
 	// Max ammo count
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Max Ammo"),
-		Category="Weapon | Firing |")
-	float MaxAmmoAmount;
+		Category="Weapon | Firing | Ammo | ")
+	float MaxAmmoAmount = 10;
 	float CurrentAmmoAmount;
-
-	
 	
 	// Function to shoot projectile
-	UFUNCTION(BlueprintCallable)
-	void Fire();
+	UFUNCTION(BlueprintCallable,
+		Category="Weapon | Firing | ")
+	void Fire(int AmmoConsumption);
 
 	// Function to melee attack
 	UFUNCTION(BlueprintCallable)
-	static void Melee();
+	void Melee();
 
 	// Function to reload weapon
-	UFUNCTION(BlueprintCallable)
-	static void Reload();
+	UFUNCTION(BlueprintCallable,
+		Category="Weapon | Firing | ")
+	void StartReload();
+	void Reload();
+
+	UFUNCTION(BlueprintPure,
+		Category="Weapon | Firing | ")
+	bool CanFire() const;
+
+	// Current ammo minus ammo consumption
+	UFUNCTION(BlueprintCallable,
+		Category="Weapon | Firing | Ammo | ")
+	void ConsumeAmmo(const int AmmoConsumption);
 	
 private:
 	GENERATED_BODY()

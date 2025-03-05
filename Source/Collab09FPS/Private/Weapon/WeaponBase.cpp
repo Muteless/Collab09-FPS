@@ -21,8 +21,6 @@ AWeaponBase::AWeaponBase()
 	ProjectileSpawnLocation->ArrowSize = 0.5;
 	ProjectileSpawnLocation->ArrowColor = FColor::FromHex("FFFF00FF");
 	
-	// Bind delegates
-	
 }
 
 // Called when the game starts or when spawned
@@ -32,10 +30,10 @@ void AWeaponBase::BeginPlay()
 	
 }
 
-void AWeaponBase::Fire()
+void AWeaponBase::Fire(const int AmmoConsumption)
 {
 	// If projectile class is valid
-	if (ProjectileClass != nullptr)
+	if (CanFire() && ProjectileClass != nullptr)
 	{
 		// Setup spawn parameters
 		FActorSpawnParameters SpawnParams;
@@ -51,13 +49,45 @@ void AWeaponBase::Fire()
 		// Spawn projectile at ProjectileSpawn
 		GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 	}
+	// Consume ammo
+	ConsumeAmmo(AmmoConsumption);
 }
 
+// Melee attack
 void AWeaponBase::Melee()
 {
 	
 }
 
+// Start reloading weapon
+void AWeaponBase::StartReload()
+{
+	// Create timer handle
+	FTimerHandle TimerHandle;
+
+	// Bind timer handle when finished
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,
+		this,
+		&AWeaponBase::Reload,
+		ReloadSpeed,
+		false);
+}
+
+// Reload weapon
 void AWeaponBase::Reload()
 {
+	CurrentAmmoAmount = MaxAmmoAmount;
+	WeaponReloaded.Broadcast();
+}
+
+// Returns if fire be executed
+bool AWeaponBase::CanFire() const
+{
+	return CurrentAmmoAmount > 0;
+}
+
+// Consumes ammo
+void AWeaponBase::ConsumeAmmo(const int AmmoConsumption)
+{
+	CurrentAmmoAmount -= AmmoConsumption;
 }
