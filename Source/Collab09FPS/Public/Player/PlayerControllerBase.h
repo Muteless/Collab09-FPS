@@ -10,9 +10,17 @@
 #include "PlayerControllerBase.generated.h"
 
 /**
- * 
+ * @class APlayerControllerBase
+ * @brief A base class for managing player controllers.
+ *
+ * This class inherits from APlayerController and is intended to provide
+ * foundational functionality for controlling player characters. It serves as the
+ * base class for player-specific behavior and input handling within the game framework.
+ *
+ * The class is designed for extensibility and can be derived to implement custom
+ * gameplay logic and input.
  */
-UCLASS()
+UCLASS(Abstract)
 class COLLAB09FPS_API APlayerControllerBase : public APlayerController
 {
 public:
