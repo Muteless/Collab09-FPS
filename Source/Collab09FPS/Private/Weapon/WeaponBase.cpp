@@ -48,9 +48,10 @@ void AWeaponBase::Fire(const int AmmoConsumption)
 
 		// Spawn projectile at ProjectileSpawn
 		GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+		
+		// Consume ammo
+		ConsumeAmmo(AmmoConsumption);
 	}
-	// Consume ammo
-	ConsumeAmmo(AmmoConsumption);
 }
 
 // Melee attack
