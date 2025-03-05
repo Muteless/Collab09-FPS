@@ -3,16 +3,18 @@
 
 #include "Collab09FPS/Public/Projectile/ProjectileBase.h"
 
+#include "Projects.h"
+
 
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
-	
+	// Create projectile mesh
+	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
+		
+	// Create ProjectileMovementComponent
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
+	ProjectileMovementComponent->InitialSpeed = 100;
+	ProjectileMovementComponent->MaxSpeed = 100;
 }
 
-// Called when the game starts or when spawned
-void AProjectileBase::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
