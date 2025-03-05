@@ -4,21 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "Components/StaticMeshComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+
 #include "ProjectileBase.generated.h"
 
 UCLASS(Abstract)
 class COLLAB09FPS_API AProjectileBase : public AActor
 {
-	GENERATED_BODY()
-
 public:
 	// Sets default values for this actor's properties
 	AProjectileBase();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	// Projectile mesh
+	UPROPERTY(EditAnywhere,
+		Category="Projectile | Visual | ")
+	UStaticMeshComponent* ProjectileMesh;
 
-public:
-	
+	// Projectile movement component
+	UPROPERTY(VisibleAnywhere,
+		Category="Projectile | Movement | ")
+	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
+
+private:
+	GENERATED_BODY()
 };

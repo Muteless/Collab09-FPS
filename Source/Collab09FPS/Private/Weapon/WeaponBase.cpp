@@ -13,26 +13,25 @@ AWeaponBase::AWeaponBase()
 	ReloadSpeed = BaseReloadSpeed;
 	CurrentAmmoAmount = MaxAmmoAmount;
 
-	// Setup weapon skeletal mesh
+	// Create weapon SkeletalMeshComponent
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
 	
-	// Setup projectile spawn location
+	// Create ProjectileSpawnLocation UArrowComponent
 	ProjectileSpawnLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("Projectile Spawn Location"));
 	ProjectileSpawnLocation->ArrowSize = 0.5;
 	ProjectileSpawnLocation->ArrowColor = FColor::FromHex("FFFF00FF");
 	
 }
 
-// Called when the game starts or when spawned
-void AWeaponBase::BeginPlay()
+// Returns if fire can be executed
+bool AWeaponBase::CanFire() const
 {
-	Super::BeginPlay();
-	
+	return CurrentAmmoAmount > 0;
 }
 
 void AWeaponBase::Fire(const int AmmoConsumption)
 {
-	// If projectile class is valid
+	// If projectile class is valid & Can Fire
 	if (CanFire() && ProjectileClass != nullptr)
 	{
 		// Setup spawn parameters
@@ -54,14 +53,8 @@ void AWeaponBase::Fire(const int AmmoConsumption)
 	}
 }
 
-// Melee attack
-void AWeaponBase::Melee()
-{
-	
-}
-
-// Start reloading weapon
-void AWeaponBase::StartReload()
+// Reload weapon
+void AWeaponBase::Reload()
 {
 	// Create timer handle
 	FTimerHandle TimerHandle;
@@ -69,26 +62,44 @@ void AWeaponBase::StartReload()
 	// Bind timer handle when finished
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle,
 		this,
-		&AWeaponBase::Reload,
+		&AWeaponBase::ReloadComplete,
 		ReloadSpeed,
 		false);
+
+	// Broadcast that we have started to reload
+	WeaponStartedReload.Broadcast();
 }
 
-// Reload weapon
-void AWeaponBase::Reload()
+void AWeaponBase::ReloadComplete()
 {
+	// Reset current ammo to max ammo
 	CurrentAmmoAmount = MaxAmmoAmount;
 	WeaponReloaded.Broadcast();
 }
 
-// Returns if fire be executed
-bool AWeaponBase::CanFire() const
+// Ammo is not max ammo
+bool AWeaponBase::CanReload() const
 {
-	return CurrentAmmoAmount > 0;
+	return CurrentAmmoAmount < MaxAmmoAmount;
 }
 
 // Consumes ammo
 void AWeaponBase::ConsumeAmmo(const int AmmoConsumption)
 {
 	CurrentAmmoAmount -= AmmoConsumption;
+}
+
+// Melee attack
+void AWeaponBase::Melee()
+{
+	if (CanMelee())
+	{
+		StartedMelee.Broadcast();
+	}
+}
+
+bool AWeaponBase::CanMelee()
+{
+	// TODO: Implement can melee with GAS?
+	return true;
 }

@@ -15,7 +15,11 @@
 
 // Delegates
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWeaponFired);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWeaponReloaded);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartedReload);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStartedMelee);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMelee);
 
 
@@ -26,28 +30,34 @@ public:
 	// Sets default values for this actor's properties
 	AWeaponBase();
 	
-	// Delegates, We want them public so UI or other actors can access it
-	// Called when a weapon is fired (Weapon fired delegate)
+	// Delegates, We want these public so UI or other actors can access it
+	// Called when weapon fires
 	UPROPERTY(BlueprintAssignable)
 	FWeaponFired WeaponFired;
 
-	// Called when a weapon has reloaded (Weapon fired delegate)
+	// Called when a weapon has started to reload
 	UPROPERTY(BlueprintAssignable)
-	FWeaponReloaded WeaponReloaded;
+	FOnWeaponStartedReload WeaponStartedReload;
+	
+	// Called when a weapon has reloaded
+	UPROPERTY(BlueprintAssignable)
+	FOnWeaponReloaded WeaponReloaded;
 
-	// Called when a weapon has used melee attack (Weapon melee delegate)
+	// Called when weapon has used melee attack
 	UPROPERTY(BlueprintAssignable)
-	FWeaponReloaded OnMelee;
+	FOnMelee StartedMelee;
+	
+	// Called when weapon has used melee attack
+	UPROPERTY(BlueprintAssignable)
+	FOnMelee OnMelee;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
+	// Projectile class used when firing
 	UPROPERTY(EditAnywhere, BlueprintReadWrite,
 		Category = "Weapon | Firing | Projectile | ")
 	TSubclassOf<class AProjectileBase> ProjectileClass;
 
-	// Location used when spawning the projectile
+	// Location object used when spawning the projectile
 	UPROPERTY(VisibleAnywhere,
 		meta=(DisplayName="Projectile Spawn Location"),
 		Category="Weapon | Firing | Projectile | ")
@@ -84,25 +94,24 @@ protected:
 	UFUNCTION(BlueprintCallable,
 		Category="Weapon | Firing | ")
 	void Fire(int AmmoConsumption);
-
-	// Function to melee attack
-	UFUNCTION(BlueprintCallable)
-	void Melee();
-
-	// Function to reload weapon
-	UFUNCTION(BlueprintCallable,
-		Category="Weapon | Firing | ")
-	void StartReload();
-	void Reload();
-
-	UFUNCTION(BlueprintPure,
-		Category="Weapon | Firing | ")
 	bool CanFire() const;
-
+	
 	// Current ammo minus ammo consumption
 	UFUNCTION(BlueprintCallable,
 		Category="Weapon | Firing | Ammo | ")
 	void ConsumeAmmo(const int AmmoConsumption);
+	
+	// Function to melee attack
+	UFUNCTION(BlueprintCallable)
+	void Melee();
+	bool CanMelee();
+
+	// Function to start reloading weapon
+	UFUNCTION(BlueprintCallable,
+		Category="Weapon | Firing | ")
+	void Reload();
+	void ReloadComplete();
+	bool CanReload() const;
 	
 private:
 	GENERATED_BODY()
