@@ -7,7 +7,7 @@ ACharacterBase::ACharacterBase()
 {
 	//* Ability System Component *//
 	// Create AbilitySystemComponent
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponentBase>(TEXT("Ability System Component"));
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
@@ -17,7 +17,7 @@ ACharacterBase::ACharacterBase()
 }
 
 // AbilitySystemComponent interface, return ability system component
-UAbilitySystemComponentBase* ACharacterBase::GetAbilitySystemComponent() const
+UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }

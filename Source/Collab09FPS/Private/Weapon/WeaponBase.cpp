@@ -23,11 +23,6 @@ AWeaponBase::AWeaponBase()
 	ProjectileSpawnLocation->ArrowColor = FColor::FromHex("FFFF00FF");
 }
 
-UAbilitySystemComponentBase* AWeaponBase::GetAbilitySystemComponent()
-{
-	return GetOwner()->FindComponentByClass<UAbilitySystemComponentBase>();
-}
-
 // Returns if fire can be executed
 bool AWeaponBase::CanFire() const
 {
