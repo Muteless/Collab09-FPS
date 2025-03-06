@@ -14,7 +14,8 @@
 #include "WeaponBase.generated.h"
 
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWeaponFired);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFired);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoConsumed);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartedReload);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
@@ -41,7 +42,11 @@ public:
 	// Delegates, We want these public so UI or other actors can access it
 	// Called when weapon fires
 	UPROPERTY(BlueprintAssignable)
-	FWeaponFired WeaponFired;
+	FOnWeaponFired WeaponFired;
+
+	// Called when ammo has been consumed
+	UPROPERTY(BlueprintAssignable)
+	FOnAmmoConsumed AmmoConsumed;
 
 	// Called when a weapon has started to reload
 	UPROPERTY(BlueprintAssignable)
@@ -83,6 +88,7 @@ protected:
 		Category="Weapon | Firing | ")
 	float BaseRateOfFire = 1;
 	float RateOfFire;
+	FTimerHandle RateOfFireTimerHandle;
 	
 	// Reloading speed in seconds
 	UPROPERTY(BlueprintReadWrite,
@@ -90,7 +96,8 @@ protected:
 		Category="Weapon | Firing | Reloading | ")
 	float BaseReloadSpeed = 1;
 	float ReloadSpeed;
-
+	FTimerHandle ReloadTimerHandle;
+	
 	// Max ammo count
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Max Ammo"),
@@ -112,7 +119,7 @@ protected:
 	// Function to melee attack
 	UFUNCTION(BlueprintCallable)
 	void Melee();
-	bool CanMelee();
+	bool CanMelee() const;
 
 	// Function to start reloading weapon
 	UFUNCTION(BlueprintCallable,
@@ -123,5 +130,4 @@ protected:
 	
 private:
 	GENERATED_BODY()
-	
 };
