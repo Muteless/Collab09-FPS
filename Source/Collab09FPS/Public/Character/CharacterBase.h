@@ -64,10 +64,36 @@ protected:
 		Category = "GAS | Abilities | ")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
+	// Tags
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "GAS | Containers | ")
-	FGameplayTagContainer MovementTagsRequired;
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer MovementTag;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer LookTag;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer JumpTag;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer PrimaryActionTag;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer SecondaryActionTag;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer ReloadTag;
 	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
