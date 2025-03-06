@@ -63,37 +63,6 @@ protected:
 		BlueprintReadOnly,
 		Category = "GAS | Abilities | ")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
-
-	// Tags
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "GAS | Tags | ")
-	FGameplayTagContainer MovementTag;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "GAS | Tags | ")
-	FGameplayTagContainer LookTag;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "GAS | Tags | ")
-	FGameplayTagContainer JumpTag;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "GAS | Tags | ")
-	FGameplayTagContainer PrimaryActionTag;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "GAS | Tags | ")
-	FGameplayTagContainer SecondaryActionTag;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "GAS | Tags | ")
-	FGameplayTagContainer ReloadTag;
 	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
@@ -104,7 +73,6 @@ protected:
 		Category = "Weapon | ")
 	TSubclassOf<AWeaponBase> Weapon;
 	
-
 	//* Health *//
 	// Health attribute set
 	UPROPERTY()
@@ -114,16 +82,6 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Player | Health | ")
 	float GetCurrentHealth() const;
-
-	//* Stamina *//
-	// Stamina attribute set
-	UPROPERTY()
-	UStaminaAttributeSet* StaminaAttributeSet;
-
-	// Get current stamina
-	UFUNCTION(BlueprintPure,
-		Category = "Player | Stamina | ")
-	float GetCurrentStamina() const;
 
 private:
 	GENERATED_BODY()

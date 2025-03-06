@@ -13,7 +13,6 @@ ACharacterBase::ACharacterBase()
 
 	// Create attribute sets
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
-	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -67,16 +66,6 @@ float ACharacterBase::GetCurrentHealth() const
 	if (HealthAttributeSet)
 	{
 		return HealthAttributeSet->GetCurrentHealth();
-	}
-	return 0.0f;
-}
-
-// Get current stamina attribute
-float ACharacterBase::GetCurrentStamina() const
-{
-	if (StaminaAttributeSet)
-	{
-		return StaminaAttributeSet->GetCurrentStamina();
 	}
 	return 0.0f;
 }
