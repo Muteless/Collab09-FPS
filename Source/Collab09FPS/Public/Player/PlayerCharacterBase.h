@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "Character/CharacterBase.h"
 
+// Attributes
+#include "GAS/AttributeSets/StaminaAttributeSet.h"
+
 // Interfaces
 #include "Interfaces/CharacterInput.h"
 
@@ -16,8 +19,6 @@
 UCLASS()
 class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase, public ICharacterInput
 {
-	
-
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
