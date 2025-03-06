@@ -13,16 +13,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementBlood.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementCurse.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementFire.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementIce.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/BP_MeleeAbilityBase.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/GE_ElementFire.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Projectile/BP_ProjectileFire.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Projectile/BP_ProjectileBase.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Weapon/BP_WeaponBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Weapon/BP_WeaponBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Weapon/BP_WeaponBase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/Abilities/MeleeAbilityBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/Abilities/MeleeAbilityBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Weapon/WeaponBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Weapon/WeaponBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/Abilities/MeleeAbilityBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/Abilities/MeleeAbilityBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Weapon/WeaponBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Weapon/WeaponBase.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +38,45 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/EngineTypes.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/TimerHandle.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Private/Projectile/ProjectileBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" root0="FORCE_HIGHLIGHTING" />
@@ -64,14 +103,14 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "(C++)-WeaponBase",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -564,6 +603,7 @@
       <workItem from="1741204734364" duration="1105000" />
       <workItem from="1741205894178" duration="4972000" />
       <workItem from="1741210952387" duration="5003000" />
+      <workItem from="1741256951921" duration="6992000" />
     </task>
     <servers />
   </component>
