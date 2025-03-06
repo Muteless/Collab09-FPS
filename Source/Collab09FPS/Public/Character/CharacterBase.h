@@ -68,32 +68,32 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "GAS | Tags | ")
-	FGameplayTagContainer MovementTag;
+	FGameplayTagContainer MovementTags;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "GAS | Tags | ")
-	FGameplayTagContainer LookTag;
+	FGameplayTagContainer LookTags;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "GAS | Tags | ")
-	FGameplayTagContainer JumpTag;
+	FGameplayTagContainer JumpTags;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "GAS | Tags | ")
-	FGameplayTagContainer PrimaryActionTag;
+	FGameplayTagContainer PrimaryActionTags;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "GAS | Tags | ")
-	FGameplayTagContainer SecondaryActionTag;
+	FGameplayTagContainer SecondaryActionTags;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "GAS | Tags | ")
-	FGameplayTagContainer ReloadTag;
+	FGameplayTagContainer ReloadTags;
 	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
