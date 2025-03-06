@@ -8,10 +8,11 @@
 AWeaponBase::AWeaponBase()
 {
 	// Default variables
-	ProjectileClass = nullptr;
 	RateOfFire = BaseRateOfFire;
 	ReloadSpeed = BaseReloadSpeed;
 	CurrentAmmoAmount = MaxAmmoAmount;
+	CurrentProjectileIndex = 0;
+	CurrentMeleeAbilityIndex = 0;
 
 	// Create weapon SkeletalMeshComponent
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
@@ -22,6 +23,11 @@ AWeaponBase::AWeaponBase()
 	ProjectileSpawnLocation->ArrowColor = FColor::FromHex("FFFF00FF");
 }
 
+UAbilitySystemComponentBase* AWeaponBase::GetAbilitySystemComponent()
+{
+	return GetOwner()->FindComponentByClass<UAbilitySystemComponentBase>();
+}
+
 // Returns if fire can be executed
 bool AWeaponBase::CanFire() const
 {
@@ -29,10 +35,10 @@ bool AWeaponBase::CanFire() const
 }
 
 // Fire weapon
-void AWeaponBase::Fire(const int AmmoConsumption)
+void AWeaponBase::Fire(const int AmmoConsumption, bool bIncrementCurrentIndex)
 {
-	// If can Fire & projectile class is valid
-	if (CanFire() && ProjectileClass != nullptr)
+	// If weapon can Fire & projectile class is valid
+	if (CanFire() && ProjectileClasses[CurrentProjectileIndex] != nullptr)
 	{
 		// Setup spawn parameters
 		FActorSpawnParameters SpawnParams;
@@ -46,13 +52,27 @@ void AWeaponBase::Fire(const int AmmoConsumption)
 		const FRotator SpawnRotation = ProjectileSpawnLocation->GetComponentRotation();
 
 		// Spawn projectile at ProjectileSpawn
-		GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+		GetWorld()->SpawnActor<AProjectileBase>(ProjectileClasses[CurrentProjectileIndex], SpawnLocation, SpawnRotation, SpawnParams);
 
 		// Start rate of fire timer
 		GetWorld()->GetTimerManager().SetTimer(RateOfFireTimerHandle, RateOfFire, false);
+
+		// Increment current index
+		if (bIncrementCurrentIndex)
+		{
+			CurrentProjectileIndex++;
+			if (CurrentProjectileIndex >= ProjectileClasses.Num())
+			{
+				CurrentProjectileIndex = 0;
+			}
+		}
 		
 		// Consume ammo
 		ConsumeAmmo(AmmoConsumption);
+	}	else 
+	{
+		// weapon has failed to fire
+		WeaponFailedToFire.Broadcast();
 	}
 }
 
@@ -77,6 +97,10 @@ void AWeaponBase::Reload()
 		// Broadcast that we have started to reload
 		WeaponStartedReload.Broadcast();
 	}
+	else
+	{
+		WeaponFailedToReload.Broadcast();
+	}
 }
 
 void AWeaponBase::ReloadComplete()
@@ -90,20 +114,37 @@ void AWeaponBase::ReloadComplete()
 void AWeaponBase::ConsumeAmmo(const int AmmoConsumption)
 {
 	CurrentAmmoAmount -= AmmoConsumption;
-	AmmoConsumed.Broadcast();
+	WeaponAmmoConsumed.Broadcast();
 }
 
 // Melee attack
-void AWeaponBase::Melee()
+TSubclassOf<UMeleeAbilityBase> AWeaponBase::Melee(const bool bIncrementCurrentIndex)
 {
 	if (CanMelee())
 	{
-		StartedMelee.Broadcast();
+		// Increment current index
+		if (bIncrementCurrentIndex)
+		{
+			CurrentMeleeAbilityIndex++;
+			if (CurrentMeleeAbilityIndex >= MeleeAbilityClasses.Num())
+			{
+				CurrentMeleeAbilityIndex = 0;
+			}
+		}
+		WeaponMelee.Broadcast();
+		return MeleeAbilityClasses[CurrentMeleeAbilityIndex];
 	}
+	else
+	{
+		// Weapon has failed to melee
+		WeaponFailedToMelee.Broadcast();
+	}
+	
+	return nullptr;
 }
 
 bool AWeaponBase::CanMelee() const
 {
-	// TODO: Implement can melee with GAS?
-	return true;
+	// Melee classes can't be empty
+	return !MeleeAbilityClasses.IsEmpty();
 }

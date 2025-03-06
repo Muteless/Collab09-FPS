@@ -17,7 +17,7 @@ ACharacterBase::ACharacterBase()
 }
 
 // AbilitySystemComponent interface, return ability system component
-UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
+UAbilitySystemComponentBase* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }

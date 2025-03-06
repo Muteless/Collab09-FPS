@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include "GAS/AbilitySystemComponentBase.h"
 #include "GameplayAbilities/Public/AbilitySystemInterface.h"
+#include "GAS/AbilitySystemComponentBase.h"
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
 
@@ -34,7 +34,7 @@ public:
 	ACharacterBase();
 	
 	// Override from IAbilitySystemInterface
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAbilitySystemComponentBase* GetAbilitySystemComponent() const override;
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -45,7 +45,7 @@ protected:
 
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GAS | ")
-	UAbilitySystemComponent* AbilitySystemComponent;
+	UAbilitySystemComponentBase* AbilitySystemComponent;
 
 	// Abilities granted when the ability system is initialized
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS | Abilities | ")
