@@ -5,11 +5,19 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include "GameplayAbilities/Public/AbilitySystemInterface.h"
+// Ability system
+#include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+
+// Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
+
+// Weapon
 #include "Weapon/WeaponBase.h"
+
+// Gameplay tags
+#include "GameplayTagContainer.h"
 
 #include "CharacterBase.generated.h"
 
@@ -40,15 +48,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	
 protected:
 	// Possessed by controller
 	virtual void PossessedBy(AController* NewController) override;
-
-	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
-	UPROPERTY(VisibleDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS | ")
-	UAbilitySystemComponent* AbilitySystemComponent;
 
 	// Abilities granted when the ability system is initialized
 	UPROPERTY(EditDefaultsOnly,
@@ -56,6 +64,37 @@ protected:
 		Category = "GAS | Abilities | ")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
+	// Tags
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer MovementTag;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer LookTag;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer JumpTag;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer PrimaryActionTag;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer SecondaryActionTag;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "GAS | Tags | ")
+	FGameplayTagContainer ReloadTag;
+	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
 

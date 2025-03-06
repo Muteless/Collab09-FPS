@@ -54,6 +54,7 @@ void ACharacterBase::AddInitialCharacterAbilities()
 			if (Ability != nullptr)
 			{
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
+				AbilitySystemComponent->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag((FName(TEXT("Ability.Movement")))));
 			}
 		}
 	}

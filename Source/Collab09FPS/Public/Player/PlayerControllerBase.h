@@ -5,9 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 
-#include "Character/CharacterBase.h"
+#include "EnhancedInput/Public/InputMappingContext.h"
+#include "EnhancedInput/Public/InputAction.h"
 
 #include "PlayerControllerBase.generated.h"
+
+// Forward declaration of classes
+class UInputAction;
+class UInputMappingContext;
+
 
 /**
  * @class APlayerControllerBase
@@ -24,7 +30,12 @@ UCLASS(Abstract)
 class COLLAB09FPS_API APlayerControllerBase : public APlayerController
 {
 public:
-	
+	// Input Mapping Context
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Input")
+	TObjectPtr<UInputMappingContext> InputMappingContext;
+
 private:
 	GENERATED_BODY()
 };
