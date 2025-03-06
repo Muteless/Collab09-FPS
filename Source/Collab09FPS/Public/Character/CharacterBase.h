@@ -63,7 +63,7 @@ protected:
 		BlueprintReadOnly,
 		Category = "GAS | Abilities | ")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
-	
+
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
 
@@ -82,6 +82,16 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Player | Health | ")
 	float GetCurrentHealth() const;
+
+	//* Stamina *//
+	// Stamina attribute set
+	UPROPERTY()
+	UStaminaAttributeSet* StaminaAttributeSet;
+
+	// Get current stamina
+	UFUNCTION(BlueprintPure,
+		Category = "Player | Stamina | ")
+	float GetCurrentStamina() const;
 
 private:
 	GENERATED_BODY()
