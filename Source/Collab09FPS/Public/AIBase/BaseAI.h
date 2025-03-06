@@ -6,20 +6,38 @@
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "BaseAI.generated.h"
 
+class UBehaviorTreeComponent;
+
 UCLASS()
 class COLLAB09FPS_API ABaseAI : public AAIController
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ABaseAI();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void OnPossess(APawn* InPawn) override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+private:
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite,
+		Category="Base AI",
+		meta = (AllowPrivateAccess = true))
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category="Base AI",
+		meta = (AllowPrivateAccess = true))
+	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComponent;
+
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category="Base AI",
+		meta = (AllowPrivateAccess = true)
+		)
+	TObjectPtr<UBlackboardComponent> BlackboardComponent;
+	
 };
