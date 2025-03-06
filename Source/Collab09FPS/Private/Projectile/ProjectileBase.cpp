@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GAS/AbilitySystemComponentBase.h"
 #include "Collab09FPS/Public/Projectile/ProjectileBase.h"
+#include "GAS/AbilitySystemComponentBase.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()

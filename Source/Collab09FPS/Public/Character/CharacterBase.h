@@ -6,9 +6,10 @@
 #include "GameFramework/Character.h"
 
 #include "GameplayAbilities/Public/AbilitySystemInterface.h"
-#include "GAS/AbilitySystemComponentBase.h"
+#include "AbilitySystemComponent.h"
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
+#include "Weapon/WeaponBase.h"
 
 #include "CharacterBase.generated.h"
 
@@ -34,7 +35,7 @@ public:
 	ACharacterBase();
 	
 	// Override from IAbilitySystemInterface
-	virtual UAbilitySystemComponentBase* GetAbilitySystemComponent() const override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -44,15 +45,26 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GAS | ")
-	UAbilitySystemComponentBase* AbilitySystemComponent;
+	UPROPERTY(VisibleDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "GAS | ")
+	UAbilitySystemComponent* AbilitySystemComponent;
 
 	// Abilities granted when the ability system is initialized
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS | Abilities | ")
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "GAS | Abilities | ")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
+
+	//* Weapon *//
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "Weapon | ")
+	TSubclassOf<AWeaponBase> Weapon;
+	
 
 	//* Health *//
 	// Health attribute set
@@ -60,7 +72,8 @@ protected:
 	UHealthAttributeSet* HealthAttributeSet;
 
 	// Get current health
-	UFUNCTION(BlueprintPure, Category = "Player | Health | ")
+	UFUNCTION(BlueprintPure,
+		Category = "Player | Health | ")
 	float GetCurrentHealth() const;
 
 	//* Stamina *//
@@ -69,7 +82,8 @@ protected:
 	UStaminaAttributeSet* StaminaAttributeSet;
 
 	// Get current stamina
-	UFUNCTION(BlueprintPure, Category = "Player | Stamina | ")
+	UFUNCTION(BlueprintPure,
+		Category = "Player | Stamina | ")
 	float GetCurrentStamina() const;
 
 private:

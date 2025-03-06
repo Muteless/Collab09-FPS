@@ -13,7 +13,6 @@ UAbilitySystemComponentBase::UAbilitySystemComponentBase()
 	
 }
 
-
 // Called when the game starts
 void UAbilitySystemComponentBase::BeginPlay()
 {

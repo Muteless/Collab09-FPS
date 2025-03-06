@@ -10,8 +10,6 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Projectile/ProjectileBase.h"
-#include "GameplayAbilities/Public/AbilitySystemInterface.h"
-#include "GAS/AbilitySystemComponentBase.h"
 
 #include "WeaponBase.generated.h"
 
@@ -37,15 +35,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToMelee);
  */
 
 UCLASS(Abstract)
-class COLLAB09FPS_API AWeaponBase : public AActor, public IAbilitySystemInterface
+class COLLAB09FPS_API AWeaponBase : public AActor
 {
 public:
 	// Sets default values for this actor's properties
 	AWeaponBase();
 
-	// Ability system component
-	virtual UAbilitySystemComponentBase* GetAbilitySystemComponent();
-	
 	// Delegates, We want these public so UI or other actors can access it
 	// Called when weapon fires
 	UPROPERTY(BlueprintAssignable)
