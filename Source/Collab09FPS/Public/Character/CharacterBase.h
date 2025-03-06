@@ -11,7 +11,6 @@
 
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
-#include "GAS/AttributeSets/StaminaAttributeSet.h"
 
 // Weapon
 #include "Weapon/WeaponBase.h"
@@ -82,16 +81,6 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Player | Health | ")
 	float GetCurrentHealth() const;
-
-	//* Stamina *//
-	// Stamina attribute set
-	UPROPERTY()
-	UStaminaAttributeSet* StaminaAttributeSet;
-
-	// Get current stamina
-	UFUNCTION(BlueprintPure,
-		Category = "Player | Stamina | ")
-	float GetCurrentStamina() const;
 
 private:
 	GENERATED_BODY()
