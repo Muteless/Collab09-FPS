@@ -13,19 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/BP_PlayerCharacter.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Interfaces/CharacterInput.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Player/PlayerCharacterBase.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterInput.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerCharacterBase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Character/BP_PlayerCharacter.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GameMode/Level/GM_Level.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/GameMode/Level/GM_Level.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Interface/BPI_Input.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Player/Level/PC_Level.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/PC_Level.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerCharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerCharacterBase.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

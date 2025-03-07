@@ -59,7 +59,7 @@ protected:
 		BlueprintReadOnly,
 		Category = "GAS|Abilities|")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
-	
+
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
 
