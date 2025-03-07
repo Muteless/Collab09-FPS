@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "Character/CharacterBase.h"
 
+// Attributes
+#include "GAS/AttributeSets/StaminaAttributeSet.h"
+
 // Interfaces
 #include "Interfaces/CharacterInput.h"
 
