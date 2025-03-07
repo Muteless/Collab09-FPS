@@ -70,11 +70,11 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 		// Initialize attribute sets
 		// Health
 		AbilitySystemComponent->InitStats(UHealthAttributeSet::StaticClass(),
-			HealthAttributeDataTable->IsValidLowLevel() ? HealthAttributeDataTable : nullptr);
+			HealthAttributeDataTable);
 		
 		// Air Actions
 		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
-			AirActionAttributeDataTable->IsValidLowLevel() ? AirActionAttributeDataTable : nullptr);
+			AirActionAttributeDataTable);
 	}
 }
 
