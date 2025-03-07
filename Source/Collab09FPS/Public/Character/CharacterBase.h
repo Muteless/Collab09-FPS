@@ -120,6 +120,9 @@ protected:
 		Category = "GAS|Data Tables|")
 	TObjectPtr<UDataTable> AirActionAttributeDataTable;
 
+	UPROPERTY(BlueprintReadOnly)
+	float a;
+
 private:
 	GENERATED_BODY()
 };
