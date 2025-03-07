@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "Collab09FPS.generated.h"
 
 
@@ -65,4 +66,35 @@ struct FVector2DInput
 		: InputType(InInputType)
 		, Input(InInputs)
 	{}
+};
+
+USTRUCT(BlueprintType)
+struct FCharacterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxStamina;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float CurrentStamina;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxAirActions;
 };
