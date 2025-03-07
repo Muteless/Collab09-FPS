@@ -69,7 +69,7 @@ struct FVector2DInput
 };
 
 USTRUCT(BlueprintType)
-struct FCharacterData : public FTableRowBase
+struct FHealthCharacterData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -92,6 +92,58 @@ struct FCharacterData : public FTableRowBase
 		BlueprintReadWrite,
 		Category = "Attributes")
 	float CurrentStamina;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxAirActions;
+};
+
+USTRUCT(BlueprintType)
+struct FPlayerCharacterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxStamina;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float CurrentStamina;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxAirActions;
+};
+
+USTRUCT(BlueprintType)
+struct FCharacterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Attributes")
+	float CurrentHealth;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,

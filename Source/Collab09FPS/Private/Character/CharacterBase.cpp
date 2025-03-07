@@ -10,7 +10,7 @@ ACharacterBase::ACharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-
+	
 	// Create attribute sets
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
 	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
@@ -46,6 +46,21 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ACharacterBase::AddInitialCharacterAttributeSets()
+{
+	if (AbilitySystemComponent)
+	{
+		// Initialize attribute sets
+		// Health
+		AbilitySystemComponent->InitStats(UHealthAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+
+		// Air Actions
+		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+	}
+}
+
 // Add initial character abilities
 void ACharacterBase::AddInitialCharacterAbilities()
 {
@@ -57,27 +72,10 @@ void ACharacterBase::AddInitialCharacterAbilities()
 			if (Ability != nullptr)
 			{
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
-				AbilitySystemComponent->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag((FName(TEXT("Ability.Movement")))));
 			}
 		}
 	}
 }
-
-void ACharacterBase::AddInitialCharacterAttributeSets()
-{
-	if (AbilitySystemComponent)
-	{
-		// Initialize attribute sets
-		// Health
-		AbilitySystemComponent->InitStats(UHealthAttributeSet::StaticClass(),
-			HealthAttributeDataTable);
-		
-		// Air Actions
-		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
-			AirActionAttributeDataTable);
-	}
-}
-
 
 
 //* Blueprint Helper functions *//
@@ -88,7 +86,7 @@ float ACharacterBase::GetCurrentHealth() const
 	{
 		return HealthAttributeSet->GetCurrentHealth();
 	}
-	return -0.0f;
+	return -1.0f;
 }
 
 // Get max health

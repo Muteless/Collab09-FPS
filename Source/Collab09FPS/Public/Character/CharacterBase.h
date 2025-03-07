@@ -10,6 +10,7 @@
 #include "AbilitySystemComponent.h"
 
 // Attribute sets
+#include "AttributeSet.h"
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/AirActionAttributeSet.h"
 
@@ -56,6 +57,12 @@ public:
 		BlueprintReadOnly,
 		meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	// Required movement tags
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "GAS|Tag Requirements|")
+	FGameplayTagContainer RequiredMovementTags;
 	
 protected:
 	// Possessed by controller
@@ -68,21 +75,10 @@ protected:
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
 	// Grants initial attribute sets
-	void AddInitialCharacterAttributeSets();
+	virtual void AddInitialCharacterAttributeSets();
 	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
-	
-	// Required movement tags
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS|Tag Requirements|")
-	FGameplayTagContainer RequiredMovementTags;
-	
-	//* Health *//
-	// Health attribute set
-	UPROPERTY()
-	UHealthAttributeSet* HealthAttributeSet;
 
 	// Get current health
 	UFUNCTION(BlueprintPure,
@@ -109,19 +105,15 @@ protected:
 		Category = "Player|Actions|")
 	float GetMaxAirActions() const;
 
+	//* Health *//
+	// Health attribute set
+	UPROPERTY()
+	UHealthAttributeSet* HealthAttributeSet;
+
 	//* Data Tables *//
-	// Health attribute data table
 	UPROPERTY(BlueprintReadOnly,
-		Category = "GAS|Data Tables|")
-	TObjectPtr<UDataTable> HealthAttributeDataTable;
-
-	// Air actions attribute data table
-	UPROPERTY(BlueprintReadOnly,
-		Category = "GAS|Data Tables|")
-	TObjectPtr<UDataTable> AirActionAttributeDataTable;
-
-	UPROPERTY(BlueprintReadOnly)
-	float a;
+		Category = "GAS")
+	TObjectPtr<UDataTable> CharacterAttributeDataTable;
 
 private:
 	GENERATED_BODY()

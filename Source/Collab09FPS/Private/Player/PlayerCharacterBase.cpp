@@ -50,7 +50,18 @@ APlayerCharacterBase::APlayerCharacterBase()
 void APlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
+}
+
+void APlayerCharacterBase::AddInitialCharacterAttributeSets()
+{
+	Super::AddInitialCharacterAttributeSets();
+	if (AbilitySystemComponent)
+	{
+		// Initialize attribute sets
+		// Stamina
+		AbilitySystemComponent->InitStats(UStaminaAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+	}
 }
 
 void APlayerCharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)

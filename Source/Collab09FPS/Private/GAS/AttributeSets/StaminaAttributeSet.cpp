@@ -3,7 +3,10 @@
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
 #include "Net/UnrealNetwork.h"
 
-
+UStaminaAttributeSet::UStaminaAttributeSet()
+{
+	
+}
 
 void UStaminaAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
@@ -30,7 +33,6 @@ void UStaminaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 		COND_None,
 		REPNOTIFY_Always); // Register Max Stamina for replication
 }
-
 
 void UStaminaAttributeSet::OnRep_MaxStamina()
 {

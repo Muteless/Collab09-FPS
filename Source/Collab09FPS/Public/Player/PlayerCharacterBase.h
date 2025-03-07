@@ -49,6 +49,9 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void PossessedBy(AController* NewController) override;
+
+	// Grants initial attribute sets
+	virtual void AddInitialCharacterAttributeSets() override;
 	
 	//* Movement *//
 	void MoveTriggered(FVector2d Input);
