@@ -11,9 +11,16 @@
 
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
+#include "GAS/AttributeSets/AirActionAttributeSet.h"
 
 // Gameplay tags
 #include "GameplayTagContainer.h"
+
+// Components
+#include "Engine/DataTable.h"
+
+// Structs
+#include "Collab09FPS/Collab09FPS.h"
 
 #include "CharacterBase.generated.h"
 
@@ -45,7 +52,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
-	UPROPERTY(VisibleAnywhere,
+	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
 		meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -60,9 +67,12 @@ protected:
 		Category = "GAS|Abilities|")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
+	// Grants initial attribute sets
+	void AddInitialCharacterAttributeSets();
+	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
-
+	
 	// Required movement tags
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
@@ -79,7 +89,37 @@ protected:
 		Category = "Player|Health|")
 	float GetCurrentHealth() const;
 
+	// Get current health
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Health|")
+	float GetMaxHealth() const;
+
+	//* Air Actions *//
+	// AirAction attribute set
+	UPROPERTY()
+	UAirActionAttributeSet* AirActionAttributeSet;
+
+	// Get current air actions
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Actions|")
+	float GetCurrentAirActions() const;
+
+	// Get current air actions
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Actions|")
+	float GetMaxAirActions() const;
+
+	//* Data Tables *//
+	// Health attribute data table
+	UPROPERTY(BlueprintReadOnly,
+		Category = "GAS|Data Tables|")
+	TObjectPtr<UDataTable> HealthAttributeDataTable;
+
+	// Air actions attribute data table
+	UPROPERTY(BlueprintReadOnly,
+		Category = "GAS|Data Tables|")
+	TObjectPtr<UDataTable> AirActionAttributeDataTable;
+
 private:
 	GENERATED_BODY()
-
 };

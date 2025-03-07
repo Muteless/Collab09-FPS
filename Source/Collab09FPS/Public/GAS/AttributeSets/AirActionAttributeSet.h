@@ -1,0 +1,61 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
+#include "AttributeSet.h"
+
+
+
+#include "AirActionAttributeSet.generated.h"
+
+// Attribute accessors
+#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
+/**
+ * 
+ */
+UCLASS()
+class COLLAB09FPS_API UAirActionAttributeSet : public UAttributeSet
+{
+public:
+	UAirActionAttributeSet();
+	
+	//*//
+	// Max AirActions Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Actions | ",
+		ReplicatedUsing=OnRep_MaxAirActions)
+	FGameplayAttributeData MaxAirActions;
+	UFUNCTION()
+	virtual void OnRep_MaxAirActions();
+	
+	// Max AirAction Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UAirActionAttributeSet, MaxAirActions)
+
+	// Max AirActions Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Actions | ",
+		ReplicatedUsing=OnRep_CurrentAirActions)
+	FGameplayAttributeData CurrentAirActions;
+	UFUNCTION()
+	virtual void OnRep_CurrentAirActions();
+	
+	// Max AirAction Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UAirActionAttributeSet, CurrentAirActions)
+
+	//*//
+	// Get LifetimeReplicatedProps override
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+protected:
+	// Called before attribute changes
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+private:
+	GENERATED_BODY()
+};

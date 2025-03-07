@@ -3,6 +3,12 @@
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "Net/UnrealNetwork.h"
 
+UHealthAttributeSet::UHealthAttributeSet()
+{
+	
+}
+
+
 void UHealthAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);

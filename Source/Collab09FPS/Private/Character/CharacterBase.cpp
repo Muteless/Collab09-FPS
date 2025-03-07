@@ -13,6 +13,7 @@ ACharacterBase::ACharacterBase()
 
 	// Create attribute sets
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
+	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -31,6 +32,9 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
+		// Set initial character attribute sets
+		AddInitialCharacterAttributeSets();
+		
 		// Add initial character abilities to ability system
 		AddInitialCharacterAbilities();
 	}
@@ -59,6 +63,23 @@ void ACharacterBase::AddInitialCharacterAbilities()
 	}
 }
 
+void ACharacterBase::AddInitialCharacterAttributeSets()
+{
+	if (AbilitySystemComponent)
+	{
+		// Initialize attribute sets
+		// Health
+		AbilitySystemComponent->InitStats(UHealthAttributeSet::StaticClass(),
+			HealthAttributeDataTable->IsValidLowLevel() ? HealthAttributeDataTable : nullptr);
+		
+		// Air Actions
+		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
+			AirActionAttributeDataTable->IsValidLowLevel() ? AirActionAttributeDataTable : nullptr);
+	}
+}
+
+
+
 //* Blueprint Helper functions *//
 // Get current health attribute
 float ACharacterBase::GetCurrentHealth() const
@@ -67,5 +88,35 @@ float ACharacterBase::GetCurrentHealth() const
 	{
 		return HealthAttributeSet->GetCurrentHealth();
 	}
-	return 0.0f;
+	return -0.0f;
+}
+
+// Get max health
+float ACharacterBase::GetMaxHealth() const
+{
+	if (HealthAttributeSet)
+	{
+		return HealthAttributeSet->GetMaxHealth();
+	}
+	return -1.0f;
+}
+
+// Get current air actions
+float ACharacterBase::GetCurrentAirActions() const
+{
+	if (AirActionAttributeSet)
+	{
+		return AirActionAttributeSet->GetCurrentAirActions();
+	}
+	return -1.0f;
+}
+
+// Get max air actions
+float ACharacterBase::GetMaxAirActions() const
+{
+	if (AirActionAttributeSet)
+	{
+		return AirActionAttributeSet->GetMaxAirActions();
+	}
+	return -1.0f;
 }

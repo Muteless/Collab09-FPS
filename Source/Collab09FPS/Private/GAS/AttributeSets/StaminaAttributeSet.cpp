@@ -34,10 +34,10 @@ void UStaminaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 void UStaminaAttributeSet::OnRep_MaxStamina()
 {
-	
+	// Max stamina replicated
 }
 
 void UStaminaAttributeSet::OnRep_CurrentStamina()
 {
-	
+	// Current stamina replicated
 }

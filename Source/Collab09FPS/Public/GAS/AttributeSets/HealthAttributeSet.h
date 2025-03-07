@@ -30,6 +30,9 @@ UCLASS()
 class COLLAB09FPS_API UHealthAttributeSet : public UAttributeSet
 {
 public:
+	// Constructor
+	UHealthAttributeSet();
+	
 	//*//
 	// Max Health Attribute
 	UPROPERTY(BlueprintReadOnly,
