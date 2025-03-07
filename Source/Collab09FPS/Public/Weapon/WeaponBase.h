@@ -77,38 +77,38 @@ public:
 protected:
 	// Projectile class used when firing
 	UPROPERTY(EditAnywhere, BlueprintReadWrite,
-		Category = "Weapon | Firing | Projectile | ")
+		Category = "Weapon|Firing|Projectile|")
 	TArray<TSubclassOf<class AProjectileBase>> ProjectileClasses;
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Weapon | Firing | Projectile | ")
+		Category = "Weapon|Firing|Projectile|")
 	int CurrentProjectileIndex;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Weapon | Melee | ")
+		Category = "Weapon|Melee|")
 	TArray<TSubclassOf<class UMeleeAbilityBase>> MeleeAbilityClasses;
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Weapon | Melee | ")
+		Category = "Weapon|Melee|")
 	int CurrentMeleeAbilityIndex;
 
 	// Location object used when spawning the projectile
 	UPROPERTY(VisibleAnywhere,
 		meta=(DisplayName="Projectile Spawn Location"),
-		Category="Weapon | Firing | Projectile | ")
+		Category="Weapon|Firing|Projectile|")
 	UArrowComponent* ProjectileSpawnLocation;
 
 	// Skeletal mesh used by the weapon
 	UPROPERTY(VisibleAnywhere,
 		meta=(DisplayName="Weapon Mesh"),
-		Category="Weapon | ")
+		Category="Weapon|")
 	class USkeletalMeshComponent* WeaponMesh;
 	
 	// Rate of fire (per Second)
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Rate Of Fire"),
-		Category="Weapon | Firing | ")
+		Category="Weapon|Firing|")
 	float BaseRateOfFire = 1;
 	float RateOfFire;
 	FTimerHandle RateOfFireTimerHandle;
@@ -116,7 +116,7 @@ protected:
 	// Reloading speed in seconds
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Reload Speed"),
-		Category="Weapon | Firing | Reloading | ")
+		Category="Weapon|Firing|Reloading|")
 	float BaseReloadSpeed = 1;
 	float ReloadSpeed;
 	FTimerHandle ReloadTimerHandle;
@@ -124,19 +124,19 @@ protected:
 	// Max ammo count
 	UPROPERTY(BlueprintReadWrite,
 		meta=(DisplayName="Max Ammo"),
-		Category="Weapon | Firing | Ammo | ")
+		Category="Weapon|Firing|Ammo|")
 	float MaxAmmoAmount = 10;
 	float CurrentAmmoAmount;
 	
 	// Function to shoot projectile
 	UFUNCTION(BlueprintCallable,
-		Category="Weapon | Firing | ")
+		Category="Weapon|Firing|")
 	void Fire(int AmmoConsumption, bool bIncrementCurrentIndex);
 	bool CanFire() const;
 	
 	// Current ammo minus ammo consumption
 	UFUNCTION(BlueprintCallable,
-		Category="Weapon | Firing | Ammo | ")
+		Category="Weapon|Firing|Ammo|")
 	void ConsumeAmmo(const int AmmoConsumption);
 	
 	// Function to melee attack
@@ -146,7 +146,7 @@ protected:
 
 	// Function to start reloading weapon
 	UFUNCTION(BlueprintCallable,
-		Category="Weapon | Firing | ")
+		Category="Weapon|Firing|")
 	void Reload();
 	void ReloadComplete();
 	bool CanReload() const;

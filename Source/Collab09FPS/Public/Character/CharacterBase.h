@@ -12,9 +12,6 @@
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 
-// Weapon
-#include "Weapon/WeaponBase.h"
-
 // Gameplay tags
 #include "GameplayTagContainer.h"
 
@@ -60,17 +57,17 @@ protected:
 	// Abilities granted when the ability system is initialized
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
-		Category = "GAS | Abilities | ")
+		Category = "GAS|Abilities|")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
 
-	//* Weapon *//
+	// Required movement tags
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
-		Category = "Weapon | ")
-	TSubclassOf<AWeaponBase> Weapon;
+		Category = "GAS|Tag Requirements|")
+	FGameplayTagContainer RequiredMovementTags;
 	
 	//* Health *//
 	// Health attribute set
@@ -79,7 +76,7 @@ protected:
 
 	// Get current health
 	UFUNCTION(BlueprintPure,
-		Category = "Player | Health | ")
+		Category = "Player|Health|")
 	float GetCurrentHealth() const;
 
 private:

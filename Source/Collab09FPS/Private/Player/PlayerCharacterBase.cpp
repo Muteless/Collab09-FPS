@@ -3,46 +3,118 @@
 
 #include "Player/PlayerCharacterBase.h"
 
+#include "MeshPassProcessor.h"
 #include "Collab09FPS/Collab09FPS.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-// Sets default values
+// Constructor
 APlayerCharacterBase::APlayerCharacterBase()
 {
-	// Initialize the CMC
-	CharacterMovementComponent = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("Character Movement Component"));
+	// CMC
+	GetCharacterMovement()->SetActive(true);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+
+	// Create and configure a SpringArmComponent
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArmComponent->SetupAttachment(GetCapsuleComponent());  // Attach SpringArm to CapsuleComponent
+	SpringArmComponent->TargetArmLength = 10.0f;						// Set the distance the camera will follow
+	SpringArmComponent->bUsePawnControlRotation = true;					// Rotate arm based on controller movement
+	SpringArmComponent->bDoCollisionTest = false;						// Don't want to collide with the arm
+	SpringArmComponent->bEnableCameraLag = true;						// Enable camera lag
+	SpringArmComponent->CameraLagSpeed = 10.0f;							// Set the camera lag speed
+
+	// Create and configure the CameraComponent
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComponent->SetupAttachment(SpringArmComponent);      // Attach the camera to the SpringArm
+	CameraComponent->bUsePawnControlRotation = false;          // This disables direct control rotation, relying on spring arm
+
+	// FOV
+	FOVMinimum = 90;
+	FOVMaximum = 100;
+	MinFOVSpeedThreshold = 100.0f;
+	MaxFOVSpeedThreshold = 900.0f;
+	FOVInterpSpeed = 5.0f;
 	
-	// Initialize the Camera Component
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	// Ensure the pawn itself doesn't rotate the camera
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 	
 	// Attribute sets
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
+
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+void APlayerCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
 }
 
 void APlayerCharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
 {
 	ICharacterInput::InputActionMove_Implementation(InputType, Input);
-
+	
 	switch (InputType)
 	{
 		case EInputTypes::Triggered:
 			MoveTriggered(Input);
 	}
-	return;
 }
 
 // Movement
 void APlayerCharacterBase::MoveTriggered(const FVector2d Input)
 {
-	AddMovementInput(GetActorForwardVector(), Input.Y, false);
-	AddMovementInput(GetActorRightVector(), Input.X, false);
-	return;
+	if (CanMove())
+	{
+		AddMovementInput(GetActorRightVector(), Input.X, false);
+		AddMovementInput(GetActorForwardVector(), Input.Y, false);
+	}
 }
 
+bool APlayerCharacterBase::CanMove() const
+{
+	// Has movement tags
+	return AbilitySystemComponent->HasAllMatchingGameplayTags(RequiredMovementTags);
+}
+
+// Camera
 void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType, FVector2D Input)
 {
-	ICharacterInput::InputActionLook_Implementation(InputType, Input);
-	return;
+	AddControllerYawInput(bInvertedYaw ? Input.X : -Input.X);
+	AddControllerPitchInput(bInvertedPitch ? Input.Y : -Input.Y);
+}
+
+// Tick
+void APlayerCharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// Update FOV based on speed
+	UpdateFOVBasedOnSpeed(DeltaTime);
+}
+
+void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const
+{
+	float CurrentSpeed = GetVelocity().Size();
+
+	// Ensure the camera component is valid
+	if (!CameraComponent) return;
+	
+	// Map speed to FOV
+	float TargetFOV = FMath::Lerp(FOVMinimum,
+		FOVMaximum,
+		FMath::Clamp((CurrentSpeed - MinFOVSpeedThreshold) / (MaxFOVSpeedThreshold - MinFOVSpeedThreshold),
+			0.0f,
+			1.0f));
+
+	float CurrentFOV = CameraComponent->FieldOfView;
+	CameraComponent->FieldOfView = FMath::FInterpTo(CurrentFOV,
+		TargetFOV,
+		DeltaTime,
+		FOVInterpSpeed);
 }
 
 // Called to bind functionality to input
