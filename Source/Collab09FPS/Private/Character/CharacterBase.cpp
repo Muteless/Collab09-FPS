@@ -13,13 +13,18 @@ ACharacterBase::ACharacterBase()
 	
 	// Create attribute sets
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
-	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
 }
 
 // AbilitySystemComponent interface, return ability system component
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+// Make the character jump
+void ACharacterBase::CharacterMovementJump_Implementation()
+{
+	Jump();
 }
 
 // Called when character has been possessed
@@ -37,6 +42,9 @@ void ACharacterBase::PossessedBy(AController* NewController)
 		
 		// Add initial character abilities to ability system
 		AddInitialCharacterAbilities();
+
+		// Add initial effects to ability system
+		AddInitialCharacterGameplayEffects();
 	}
 }
 
@@ -78,6 +86,20 @@ void ACharacterBase::AddInitialCharacterAbilities()
 }
 
 
+void ACharacterBase::AddInitialCharacterGameplayEffects()
+{
+	if (AbilitySystemComponent)
+	{
+		for (TSubclassOf<UGameplayEffect> GameplayEffect : InitialGameplayEffects)
+		{
+			// Create an outgoing spec for the Gameplay Effect
+			FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
+			// Apply the effect to the Ability System Component
+			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		}
+	}
+}
+
 //* Blueprint Helper functions *//
 // Get current health attribute
 float ACharacterBase::GetCurrentHealth() const
@@ -95,26 +117,6 @@ float ACharacterBase::GetMaxHealth() const
 	if (HealthAttributeSet)
 	{
 		return HealthAttributeSet->GetMaxHealth();
-	}
-	return -1.0f;
-}
-
-// Get current air actions
-float ACharacterBase::GetCurrentAirActions() const
-{
-	if (AirActionAttributeSet)
-	{
-		return AirActionAttributeSet->GetCurrentAirActions();
-	}
-	return -1.0f;
-}
-
-// Get max air actions
-float ACharacterBase::GetMaxAirActions() const
-{
-	if (AirActionAttributeSet)
-	{
-		return AirActionAttributeSet->GetMaxAirActions();
 	}
 	return -1.0f;
 }

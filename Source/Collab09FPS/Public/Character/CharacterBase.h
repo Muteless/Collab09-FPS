@@ -8,9 +8,9 @@
 // Ability system
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffect.h"
 
 // Attribute sets
-#include "AttributeSet.h"
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/AirActionAttributeSet.h"
 
@@ -22,6 +22,7 @@
 
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
+#include "Interfaces/CharacterMovementAbilities.h"
 
 #include "CharacterBase.generated.h"
 
@@ -40,11 +41,19 @@
  */
 
 UCLASS(Abstract)
-class COLLAB09FPS_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
+class COLLAB09FPS_API ACharacterBase : public ACharacter,
+public IAbilitySystemInterface,
+public ICharacterMovementAbilities
 {
 public:
 	// Sets default values for this character's properties
 	ACharacterBase();
+
+	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	
 	// Override from IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -52,17 +61,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-
 	// Required movement tags
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
 		Category = "GAS|Tag Requirements|")
 	FGameplayTagContainer RequiredMovementTags;
+
+	// Required jump tags
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "GAS|Tag Requirements|")
+	FGameplayTag RequiredJumpTag;
+
+	// Jump
+	virtual void CharacterMovementJump_Implementation() override;
 	
 protected:
 	// Possessed by controller
@@ -71,15 +83,21 @@ protected:
 	// Abilities granted when the ability system is initialized
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
-		Category = "GAS|Abilities|")
+		Category = "GAS")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
-	// Grants initial attribute sets
-	virtual void AddInitialCharacterAttributeSets();
-	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
+	
+	// Initial gameplay effects
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "GAS")
+	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
 
+	// Grant initial gameplay effects
+	void AddInitialCharacterGameplayEffects();
+	
 	// Get current health
 	UFUNCTION(BlueprintPure,
 		Category = "Player|Health|")
@@ -90,20 +108,8 @@ protected:
 		Category = "Player|Health|")
 	float GetMaxHealth() const;
 
-	//* Air Actions *//
-	// AirAction attribute set
-	UPROPERTY()
-	UAirActionAttributeSet* AirActionAttributeSet;
-
-	// Get current air actions
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Actions|")
-	float GetCurrentAirActions() const;
-
-	// Get current air actions
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Actions|")
-	float GetMaxAirActions() const;
+	// Grants initial attribute sets
+	virtual void AddInitialCharacterAttributeSets();
 
 	//* Health *//
 	// Health attribute set
