@@ -29,6 +29,7 @@ UCLASS()
 class COLLAB09FPS_API UStaminaAttributeSet : public UAttributeSet
 {
 public:
+	UStaminaAttributeSet();
 
 	//*//
 	// Max Stamina Attribute

@@ -5,9 +5,6 @@
 #include "CoreMinimal.h"
 #include "Character/CharacterBase.h"
 
-// Attributes
-#include "GAS/AttributeSets/StaminaAttributeSet.h"
-
 // Interfaces
 #include "Interfaces/CharacterInput.h"
 
@@ -41,14 +38,17 @@ public:
 	UFUNCTION(Category = "Input")
 	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
 
+	UFUNCTION(Category = "Input")
+	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
+
 	// Runs every frame
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void PossessedBy(AController* NewController) override;
+
+	// Grants initial attribute sets
+	virtual void AddInitialCharacterAttributeSets() override;
 	
 	//* Movement *//
 	void MoveTriggered(FVector2d Input);
@@ -124,6 +124,21 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Player|Stamina|")
 	float GetCurrentStamina() const;
+
+	//* Air Actions *//
+	// AirAction attribute set
+	UPROPERTY()
+	UAirActionAttributeSet* AirActionAttributeSet;
+
+	// Get current air actions
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Actions|")
+	float GetCurrentAirActions() const;
+
+	// Get current air actions
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Actions|")
+	float GetMaxAirActions() const;
 
 private:
 	GENERATED_BODY()

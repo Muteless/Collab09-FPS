@@ -22,7 +22,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 	SpringArmComponent->bUsePawnControlRotation = true;					// Rotate arm based on controller movement
 	SpringArmComponent->bDoCollisionTest = false;						// Don't want to collide with the arm
 	SpringArmComponent->bEnableCameraLag = true;						// Enable camera lag
-	SpringArmComponent->CameraLagSpeed = 10.0f;							// Set the camera lag speed
+	SpringArmComponent->CameraLagSpeed = 5.0f;							// Set the camera lag speed
 
 	// Create and configure the CameraComponent
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -43,14 +43,26 @@ APlayerCharacterBase::APlayerCharacterBase()
 	
 	// Attribute sets
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
-
+	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
+}
+
+void APlayerCharacterBase::AddInitialCharacterAttributeSets()
+{
+	Super::AddInitialCharacterAttributeSets();
+	if (AbilitySystemComponent)
+	{
+		// Initialize attribute sets
+		// Stamina
+		AbilitySystemComponent->InitStats(UStaminaAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+	}
 }
 
 void APlayerCharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
@@ -76,7 +88,6 @@ void APlayerCharacterBase::MoveTriggered(const FVector2d Input)
 
 bool APlayerCharacterBase::CanMove() const
 {
-	// Has movement tags
 	return AbilitySystemComponent->HasAllMatchingGameplayTags(RequiredMovementTags);
 }
 
@@ -85,6 +96,18 @@ void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType,
 {
 	AddControllerYawInput(bInvertedYaw ? Input.X : -Input.X);
 	AddControllerPitchInput(bInvertedPitch ? Input.Y : -Input.Y);
+}
+
+void APlayerCharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
+{
+	if (AbilitySystemComponent)
+	{
+		// Define optional event data
+		FGameplayEventData Payload;
+		
+		// Trigger jump ability event
+		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Ability.Jump")), &Payload);
+	}
 }
 
 // Tick
@@ -117,12 +140,7 @@ void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const
 		FOVInterpSpeed);
 }
 
-// Called to bind functionality to input
-void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
+//* Blueprint Helper functions *//
 // Get current stamina attribute
 float APlayerCharacterBase::GetCurrentStamina() const
 {
@@ -131,4 +149,24 @@ float APlayerCharacterBase::GetCurrentStamina() const
 		return StaminaAttributeSet->GetCurrentStamina();
 	}
 	return 0.0f;
+}
+
+// Get current air actions
+float APlayerCharacterBase::GetCurrentAirActions() const
+{
+	if (AirActionAttributeSet)
+	{
+		return AirActionAttributeSet->GetCurrentAirActions();
+	}
+	return -1.0f;
+}
+
+// Get max air actions
+float APlayerCharacterBase::GetMaxAirActions() const
+{
+	if (AirActionAttributeSet)
+	{
+		return AirActionAttributeSet->GetMaxAirActions();
+	}
+	return -1.0f;
 }
