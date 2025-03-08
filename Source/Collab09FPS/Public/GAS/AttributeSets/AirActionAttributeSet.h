@@ -38,7 +38,7 @@ public:
 	// Max AirAction Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UAirActionAttributeSet, MaxAirActions)
 
-	// Max AirActions Attribute
+	// Current AirActions Attribute
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | Actions | ",
 		ReplicatedUsing=OnRep_CurrentAirActions)
@@ -46,7 +46,7 @@ public:
 	UFUNCTION()
 	virtual void OnRep_CurrentAirActions();
 	
-	// Max AirAction Attribute Accessor
+	// Current AirAction Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UAirActionAttributeSet, CurrentAirActions)
 
 	//*//

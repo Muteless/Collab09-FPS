@@ -2,6 +2,8 @@
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 // Constructor
 ACharacterBase::ACharacterBase()
 {
@@ -10,9 +12,28 @@ ACharacterBase::ACharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	AbilitySystemComponent->RegisterComponent();
+
+	// Character Movement Component
+	CharacterMovementComponent = GetCharacterMovement();
+
+	// Wall capsule component
+	WallCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Wall Capsule Collision"));
+	WallCapsuleCollision->SetupAttachment(GetCapsuleComponent());
+	WallCapsuleCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	WallCapsuleCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
+	WallCapsuleCollision->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
+	WallCapsuleCollision->SetGenerateOverlapEvents(true);
+	
+	WallCapsuleCollision->ShapeColor = FColor::Blue;
+	WallCapsuleCollision->SetLineThickness(1);
+	WallCapsuleCollision->SetCapsuleSize(GetCapsuleComponent()->GetScaledCapsuleRadius() + WallCapsuleDetectionOffsetRadius, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+	
 	
 	// Create attribute sets
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
+	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
+	DashAttributeSet = CreateDefaultSubobject<UDashAttributeSet>(TEXT("Dash Attribute Set"));
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -21,17 +42,31 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-// Make the character jump
-void ACharacterBase::CharacterMovementJump_Implementation()
+// Get character movement component
+UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
 {
-	Jump();
+	return CharacterMovementComponent;
 }
+
+FVector ACharacterBase::GetMovementInput_Implementation()
+{
+	return GetLastMovementInputVector();
+}
+
 
 // Called when character has been possessed
 void ACharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	// Initialize wall capsule collision
+	if (WallCapsuleCollision)
+	{
+		// Begin & end overlap events
+		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleBeginOverlap);
+		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleEndOverlap);
+	}
+	
 	// Initialize AbilitySystemComponent
 	if (AbilitySystemComponent)
 	{
@@ -48,12 +83,6 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	}
 }
 
-// Called to bind functionality to input
-void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
 void ACharacterBase::AddInitialCharacterAttributeSets()
 {
 	if (AbilitySystemComponent)
@@ -65,6 +94,10 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 
 		// Air Actions
 		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+
+		// Dash
+		AbilitySystemComponent->InitStats(UDashAttributeSet::StaticClass(),
 			CharacterAttributeDataTable);
 	}
 }
@@ -94,9 +127,95 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 		{
 			// Create an outgoing spec for the Gameplay Effect
 			FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
+			
 			// Apply the effect to the Ability System Component
 			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 		}
+	}
+}
+
+void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Wall Capsule Overlapped Actor: %s"), *OtherActor->GetName());
+	}
+}
+
+void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Wall Capsule Ended Overlap with Actor: %s"), *OtherActor->GetName());
+	}
+
+}
+
+// Make the character ground jump
+void ACharacterBase::CharacterMovementJump_Implementation()
+{
+	Jump();
+}
+
+void ACharacterBase::CharacterMovementAirJump_Implementation()
+{
+	// Reset Z Velocity
+	CharacterMovementComponent->Velocity.Z = 0.0f;
+	
+	// Add jump impulse
+	CharacterMovementComponent->AddImpulse(FVector(0.0f,
+		0.0f,
+		(GetCharacterMovement()->JumpZVelocity)),
+		true);
+}
+
+// On landed
+void ACharacterBase::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	if (AbilitySystemComponent)
+	{
+		for (TSubclassOf<UGameplayEffect> Effect : OnLandedEffects)
+		{
+			// Create an outgoing spec for the Gameplay Effect
+			FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Effect, 1.f, AbilitySystemComponent->MakeEffectContext());
+			
+			// Apply the effect to the Ability System Component
+			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		}
+	}
+}
+
+// Ground Dash
+void ACharacterBase::CharacterMovementGroundDash_Implementation()
+{
+	if (AbilitySystemComponent)
+	{
+		// Define optional event data
+		FGameplayEventData Payload;
+	
+		// Use dash ability event
+		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.GroundDash")), &Payload);
+	}
+}
+
+void ACharacterBase::CharacterMovementAirDash_Implementation()
+{
+	if (AbilitySystemComponent)
+	{
+		// Define optional event data
+		FGameplayEventData Payload;
+	
+		// Use dash ability event
+		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirDash")), &Payload);
 	}
 }
 
@@ -117,6 +236,32 @@ float ACharacterBase::GetMaxHealth() const
 	if (HealthAttributeSet)
 	{
 		return HealthAttributeSet->GetMaxHealth();
+	}
+	return -1.0f;
+}
+
+// Get character is airborne
+bool ACharacterBase::IsAirborne_Implementation()
+{
+	return GetCharacterMovement()->IsFalling();
+}
+
+// Get current air actions
+float ACharacterBase::GetCurrentAirActions() const
+{
+	if (AirActionAttributeSet)
+	{
+		return AirActionAttributeSet->GetCurrentAirActions();
+	}
+	return -1.0f;
+}
+
+// Get max air actions
+float ACharacterBase::GetMaxAirActions() const
+{
+	if (AirActionAttributeSet)
+	{
+		return AirActionAttributeSet->GetMaxAirActions();
 	}
 	return -1.0f;
 }
