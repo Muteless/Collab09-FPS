@@ -31,9 +31,9 @@ APlayerCharacterBase::APlayerCharacterBase()
 
 	// FOV
 	FOVMinimum = 90;
-	FOVMaximum = 100;
+	FOVMaximum = 110;
 	MinFOVSpeedThreshold = 100.0f;
-	MaxFOVSpeedThreshold = 900.0f;
+	MaxFOVSpeedThreshold = 1100.0f;
 	FOVInterpSpeed = 5.0f;
 	
 	// Ensure the pawn itself doesn't rotate the camera
@@ -43,7 +43,6 @@ APlayerCharacterBase::APlayerCharacterBase()
 	
 	// Attribute sets
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
-	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
 	
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -71,6 +70,7 @@ void APlayerCharacterBase::InputActionMove_Implementation(const EInputTypes Inpu
 	
 	switch (InputType)
 	{
+		default: return;
 		case EInputTypes::Triggered:
 			MoveTriggered(Input);
 	}
@@ -100,13 +100,50 @@ void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType,
 
 void APlayerCharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
 {
-	if (AbilitySystemComponent)
+	switch (InputType)
 	{
-		// Define optional event data
-		FGameplayEventData Payload;
+		default: return;
+	case EInputTypes::Started:
+		if (AbilitySystemComponent)
+		{
+			if (!GetCharacterMovement()->IsFalling())
+			{
+				// Ground jump
+				// Define optional event data
+				FGameplayEventData Payload;
 		
-		// Trigger jump ability event
-		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Ability.Jump")), &Payload);
+				// Trigger jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Jump")), &Payload);
+			}
+			else
+			{
+				// Air jump
+				// Define optional event data
+				FGameplayEventData Payload;
+
+				// Trigger air jump ability events
+				// Trigger jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirJump")), &Payload);
+			}
+		}
+	}
+}
+
+void APlayerCharacterBase::InputActionDash_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType)
+	{
+		case EInputTypes::Started:
+			if (!CharacterMovementComponent->IsFalling())
+			{
+				// Ground dash
+				Execute_CharacterMovementGroundDash(this);
+			}
+			else
+			{
+				// Air dash
+				Execute_CharacterMovementAirDash(this);
+			}
 	}
 }
 
@@ -147,26 +184,6 @@ float APlayerCharacterBase::GetCurrentStamina() const
 	if (StaminaAttributeSet)
 	{
 		return StaminaAttributeSet->GetCurrentStamina();
-	}
-	return 0.0f;
-}
-
-// Get current air actions
-float APlayerCharacterBase::GetCurrentAirActions() const
-{
-	if (AirActionAttributeSet)
-	{
-		return AirActionAttributeSet->GetCurrentAirActions();
-	}
-	return -1.0f;
-}
-
-// Get max air actions
-float APlayerCharacterBase::GetMaxAirActions() const
-{
-	if (AirActionAttributeSet)
-	{
-		return AirActionAttributeSet->GetMaxAirActions();
 	}
 	return -1.0f;
 }

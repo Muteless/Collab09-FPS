@@ -29,15 +29,12 @@ void UAirActionAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 void UAirActionAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	Super::PreAttributeChange(Attribute, NewValue);
-	
 	// Current air actions
 	if (Attribute == GetCurrentAirActionsAttribute())
 	{
-		SetCurrentAirActions(FMath::Clamp<float>(NewValue,
-			0,
-			GetMaxAirActions()));
+		NewValue = FMath::Clamp<float>(NewValue,0,MaxAirActions.GetCurrentValue());
 	}
+	Super::PreAttributeChange(Attribute, NewValue);
 }
 
 void UAirActionAttributeSet::OnRep_MaxAirActions()

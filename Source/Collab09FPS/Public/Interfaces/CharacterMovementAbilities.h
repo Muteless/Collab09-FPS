@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "CharacterMovementAbilities.generated.h"
+
 
 // This class does not need to be modified.
 UINTERFACE(Blueprintable)
@@ -21,8 +23,38 @@ class COLLAB09FPS_API ICharacterMovementAbilities
 public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
-		Category = "Input")
+		Category = "Component")
+	UCharacterMovementComponent* ActorCharacterMovementComponent();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Component")
+	FVector GetMovementInput();
+	
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
 	void CharacterMovementJump();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementAirJump();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementGroundDash();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementAirDash();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	bool IsAirborne();
 	
 private:
 	GENERATED_BODY()

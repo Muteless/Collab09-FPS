@@ -13,12 +13,14 @@
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/AirActionAttributeSet.h"
+#include "GAS/AttributeSets/DashAttributeSet.h"
 
 // Gameplay tags
 #include "GameplayTagContainer.h"
 
 // Components
 #include "Engine/DataTable.h"
+#include "Components/CapsuleComponent.h"
 
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
@@ -57,9 +59,39 @@ public:
 	
 	// Override from IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	// Character Movement Component
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category = "Movement")
+	UCharacterMovementComponent* CharacterMovementComponent;
+
+	// Wall capsule detection
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category = "Collision")
+	UCapsuleComponent* WallCapsuleCollision;
 	
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// Event handlers for overlap
+	UFUNCTION()
+	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
+		AActor* OtherActor, 
+		UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, 
+		bool bFromSweep, 
+		const FHitResult& SweepResult);
+	
+	UFUNCTION()
+	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, 
+		AActor* OtherActor, 
+		UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex);
+
+	// Wall capsule offset radius
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "Collision")
+	float WallCapsuleDetectionOffsetRadius = 10.0f;
 	
 	// Required movement tags
 	UPROPERTY(EditDefaultsOnly,
@@ -73,30 +105,53 @@ public:
 		Category = "GAS|Tag Requirements|")
 	FGameplayTag RequiredJumpTag;
 
+	// Get  Character Movement Component
+	virtual UCharacterMovementComponent* ActorCharacterMovementComponent_Implementation() override;
+
+	UFUNCTION(Category = "Input")
+	virtual FVector GetMovementInput_Implementation() override;
+	
 	// Jump
 	virtual void CharacterMovementJump_Implementation() override;
+
+	// Air Jump
+	virtual void CharacterMovementAirJump_Implementation() override;
+
+	// Ground dash
+	virtual void CharacterMovementGroundDash_Implementation() override;
+
+	// Air dash
+	virtual void CharacterMovementAirDash_Implementation() override;
+	
+	// IsAirborne
+	virtual bool IsAirborne_Implementation() override;
 	
 protected:
 	// Possessed by controller
 	virtual void PossessedBy(AController* NewController) override;
 
+	// Called when the character lands
+	virtual void Landed(const FHitResult& Hit) override;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadOnly,
+		Category = "GAS")
+	TArray<TSubclassOf<UGameplayEffect>> OnLandedEffects;
+
+	// Grants initial abilities
+	void AddInitialCharacterAbilities();
 	// Abilities granted when the ability system is initialized
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
 
-	// Grants initial abilities
-	void AddInitialCharacterAbilities();
-	
+	// Grant initial gameplay effects
+	void AddInitialCharacterGameplayEffects();
 	// Initial gameplay effects
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
-
-	// Grant initial gameplay effects
-	void AddInitialCharacterGameplayEffects();
 	
 	// Get current health
 	UFUNCTION(BlueprintPure,
@@ -108,14 +163,34 @@ protected:
 		Category = "Player|Health|")
 	float GetMaxHealth() const;
 
-	// Grants initial attribute sets
-	virtual void AddInitialCharacterAttributeSets();
-
 	//* Health *//
 	// Health attribute set
 	UPROPERTY()
 	UHealthAttributeSet* HealthAttributeSet;
 
+	//* Air Actions *//
+	// AirAction attribute set
+	UPROPERTY()
+	UAirActionAttributeSet* AirActionAttributeSet;
+
+	// Get current air actions
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Actions|")
+	float GetCurrentAirActions() const;
+
+	// Get current air actions
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Actions|")
+	float GetMaxAirActions() const;
+
+	//* Dash *//
+	// Dash attribute set
+	UPROPERTY()
+	UDashAttributeSet* DashAttributeSet;
+	
+	// Grants initial attribute sets
+	virtual void AddInitialCharacterAttributeSets();
+	
 	//* Data Tables *//
 	UPROPERTY(BlueprintReadOnly,
 		Category = "GAS")
