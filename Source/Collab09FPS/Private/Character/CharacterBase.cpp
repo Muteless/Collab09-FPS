@@ -10,7 +10,7 @@ ACharacterBase::ACharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-
+	
 	// Create attribute sets
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
 }
@@ -19,6 +19,12 @@ ACharacterBase::ACharacterBase()
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+// Make the character jump
+void ACharacterBase::CharacterMovementJump_Implementation()
+{
+	Jump();
 }
 
 // Called when character has been possessed
@@ -31,8 +37,14 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
+		// Set initial character attribute sets
+		AddInitialCharacterAttributeSets();
+		
 		// Add initial character abilities to ability system
 		AddInitialCharacterAbilities();
+
+		// Add initial effects to ability system
+		AddInitialCharacterGameplayEffects();
 	}
 }
 
@@ -40,6 +52,21 @@ void ACharacterBase::PossessedBy(AController* NewController)
 void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ACharacterBase::AddInitialCharacterAttributeSets()
+{
+	if (AbilitySystemComponent)
+	{
+		// Initialize attribute sets
+		// Health
+		AbilitySystemComponent->InitStats(UHealthAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+
+		// Air Actions
+		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
+			CharacterAttributeDataTable);
+	}
 }
 
 // Add initial character abilities
@@ -53,8 +80,22 @@ void ACharacterBase::AddInitialCharacterAbilities()
 			if (Ability != nullptr)
 			{
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
-				AbilitySystemComponent->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag((FName(TEXT("Ability.Movement")))));
 			}
+		}
+	}
+}
+
+
+void ACharacterBase::AddInitialCharacterGameplayEffects()
+{
+	if (AbilitySystemComponent)
+	{
+		for (TSubclassOf<UGameplayEffect> GameplayEffect : InitialGameplayEffects)
+		{
+			// Create an outgoing spec for the Gameplay Effect
+			FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
+			// Apply the effect to the Ability System Component
+			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 		}
 	}
 }
@@ -67,5 +108,15 @@ float ACharacterBase::GetCurrentHealth() const
 	{
 		return HealthAttributeSet->GetCurrentHealth();
 	}
-	return 0.0f;
+	return -1.0f;
+}
+
+// Get max health
+float ACharacterBase::GetMaxHealth() const
+{
+	if (HealthAttributeSet)
+	{
+		return HealthAttributeSet->GetMaxHealth();
+	}
+	return -1.0f;
 }

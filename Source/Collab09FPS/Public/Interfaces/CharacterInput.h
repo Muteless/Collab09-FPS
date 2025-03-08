@@ -17,8 +17,13 @@ class UCharacterInput : public UInterface
 };
 
 /**
- * 
+ * @class ICharacterInput
+ *
+ * Interface that defines character input actions. This interface is intended to be implemented
+ * by classes that require handling character-specific input actions, such as movement, looking,
+ * and various gameplay actions.
  */
+
 class COLLAB09FPS_API ICharacterInput
 {
 public:
