@@ -25,7 +25,8 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase, public ICharacterInput
+class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase,
+public ICharacterInput
 {
 public:
 	// Sets default values for this character's properties
@@ -34,13 +35,26 @@ public:
 	// Input
 	UFUNCTION(Category = "Input")
 	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
-
+	
 	UFUNCTION(Category = "Input")
 	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
 
 	UFUNCTION(Category = "Input")
 	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
 
+	UFUNCTION(Category = "Input")
+	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
+	
+	//* Stamina *//
+	// Stamina attribute set
+	UPROPERTY()
+	UStaminaAttributeSet* StaminaAttributeSet;
+
+	// Get current stamina
+	UFUNCTION(BlueprintPure,
+		Category = "Player|Stamina|")
+	float GetCurrentStamina() const;
+	
 	// Runs every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -114,31 +128,6 @@ protected:
 		BlueprintReadOnly,
 		Category = "Weapon | ")
 	TSubclassOf<AWeaponBase> Weapon;
-	
-	//* Stamina *//
-	// Stamina attribute set
-	UPROPERTY()
-	UStaminaAttributeSet* StaminaAttributeSet;
-
-	// Get current stamina
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Stamina|")
-	float GetCurrentStamina() const;
-
-	//* Air Actions *//
-	// AirAction attribute set
-	UPROPERTY()
-	UAirActionAttributeSet* AirActionAttributeSet;
-
-	// Get current air actions
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Actions|")
-	float GetCurrentAirActions() const;
-
-	// Get current air actions
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Actions|")
-	float GetMaxAirActions() const;
 
 private:
 	GENERATED_BODY()

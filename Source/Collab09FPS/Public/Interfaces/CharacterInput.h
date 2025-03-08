@@ -56,6 +56,11 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Input")
+	void InputActionDash(const EInputTypes InputType, const bool Input);
+	
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Input")
 	void InputActionCrouch(const EInputTypes InputType, const bool Input);
 
 	UFUNCTION(BlueprintNativeEvent,

@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
-
-
+#include "AbilitySystemComponent.h"
 
 #include "HealthAttributeSet.generated.h"
 
