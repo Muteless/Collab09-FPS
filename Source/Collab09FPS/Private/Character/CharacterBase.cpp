@@ -2,6 +2,7 @@
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 
+#include "LandscapeGizmoActiveActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
@@ -12,11 +13,7 @@ ACharacterBase::ACharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-	AbilitySystemComponent->RegisterComponent();
-
-	// Character Movement Component
-	CharacterMovementComponent = GetCharacterMovement();
-
+	
 	// Wall capsule component
 	WallCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Wall Capsule Collision"));
 	WallCapsuleCollision->SetupAttachment(GetCapsuleComponent());
@@ -42,10 +39,11 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+
 // Get character movement component
 UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
 {
-	return CharacterMovementComponent;
+	return GetCharacterMovement();
 }
 
 FVector ACharacterBase::GetMovementInput_Implementation()
@@ -140,9 +138,14 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor != this)
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	if (MovementComponent && MovementComponent->CanWallRun())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Wall Capsule Overlapped Actor: %s"), *OtherActor->GetName());
+		if (OtherActor && OtherActor != this)
+		{
+			BeginWallRun();
+		}
 	}
 }
 
@@ -153,10 +156,39 @@ void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp
 {
 	if (OtherActor && OtherActor != this)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Wall Capsule Ended Overlap with Actor: %s"), *OtherActor->GetName());
+		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+		
+		if (MovementComponent)
+		{
+			FHitResult SweepResult;
+			EndWallRun();
+		}
 	}
 
 }
+
+void ACharacterBase::BeginWallRun()
+{
+	if (AbilitySystemComponent)
+	{
+		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>(GetCharacterMovement());
+		if (MovementComponent && MovementComponent->CanWallRun())
+		{
+			GetCharacterMovement()->SetMovementMode(MOVE_Custom, UCharacterMovementComponentBase::MOVE_WallRunning);
+		}
+	}
+}
+
+void ACharacterBase::EndWallRun()
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>(GetCharacterMovement());
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+	}
+}
+
 
 // Make the character ground jump
 void ACharacterBase::CharacterMovementJump_Implementation()
@@ -167,10 +199,10 @@ void ACharacterBase::CharacterMovementJump_Implementation()
 void ACharacterBase::CharacterMovementAirJump_Implementation()
 {
 	// Reset Z Velocity
-	CharacterMovementComponent->Velocity.Z = 0.0f;
+	GetCharacterMovement()->Velocity.Z = 0.0f;
 	
 	// Add jump impulse
-	CharacterMovementComponent->AddImpulse(FVector(0.0f,
+	GetCharacterMovement()->AddImpulse(FVector(0.0f,
 		0.0f,
 		(GetCharacterMovement()->JumpZVelocity)),
 		true);

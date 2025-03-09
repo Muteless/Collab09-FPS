@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Character/CharacterMovementComponentBase.h"
 #include "CharacterMovementAbilities.generated.h"
 
 

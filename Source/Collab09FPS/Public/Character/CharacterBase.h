@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Character/CharacterMovementComponentBase.h"
 
 // Ability system
 #include "AbilitySystemInterface.h"
@@ -59,13 +60,7 @@ public:
 	
 	// Override from IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-	// Character Movement Component
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Movement")
-	UCharacterMovementComponent* CharacterMovementComponent;
-
+	
 	// Wall capsule detection
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadOnly,
@@ -130,6 +125,12 @@ protected:
 	// Possessed by controller
 	virtual void PossessedBy(AController* NewController) override;
 
+	UFUNCTION()
+	void BeginWallRun();
+
+	UFUNCTION()
+	void EndWallRun();
+	
 	// Called when the character lands
 	virtual void Landed(const FHitResult& Hit) override;
 	UPROPERTY(EditDefaultsOnly,
@@ -152,21 +153,21 @@ protected:
 		BlueprintReadOnly,
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
-	
-	// Get current health
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Health|")
-	float GetCurrentHealth() const;
-
-	// Get current health
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Health|")
-	float GetMaxHealth() const;
 
 	//* Health *//
 	// Health attribute set
 	UPROPERTY()
 	UHealthAttributeSet* HealthAttributeSet;
+	
+	// Get current health
+	UFUNCTION(BlueprintPure,
+		Category = "Character|Health|")
+	float GetCurrentHealth() const;
+
+	// Get current health
+	UFUNCTION(BlueprintPure,
+		Category = "Character|Health|")
+	float GetMaxHealth() const;
 
 	//* Air Actions *//
 	// AirAction attribute set
@@ -175,12 +176,12 @@ protected:
 
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
-		Category = "Player|Actions|")
+		Category = "Character|Actions|")
 	float GetCurrentAirActions() const;
 
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
-		Category = "Player|Actions|")
+		Category = "Character|Actions|")
 	float GetMaxAirActions() const;
 
 	//* Dash *//

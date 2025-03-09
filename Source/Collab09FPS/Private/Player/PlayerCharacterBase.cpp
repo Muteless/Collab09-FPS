@@ -134,7 +134,7 @@ void APlayerCharacterBase::InputActionDash_Implementation(const EInputTypes Inpu
 	switch (InputType)
 	{
 		case EInputTypes::Started:
-			if (!CharacterMovementComponent->IsFalling())
+			if (!GetCharacterMovement()->IsFalling())
 			{
 				// Ground dash
 				Execute_CharacterMovementGroundDash(this);
