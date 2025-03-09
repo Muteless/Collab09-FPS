@@ -7,15 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a8b2277-2eb3-4898-90e4-4ff41c51d95f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/EnemyAI/TestAI/BB_ChatGPT.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/EnemyAI/TestAI/BT_ChatGPT.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/EnemyAI/TestAI/ChatGPT.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/EnemyAI/TestAI/ChatGPTTest.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" afterDir="false" />
-    </list>
+    <list default="true" id="4a8b2277-2eb3-4898-90e4-4ff41c51d95f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -192,7 +184,7 @@
       <workItem from="1741457050277" duration="4279000" />
       <workItem from="1741461536849" duration="18000" />
       <workItem from="1741462478243" duration="131000" />
-      <workItem from="1741466341077" duration="2399000" />
+      <workItem from="1741466341077" duration="2721000" />
     </task>
     <servers />
   </component>

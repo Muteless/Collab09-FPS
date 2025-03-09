@@ -5,6 +5,7 @@
     <projectFile profileName="EpicGames.AspNet">../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Programs/Shared/EpicGames.AspNet/EpicGames.AspNet.csproj</projectFile>
     <projectFile kind="Docker">../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Programs/Shared/EpicGames.Perforce.Fixture/EpicGames.Perforce.Fixture.csproj</projectFile>
     <projectFile profileName="UnrealBuildTool">../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Programs/UnrealBuildTool/UnrealBuildTool.csproj</projectFile>
+    <projectFile kind="Docker">F:/Epic Games/UE_5.4/Engine/Source/Programs/Shared/EpicGames.Perforce.Fixture/EpicGames.Perforce.Fixture.csproj</projectFile>
     <projectFile>Intermediate/ProjectFiles/Collab09FPS.vcxproj</projectFile>
     <projectFile>Intermediate/ProjectFiles/UE5.vcxproj</projectFile>
   </component>
@@ -13,43 +14,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Config/Tags/GameplayCooldowns.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Config/Tags/GameplayEvents.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_AirDash.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_AirJump.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_GroundDash.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Cooldowns/GE_Cooldown_Dash.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Costs/GE_Cost_AirDash.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Costs/GE_Cost_AirJump.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Movement/GE_AirActionsReset.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Movement/GE_Movement.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/NewBlueprint.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Input/InputActions/IA_Dash.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Map/_GENERATED/Personal/CubeGridToolOutput_C502D90F.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Map/MP_MapBase/A/TH/Z97XB49XBEK3LZYMR3QM34.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/Map/MP_MapBase/6/X1/RC0JJRGOCZV100KXE9213O.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/AttributeSets/DashAttributeSet.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/DashAttributeSet.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BP_ChatGPT.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Collab09FPS.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Collab09FPS.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayAbilities.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayAbilities.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_Jump.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_Jump.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/GE_Movement.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Player/Level/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/BP_PlayerCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/Player/Level/PC_Level.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/PC_Level.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Data/DT_PlayerCharacterAttributes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Data/DT_PlayerCharacterAttributes.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Input/IMC_Level.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/IMC_Level.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/AttributeSets/AirActionAttributeSet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/GAS/AttributeSets/AirActionAttributeSet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Player/PlayerCharacterBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Player/PlayerCharacterBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/AirActionAttributeSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/AirActionAttributeSet.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/HealthAttributeSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AttributeSets/HealthAttributeSet.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterInput.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterInput.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterMovementAbilities.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterMovementAbilities.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerCharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Player/PlayerCharacterBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BB_ChatGPT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BB_ChatGPT.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/ChatGPTNew.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/ChatGPTTest.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/AIUtilities/Private/BaseNavLinkProxy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/AIUtilities/BaseNavLinkProxy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/AIUtilities/Public/BaseNavLinkProxy.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,21 +36,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Developer/ShaderCompilerCommon/Private/HlslAST.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Containers/ContainerAllocationPolicies.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/UObject/UnrealNames.inl" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/EngineTypes.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/TimerHandle.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/PhysicsEngine/BodyInstance.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/CharacterMovementComponent.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/PhysicsEngine/BodyInstance.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/PrimitiveComponentPhysics.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://F:/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/GameplayStatics.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/Collab09FPS/UHT/CharacterMovementAbilities.gen.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Private/Projectile/ProjectileBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" root0="FORCE_HIGHLIGHTING" />
@@ -105,7 +64,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;(C++)-CharacterBase&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;(C++)EnemyBase&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -571,6 +530,17 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="EpicGames.Perforce.Fixture/Dockerfile (1)" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="containerName" value="epicgames.perforce.fixture" />
+          <option name="contextFolderPath" value="Z:\Bonejam\Collab09-FPS" />
+          <option name="sourceFilePath" value="F:/Epic Games/UE_5.4/Engine/Source/Programs/Shared/EpicGames.Perforce.Fixture/Dockerfile" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <configuration name="EpicGames.Perforce.Fixture/Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
@@ -616,6 +586,8 @@
       <workItem from="1741392563640" duration="8269000" />
       <workItem from="1741426028562" duration="14800000" />
       <workItem from="1741443094667" duration="5324000" />
+      <workItem from="1741512798673" duration="2561000" />
+      <workItem from="1741515470572" duration="7276000" />
     </task>
     <servers />
   </component>

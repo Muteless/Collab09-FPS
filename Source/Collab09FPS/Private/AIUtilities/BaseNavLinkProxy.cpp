@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Collab09FPS/AIUtilities/Public/BaseNavLinkProxy.h"
-
+#include "../Public/AIUtilities/BaseNavLinkProxy.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Character/CharacterBase.h"
 
 
 // Sets default values
@@ -28,22 +28,24 @@ void ABaseNavLinkProxy::OnNavLinkReached(AActor* MovingActor, const FVector& Des
 	FVector e = DestinationPoint;
 	e.Z += 250;
 	
-	bool bSuccess = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(),LaunchVelocity, StartLocation, e);
+	bool bSuccess = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), LaunchVelocity, StartLocation, e);
 
 	if (bSuccess)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Launch Velocity: %s"), *LaunchVelocity.ToString());
-
+		
+		#pragma region ACharacter
 		ACharacter* Character = Cast<ACharacter>(MovingActor);
 		if (Character)
 		{
-			Character->LaunchCharacter(LaunchVelocity, false, false);
+			Character->LaunchCharacter(LaunchVelocity, true, true);
 			UE_LOG(LogTemp, Log, TEXT("MF DID JUMPING OR FALLING"));
 		}
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("Failed to cast MovingActor to ACharacter!"));
 		}
+		#pragma endregion
 	}
 	else
 	{

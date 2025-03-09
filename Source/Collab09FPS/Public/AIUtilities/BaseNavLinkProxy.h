@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	ABaseNavLinkProxy();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TEST")
+	float TossSpeed;
+
 protected:
 	UFUNCTION()
 	virtual void OnNavLinkReached(AActor* MovingActor, const FVector& DestinationPoint);
