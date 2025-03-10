@@ -12,11 +12,7 @@ ACharacterBase::ACharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-	AbilitySystemComponent->RegisterComponent();
-
-	// Character Movement Component
-	CharacterMovementComponent = GetCharacterMovement();
-
+	
 	// Wall capsule component
 	WallCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Wall Capsule Collision"));
 	WallCapsuleCollision->SetupAttachment(GetCapsuleComponent());
@@ -34,6 +30,8 @@ ACharacterBase::ACharacterBase()
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
 	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
 	DashAttributeSet = CreateDefaultSubobject<UDashAttributeSet>(TEXT("Dash Attribute Set"));
+	CMCAttributeSet = CreateDefaultSubobject<UCMCAttributeSet>(TEXT("CMC Attribute Set"));
+	InitCharacterMovementComponent();
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -42,10 +40,11 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+
 // Get character movement component
 UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
 {
-	return CharacterMovementComponent;
+	return GetCharacterMovement();
 }
 
 FVector ACharacterBase::GetMovementInput_Implementation()
@@ -53,12 +52,17 @@ FVector ACharacterBase::GetMovementInput_Implementation()
 	return GetLastMovementInputVector();
 }
 
+void ACharacterBase::CharacterMovementMove_Implementation(FVector MoveInput)
+{
+	AddMovementInput(GetActorRightVector(), MoveInput.X, false);
+	AddMovementInput(GetActorForwardVector(), MoveInput.Y, false);
+}
 
 // Called when character has been possessed
 void ACharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-
+	
 	// Initialize wall capsule collision
 	if (WallCapsuleCollision)
 	{
@@ -71,7 +75,7 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
+		
 		// Set initial character attribute sets
 		AddInitialCharacterAttributeSets();
 		
@@ -99,7 +103,35 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 		// Dash
 		AbilitySystemComponent->InitStats(UDashAttributeSet::StaticClass(),
 			CharacterAttributeDataTable);
+
+		// CMC
+		AbilitySystemComponent->InitStats(UCMCAttributeSet::StaticClass(),
+			CharacterMovementAttributeDataTable);
 	}
+}
+
+void ACharacterBase::InitCharacterMovementComponent() const
+{
+	GetCharacterMovement()->Mass = CMCAttributeSet->Mass.GetBaseValue();
+	GetCharacterMovement()->MaxWalkSpeed = CMCAttributeSet->MaxWalkSpeed.GetBaseValue();
+	GetCharacterMovement()->MaxAcceleration = CMCAttributeSet->MaxAcceleration.GetBaseValue();
+	GetCharacterMovement()->MaxWalkSpeedCrouched = CMCAttributeSet->MaxWalkSpeedCrouched.GetBaseValue();
+	GetCharacterMovement()->MinAnalogWalkSpeed = CMCAttributeSet->MinAnalogWalkSpeed.GetBaseValue();
+	GetCharacterMovement()->GroundFriction = CMCAttributeSet->GroundFriction.GetBaseValue();
+	GetCharacterMovement()->bUseSeparateBrakingFriction = CMCAttributeSet->bUseSeparateBrakingFactor.GetBaseValue();
+	GetCharacterMovement()->BrakingFrictionFactor = CMCAttributeSet->BrakingFrictionFactor.GetBaseValue();
+	GetCharacterMovement()->BrakingFriction = CMCAttributeSet->BrakingFriction.GetBaseValue();
+	GetCharacterMovement()->BrakingDecelerationWalking = CMCAttributeSet->BrakingDecelerationWalking.GetBaseValue();
+	GetCharacterMovement()->BrakingDecelerationFalling = CMCAttributeSet->BrakingDecelarationFalling.GetBaseValue();
+	GetCharacterMovement()->MaxStepHeight = CMCAttributeSet->MaxStepHeight.GetBaseValue();
+	GetCharacterMovement()->SetWalkableFloorAngle(CMCAttributeSet->WalkableFloorAngle.GetBaseValue());
+	GetCharacterMovement()->CrouchedHalfHeight = CMCAttributeSet->CrouchedHalfHeight.GetBaseValue();
+	GetCharacterMovement()->GravityScale = CMCAttributeSet->GravityScale.GetBaseValue();
+	GetCharacterMovement()->JumpZVelocity = CMCAttributeSet->JumpZVelocity.GetBaseValue();
+	GetCharacterMovement()->AirControl = CMCAttributeSet->AirControl.GetBaseValue();
+	GetCharacterMovement()->AirControlBoostMultiplier = CMCAttributeSet->AirControlBoostMultiplier.GetBaseValue();
+	GetCharacterMovement()->AirControlBoostVelocityThreshold = CMCAttributeSet->AirControlBoostVelocityThreshold.GetBaseValue();
+	GetCharacterMovement()->FallingLateralFriction = CMCAttributeSet->FallingLateralFriction.GetBaseValue();
 }
 
 // Add initial character abilities
@@ -140,9 +172,14 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor != this)
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	if (MovementComponent && MovementComponent->CanWallRun())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Wall Capsule Overlapped Actor: %s"), *OtherActor->GetName());
+		if (OtherActor && OtherActor != this)
+		{
+			BeginWallRun();
+		}
 	}
 }
 
@@ -153,9 +190,35 @@ void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp
 {
 	if (OtherActor && OtherActor != this)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Wall Capsule Ended Overlap with Actor: %s"), *OtherActor->GetName());
+		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+		
+		if (MovementComponent)
+		{
+			MovementComponent->EndWallRun(true);
+		}
 	}
+}
 
+void ACharacterBase::BeginWallRun()
+{
+	if (AbilitySystemComponent)
+	{
+		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>(GetCharacterMovement());
+		if (MovementComponent && MovementComponent->CanWallRun())
+		{
+			// Transition to wall running custom mode
+			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		}
+	}
+}
+
+void ACharacterBase::EndWallRun()
+{
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+	}
 }
 
 // Make the character ground jump
@@ -164,23 +227,40 @@ void ACharacterBase::CharacterMovementJump_Implementation()
 	Jump();
 }
 
+// Air jump
 void ACharacterBase::CharacterMovementAirJump_Implementation()
 {
 	// Reset Z Velocity
-	CharacterMovementComponent->Velocity.Z = 0.0f;
+	GetCharacterMovement()->Velocity.Z = 0.0f;
 	
 	// Add jump impulse
-	CharacterMovementComponent->AddImpulse(FVector(0.0f,
+	GetCharacterMovement()->AddImpulse(FVector(0.0f,
 		0.0f,
 		(GetCharacterMovement()->JumpZVelocity)),
 		true);
 }
 
+// Can start wall run
+void ACharacterBase::CharacterMovementCanStartWallRun_Implementation()
+{
+	ICharacterMovementAbilities::CharacterMovementCanStartWallRun_Implementation();
+}
+
+// End wall run
+void ACharacterBase::CharacterMovementEndWallRun_Implementation()
+{
+	ICharacterMovementAbilities::CharacterMovementEndWallRun_Implementation();
+}
+
 // On landed
 void ACharacterBase::Landed(const FHitResult& Hit)
 {
+	Execute_CharacterMovementLanded(this);
 	Super::Landed(Hit);
+}
 
+void ACharacterBase::CharacterMovementLanded_Implementation()
+{
 	if (AbilitySystemComponent)
 	{
 		for (TSubclassOf<UGameplayEffect> Effect : OnLandedEffects)
