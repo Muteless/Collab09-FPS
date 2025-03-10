@@ -10,7 +10,7 @@ public class Collab09FPS : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities", "GameplayTags", "GameplayTasks" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities", "GameplayTags", "GameplayTasks", "IKRig" });
 		
 		PrivateIncludePaths.AddRange(new string[] { "Collab09FPS/Private" });
 		PublicIncludePaths.AddRange(new string[] { "Collab09FPS/Public" });
