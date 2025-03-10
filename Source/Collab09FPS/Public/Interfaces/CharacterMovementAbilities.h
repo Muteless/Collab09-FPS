@@ -39,7 +39,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Movement")
-	void CharacterMovementCanStartWallRun();
+	void CharacterMovementWallRun();
 	
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,

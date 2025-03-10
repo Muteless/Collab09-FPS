@@ -166,61 +166,6 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 	}
 }
 
-void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep,
-	const FHitResult& SweepResult)
-{
-	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-	if (MovementComponent && MovementComponent->CanWallRun())
-	{
-		if (OtherActor && OtherActor != this)
-		{
-			BeginWallRun();
-		}
-	}
-}
-
-void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
-{
-	if (OtherActor && OtherActor != this)
-	{
-		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-		
-		if (MovementComponent)
-		{
-			MovementComponent->EndWallRun(true);
-		}
-	}
-}
-
-void ACharacterBase::BeginWallRun()
-{
-	if (AbilitySystemComponent)
-	{
-		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>(GetCharacterMovement());
-		if (MovementComponent && MovementComponent->CanWallRun())
-		{
-			// Transition to wall running custom mode
-			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-		}
-	}
-}
-
-void ACharacterBase::EndWallRun()
-{
-	if (GetCharacterMovement())
-	{
-		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-	}
-}
-
 // Make the character ground jump
 void ACharacterBase::CharacterMovementJump_Implementation()
 {
@@ -240,16 +185,61 @@ void ACharacterBase::CharacterMovementAirJump_Implementation()
 		true);
 }
 
-// Can start wall run
-void ACharacterBase::CharacterMovementCanStartWallRun_Implementation()
+
+void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult& SweepResult)
 {
-	ICharacterMovementAbilities::CharacterMovementCanStartWallRun_Implementation();
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	// Movement class is valid
+	if (MovementComponent)
+	{
+		// Other actor is valid and it is not this class
+		if (OtherActor && OtherActor != this)
+		{
+			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
+			{
+				// Create a gameplay event payload
+				FGameplayEventData EventData;
+				EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
+				
+				AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+			}
+		}
+	}
 }
 
-// End wall run
+void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		
+	}
+}
+
+void ACharacterBase::CharacterMovementWallRun_Implementation()
+{
+	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+}
+
 void ACharacterBase::CharacterMovementEndWallRun_Implementation()
 {
-	ICharacterMovementAbilities::CharacterMovementEndWallRun_Implementation();
+	UE_LOG(LogTemp, Warning, TEXT("WallRunEnd"))
+	if (AbilitySystemComponent)
+	{
+		// Create a gameplay event payload
+		FGameplayEventData EventData;
+		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRunEnd"));
+		
+		AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+	}
 }
 
 // On landed
