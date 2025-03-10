@@ -15,6 +15,7 @@
 #include "GAS/AttributeSets/HealthAttributeSet.h"
 #include "GAS/AttributeSets/AirActionAttributeSet.h"
 #include "GAS/AttributeSets/DashAttributeSet.h"
+#include "GAS/AttributeSets/CMCAttributeSet.h"
 
 // Gameplay tags
 #include "GameplayTagContainer.h"
@@ -87,30 +88,28 @@ public:
 		BlueprintReadOnly,
 		Category = "Collision")
 	float WallCapsuleDetectionOffsetRadius = 10.0f;
-	
-	// Required movement tags
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS|Tag Requirements|")
-	FGameplayTagContainer RequiredMovementTags;
-
-	// Required jump tags
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS|Tag Requirements|")
-	FGameplayTag RequiredJumpTag;
 
 	// Get  Character Movement Component
 	virtual UCharacterMovementComponent* ActorCharacterMovementComponent_Implementation() override;
 
 	UFUNCTION(Category = "Input")
 	virtual FVector GetMovementInput_Implementation() override;
-	
+
+	// Move
+	virtual void CharacterMovementMove_Implementation(FVector MoveInput) override;
+
 	// Jump
 	virtual void CharacterMovementJump_Implementation() override;
 
 	// Air Jump
 	virtual void CharacterMovementAirJump_Implementation() override;
+
+	// Wall running
+	virtual void CharacterMovementCanStartWallRun_Implementation() override;
+	virtual void CharacterMovementEndWallRun_Implementation() override;
+	
+	// Landed
+	virtual void CharacterMovementLanded_Implementation() override;
 
 	// Ground dash
 	virtual void CharacterMovementGroundDash_Implementation() override;
@@ -124,7 +123,7 @@ public:
 protected:
 	// Possessed by controller
 	virtual void PossessedBy(AController* NewController) override;
-
+	
 	UFUNCTION()
 	void BeginWallRun();
 
@@ -174,6 +173,14 @@ protected:
 	UPROPERTY()
 	UAirActionAttributeSet* AirActionAttributeSet;
 
+	//* CMC *//
+	// Character movement attribute set
+	//* Health *//
+	// Health attribute set
+	UPROPERTY()
+	UCMCAttributeSet* CMCAttributeSet;
+	
+	
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
 		Category = "Character|Actions|")
@@ -196,6 +203,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly,
 		Category = "GAS")
 	TObjectPtr<UDataTable> CharacterAttributeDataTable;
+
+	//* Data Tables *//
+	UPROPERTY(BlueprintReadOnly,
+		Category = "GAS")
+	TObjectPtr<UDataTable> CharacterMovementAttributeDataTable;
+
+	void InitCharacterMovementComponent() const;
 
 private:
 	GENERATED_BODY()

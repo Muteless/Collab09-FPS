@@ -64,13 +64,6 @@ protected:
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets() override;
 	
-	//* Movement *//
-	void MoveTriggered(FVector2d Input);
-	
-	UFUNCTION(BlueprintPure,
-		Category = "Player|Movement|")
-	bool CanMove() const;
-	
 	//* Camera *//
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadOnly,

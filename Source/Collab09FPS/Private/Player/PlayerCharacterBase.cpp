@@ -72,23 +72,30 @@ void APlayerCharacterBase::InputActionMove_Implementation(const EInputTypes Inpu
 	{
 		default: return;
 		case EInputTypes::Triggered:
-			MoveTriggered(Input);
-	}
-}
+			if (!AbilitySystemComponent)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("AbilitySystemComponent is null."));
+				return;
+			}
 
-// Movement
-void APlayerCharacterBase::MoveTriggered(const FVector2d Input)
-{
-	if (CanMove())
-	{
-		AddMovementInput(GetActorRightVector(), Input.X, false);
-		AddMovementInput(GetActorForwardVector(), Input.Y, false);
-	}
-}
+			// Create a gameplay event payload
+			FGameplayEventData EventData;
+			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Movement"));
 
-bool APlayerCharacterBase::CanMove() const
-{
-	return AbilitySystemComponent->HasAllMatchingGameplayTags(RequiredMovementTags);
+			// Create TargetData to hold FVector
+			FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
+	    
+			// Populate TargetData with a fake hit result for our input (hacky I know)
+			FHitResult HitResult;
+			HitResult.Location = FVector(Input.X, Input.Y, 0.0f); // Set the FVector here
+			TargetData->HitResult = HitResult;
+
+			// Add TargetData to the GameplayEventData
+			EventData.TargetData = FGameplayAbilityTargetDataHandle(TargetData);
+
+			// Trigger the event
+			AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+	}
 }
 
 // Camera
