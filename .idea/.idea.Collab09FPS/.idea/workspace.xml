@@ -14,15 +14,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BP_ChatGPT.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/TestTaskNode.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Collab09FPS/TestTaskNode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BB_ChatGPT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BB_ChatGPT.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/ChatGPTNew.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/ChatGPTTest.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BT_ChatGPT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BT_ChatGPT.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/AIUtilities/Private/BaseNavLinkProxy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/AIUtilities/BaseNavLinkProxy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/AIUtilities/Public/BaseNavLinkProxy.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,32 +54,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.AutomationTool.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;C++ Project.Collab09FPS.executor&quot;: &quot;Run&quot;,
-    &quot;C/C++ Project.Collab09FPS.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;(C++)EnemyBase&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;CppUnrealEngineOptionsId&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.AutomationTool.executor": "Run",
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "C++ Project.Collab09FPS.executor": "Run",
+    "C/C++ Project.Collab09FPS.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "(C++)EnemyBase",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "CppUnrealEngineOptionsId",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\G019382N\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\G019382N\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\G019382N\\AppData\\Local\\Symbols\\src"
+    ]
   }
-}</component>
-  <component name="RunManager" selected="C/C++ Project.Collab09FPS">
+}]]></component>
+  <component name="RunManager" selected="C++ Project.Collab09FPS">
     <configuration name="Collab09FPS" type="CppProject" factoryName="C++ Project">
-      <configuration_1 setup="1">
+      <configuration_1>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -87,11 +95,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_1>
-      <configuration_2 setup="1">
+      <configuration_2>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -99,11 +107,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_2>
-      <configuration_3 setup="1">
+      <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -111,11 +119,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_3>
-      <configuration_4 setup="1">
+      <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -123,11 +131,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_4>
-      <configuration_5 setup="1">
+      <configuration_5>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -135,11 +143,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_5>
-      <configuration_6 setup="1">
+      <configuration_6>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -147,11 +155,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_6>
-      <configuration_7 setup="1">
+      <configuration_7>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -159,11 +167,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_7>
-      <configuration_8 setup="1">
+      <configuration_8>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -171,11 +179,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_8>
-      <configuration_9 setup="1">
+      <configuration_9>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -183,11 +191,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_9>
-      <configuration_10 setup="1">
+      <configuration_10>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -195,11 +203,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_10>
-      <configuration_11 setup="1">
+      <configuration_11>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -207,11 +215,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_11>
-      <configuration_12 setup="1">
+      <configuration_12>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -219,11 +227,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_12>
-      <configuration_13 setup="1">
+      <configuration_13>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -231,11 +239,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_13>
-      <configuration_14 setup="1">
+      <configuration_14>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -243,11 +251,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_14>
-      <configuration_15 setup="1">
+      <configuration_15>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -255,11 +263,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_15>
-      <configuration_16 setup="1">
+      <configuration_16>
         <option name="CONFIGURATION" value="Development_Editor" />
         <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -267,19 +275,18 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       </configuration_16>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
-      <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/Collab09FPS.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="10010" />
       <method v="2">
         <option name="Build" />
       </method>
     </configuration>
     <configuration name="UE5" type="CppProject" factoryName="C++ Project">
-      <configuration_1 setup="1">
+      <configuration_1>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -287,11 +294,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_1>
-      <configuration_2 setup="1">
+      <configuration_2>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -299,11 +306,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_2>
-      <configuration_3 setup="1">
+      <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -311,11 +318,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_3>
-      <configuration_4 setup="1">
+      <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -323,11 +330,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_4>
-      <configuration_5 setup="1">
+      <configuration_5>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -335,11 +342,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_5>
-      <configuration_6 setup="1">
+      <configuration_6>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -347,11 +354,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_6>
-      <configuration_7 setup="1">
+      <configuration_7>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -359,11 +366,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_7>
-      <configuration_8 setup="1">
+      <configuration_8>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -371,11 +378,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_8>
-      <configuration_9 setup="1">
+      <configuration_9>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -383,11 +390,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_9>
-      <configuration_10 setup="1">
+      <configuration_10>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -395,11 +402,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_10>
-      <configuration_11 setup="1">
+      <configuration_11>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -407,11 +414,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_11>
-      <configuration_12 setup="1">
+      <configuration_12>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -419,11 +426,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_12>
-      <configuration_13 setup="1">
+      <configuration_13>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64-arm64ec" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -431,11 +438,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_13>
-      <configuration_14 setup="1">
+      <configuration_14>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64-arm64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -443,11 +450,11 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_14>
-      <configuration_15 setup="1">
+      <configuration_15>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
@@ -455,10 +462,8 @@
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       </configuration_15>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
-      <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/UE5.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="10000" />
       <method v="2">
         <option name="Build" />
@@ -588,6 +593,7 @@
       <workItem from="1741443094667" duration="5324000" />
       <workItem from="1741512798673" duration="2561000" />
       <workItem from="1741515470572" duration="7276000" />
+      <workItem from="1741611914655" duration="4648000" />
     </task>
     <servers />
   </component>
