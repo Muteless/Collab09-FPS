@@ -105,7 +105,7 @@ public:
 	virtual void CharacterMovementAirJump_Implementation() override;
 
 	// Wall running
-	virtual void CharacterMovementCanStartWallRun_Implementation() override;
+	virtual void CharacterMovementWallRun_Implementation() override;
 	virtual void CharacterMovementEndWallRun_Implementation() override;
 	
 	// Landed
@@ -124,13 +124,6 @@ protected:
 	// Possessed by controller
 	virtual void PossessedBy(AController* NewController) override;
 	
-	UFUNCTION()
-	void BeginWallRun();
-
-	UFUNCTION()
-	void EndWallRun();
-	
-	// Called when the character lands
 	virtual void Landed(const FHitResult& Hit) override;
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadOnly,

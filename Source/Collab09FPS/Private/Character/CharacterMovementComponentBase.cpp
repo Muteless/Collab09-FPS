@@ -15,6 +15,7 @@ UCharacterMovementComponentBase::UCharacterMovementComponentBase()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+
 // Called when the game starts
 void UCharacterMovementComponentBase::BeginPlay()
 {
@@ -43,6 +44,7 @@ void UCharacterMovementComponentBase::OnMovementModeChanged(EMovementMode PrevMo
 	{
 		EnteredFlyingMovementMode();
 	}
+	
 	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
 }
 
@@ -58,7 +60,8 @@ void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
 
 bool UCharacterMovementComponentBase::CanWallRun() const
 {
-	return IsFalling() && Velocity.Length() > MinSpeedForWallRun;
+	FHitResult WallHit;
+	return IsFalling() && Velocity.Length() > MinSpeedForWallRun && IsWallDetected(WallHit);
 }
 
 void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
@@ -66,6 +69,7 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	FHitResult WallHit;
 	if (!IsWallDetected(WallHit))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("IsWallDetected"))
 		EndWallRun(false);
 		return;
 	}
@@ -85,6 +89,7 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	
 	if (!InputDirectionWithinBounds())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("InputDirectionWithinBounds"))
 		EndWallRun(true);
 		return;
 	}
@@ -217,15 +222,22 @@ bool UCharacterMovementComponentBase::InputDirectionWithinBounds() const
 	return FVector::DotProduct(CurrentWallRunDirection, InputDirection) >= 0.5f;
 }
 
-void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
+void UCharacterMovementComponentBase::ExitWallRunImpulse()
 {
-	if (bPushOffWall)
-	{
-		FVector OutOfWallRunImpulseForce = FVector(CurrentWallNormal.X * EndWallRunOutImpulseStrength,
+	FVector PushOffWallImpulseForce = FVector(CurrentWallNormal.X * EndWallRunOutImpulseStrength,
 		CurrentWallNormal.Y * EndWallRunOutImpulseStrength,
 		EndWallRunUpImpulseStrength);
 	
-		AddImpulse(OutOfWallRunImpulseForce, true);
+	AddImpulse(PushOffWallImpulseForce, true);
+}
+
+void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
+{
+	SetMovementMode(MOVE_Falling);
+	
+	if (bPushOffWall)
+	{
+		ExitWallRunImpulse();
 	}
 	
 	// Reset wall-running variables
@@ -233,5 +245,8 @@ void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
 	CurrentWallRunDirection = FVector::ZeroVector;
 	
 	// Exit wall-running mode
-	SetMovementMode(MOVE_Falling);
+	if (CharacterOwner->Implements<UCharacterMovementAbilities>())
+	{
+		ICharacterMovementAbilities::Execute_CharacterMovementEndWallRun(CharacterOwner);
+	}
 }

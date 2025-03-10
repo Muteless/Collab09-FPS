@@ -19,7 +19,7 @@ class COLLAB09FPS_API UCharacterMovementComponentBase : public UCharacterMovemen
 public:
 	// Sets default values for this component's properties
 	UCharacterMovementComponentBase();
-
+	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 							   FActorComponentTickFunction* ThisTickFunction) override;
@@ -32,8 +32,9 @@ public:
 	virtual void EnteredFlyingMovementMode();
 	
 	// Wall running
-	void PerformWallRun(float DeltaTime);
 	bool IsWallDetected(FHitResult& WallHit) const;
+	void PerformWallRun(float DeltaTime);
+	void ExitWallRunImpulse();
 	FVector CurrentWallNormal;
 	
 	FVector GetWallRunDirection(const FHitResult& WallHit) const;
