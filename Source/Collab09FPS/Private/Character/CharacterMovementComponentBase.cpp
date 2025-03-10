@@ -4,6 +4,7 @@
 #include "Character/CharacterMovementComponentBase.h"
 
 #include "GameFramework/Character.h"
+#include "Interfaces/CharacterMovementAbilities.h"
 
 
 // Constructor
@@ -28,69 +29,209 @@ void UCharacterMovementComponentBase::TickComponent(float DeltaTime, ELevelTick 
 													FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
 
-	if (MovementMode == MOVE_Custom && CustomMovementMode == MOVE_WallRunning)
+void UCharacterMovementComponentBase::PhysFlying(float deltaTime, int32 Iterations)
+{
+	PerformWallRun(deltaTime);
+	Super::PhysFlying(deltaTime, Iterations);
+}
+
+void UCharacterMovementComponentBase::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	if (MovementMode == MOVE_Flying)
 	{
-		// Perform wall running
-		PerformWallRun(DeltaTime);
+		EnteredFlyingMovementMode();
+	}
+	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
+}
+
+void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
+{
+	// Entered wall running state
+	// Interface with character to tell them they "landed"
+	if (CharacterOwner->Implements<UCharacterMovementAbilities>())
+	{
+		ICharacterMovementAbilities::Execute_CharacterMovementLanded(CharacterOwner);
 	}
 }
 
 bool UCharacterMovementComponentBase::CanWallRun() const
 {
-	return IsFalling() && Velocity.Size() > MinimumWallRunEntrySpeed;
+	return IsFalling() && Velocity.Length() > MinSpeedForWallRun;
 }
 
 void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 {
 	FHitResult WallHit;
-	if (IsWallDetected(WallHit) && CharacterOwner)
+	if (!IsWallDetected(WallHit))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Wall detected!"));
-		// Get the direction in which the character should move along the wall
-		FVector WallRunDirection = GetWallRunDirection(WallHit);
-
-		// Adjust velocity to make the character run along the wall
-		Velocity = WallRunDirection * WallRunSpeed;
-
-		// Reduce gravity
-		GravityScale = WallRunGravityScale;
-
-		// Align character's rotation with the wall
-		CharacterOwner->SetActorRotation(FRotationMatrix::MakeFromX(WallRunDirection).Rotator());
+		EndWallRun(false);
+		return;
 	}
-	else
+	
+	// Get the direction in which the character should move along the wall
+	FVector WallRunDirection = GetWallRunDirection(WallHit);
+		
+	CurrentWallNormal = WallHit.Normal; // Set current wall normal
+	CurrentWallRunDirection = WallRunDirection; // Set current wall run direction
+	
+	// override velocity to follow the wall
+	Velocity = WallRunDirection * WallRunSpeed;
+	Velocity += WallRunGravity;
+
+	// Check if floor is detected (and within walkable distance)
+	FFindFloorResult FloorResult;
+	
+	if (!InputDirectionWithinBounds())
 	{
-		// Fall back to "falling" (no pun intended) if no wall is detected
-		SetMovementMode(MOVE_Falling);
+		EndWallRun(true);
+		return;
+	}
+
+	FindFloor(UpdatedComponent->GetComponentLocation(), FloorResult, false);
+	if (FloorResult.IsWalkableFloor())
+	{
+		EndWallRun(false);
+		return;
+	}
+	
+	// Rotate character to face wall direction
+	if (!AlignedToWallRunDirection())
+	{
+		FRotator DesiredRotation = FRotationMatrix::MakeFromX(WallRunDirection).Rotator();
+		FRotator CurrentRotation = CharacterOwner->GetActorRotation();
+		FRotator SmoothedRotation = FMath::RInterpTo(CurrentRotation,
+				DesiredRotation,
+				DeltaTime,
+				OntoWallRotationSpeed);
+				CharacterOwner->SetActorRotation(SmoothedRotation);
 	}
 }
 
 bool UCharacterMovementComponentBase::IsWallDetected(FHitResult& WallHit) const
 {
-	FVector Start = CharacterOwner->GetActorLocation();
-	FVector Forward = CharacterOwner->GetActorForwardVector();
-	FVector End = Start + Forward * WallDetectionRange;
+	// Set up detection variables
+	FVector UpperHitStart = CharacterOwner->GetActorLocation();
+	UpperHitStart.Z += WallDetectionCapsuleHeight + 10;
+	
+	FVector LowerHitStart = CharacterOwner->GetActorLocation();
+	LowerHitStart.Z -= WallDetectionCapsuleHeight + 10;
 
+	// Collision query parameters
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(CharacterOwner);
+	QueryParams.AddIgnoredActor(CharacterOwner); // Ignore the player character
+	
+	// Perform the capsule trace
+	bool bUpperHit = GetWorld()->SweepSingleByChannel(
+		WallHit,
+		UpperHitStart,
+		UpperHitStart,
+		FQuat::Identity,
+		ECC_Visibility,
+		FCollisionShape::MakeCapsule(WallDetectionCapsuleRadius,
+			WallDetectionCapsuleHeight),
+		QueryParams
+	);
 
-	// TODO: Capsule trace INSTEAD 
-	return GetWorld()->LineTraceSingleByChannel(WallHit, Start, End, ECC_Visibility, QueryParams);
+	// Perform the capsule trace
+	bool bLowerHit = GetWorld()->SweepSingleByChannel(
+		WallHit,
+		LowerHitStart,
+		LowerHitStart,
+		FQuat::Identity,
+		ECC_Visibility,
+		FCollisionShape::MakeCapsule(WallDetectionCapsuleRadius,
+			WallDetectionCapsuleHeight),
+		QueryParams
+	);
+
+	// Debug visualization for the capsule trace
+	DrawDebugCapsule(
+		GetWorld(),
+		UpperHitStart,
+		WallDetectionCapsuleHeight,
+		WallDetectionCapsuleRadius,
+		FQuat::Identity,
+		bUpperHit ? FColor::Blue : FColor::Orange,
+		false,
+		1.0f
+	);
+
+	// Debug visualization for the capsule trace
+	DrawDebugCapsule(
+		GetWorld(),
+		LowerHitStart,
+		WallDetectionCapsuleHeight,
+		WallDetectionCapsuleRadius,
+		FQuat::Identity,
+		bLowerHit ? FColor::Purple : FColor::Yellow,
+		false,
+		1.0f
+	);
+
+	if (bUpperHit && bLowerHit)
+	{
+		// Perform the capsule trace
+		bool bHit = GetWorld()->SweepSingleByChannel(
+			WallHit,
+			CharacterOwner->GetActorLocation(),
+			CharacterOwner->GetActorLocation(),
+			FQuat::Identity,
+			ECC_Visibility,
+			FCollisionShape::MakeCapsule(WallDetectionCapsuleRadius,
+				WallDetectionCapsuleHeight),
+			QueryParams
+		);
+		return bHit; // Return true if a wall was detected
+	}
+	return false;
 }
 
 FVector UCharacterMovementComponentBase::GetWallRunDirection(const FHitResult& WallHit) const
 {
 	// Calculate the wall-running direction based on the wall's normal and the player's movement direction
-	FVector WallNormal = WallHit.ImpactNormal;
+	FVector WallNormal = WallHit.Normal;
 	FVector Forward = CharacterOwner->GetActorForwardVector();
 
 	// Project forward vector onto the wall surface
 	FVector WallRunDirection = FVector::CrossProduct(WallNormal, FVector::UpVector);
 	if (FVector::DotProduct(WallRunDirection, Forward) < 0.0f)
 	{
-		WallRunDirection *= -1.0f; // Ensure running along the correct side
+		WallRunDirection *= -1.0f; // Ensure running along the correct direction
+	}
+	return WallRunDirection.GetSafeNormal();
+}
+
+bool UCharacterMovementComponentBase::AlignedToWallRunDirection() const
+{
+	return CharacterOwner->GetActorRotation() == FRotationMatrix::MakeFromX(CurrentWallRunDirection).Rotator();
+}
+
+bool UCharacterMovementComponentBase::InputDirectionWithinBounds() const
+{
+	FVector InputDirection = CharacterOwner->GetControlRotation().Vector();
+	InputDirection.Z = 0; // Ignore vertical component
+	InputDirection.Normalize();
+	
+	return FVector::DotProduct(CurrentWallRunDirection, InputDirection) >= 0.5f;
+}
+
+void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
+{
+	if (bPushOffWall)
+	{
+		FVector OutOfWallRunImpulseForce = FVector(CurrentWallNormal.X * EndWallRunOutImpulseStrength,
+		CurrentWallNormal.Y * EndWallRunOutImpulseStrength,
+		EndWallRunUpImpulseStrength);
+	
+		AddImpulse(OutOfWallRunImpulseForce, true);
 	}
 	
-	return WallRunDirection.GetSafeNormal();
+	// Reset wall-running variables
+	CurrentWallNormal = FVector::ZeroVector;
+	CurrentWallRunDirection = FVector::ZeroVector;
+	
+	// Exit wall-running mode
+	SetMovementMode(MOVE_Falling);
 }

@@ -6,26 +6,42 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CharacterMovementComponentBase.generated.h"
 
-
+/**
+ * @class UCharacterMovementComponentBase
+ * @brief A custom character movement component that extends functionality with features like wall-running and custom flying physics.
+ *
+ * This class derives from UCharacterMovementComponent and provides additional movement behavior such as wall-running and the ability
+ * to customize flying physics.
+ */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class COLLAB09FPS_API UCharacterMovementComponentBase : public UCharacterMovementComponent
 {
 public:
 	// Sets default values for this component's properties
 	UCharacterMovementComponentBase();
-	enum ECustomMovementMode : uint8
-	{
-		MOVE_WallRunning = 0
-	};
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 							   FActorComponentTickFunction* ThisTickFunction) override;
 
+	// Called every physics tick
+	virtual void PhysFlying(float deltaTime, int32 Iterations) override;
+
+	// respond to movement mode changes
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode) override;
+	virtual void EnteredFlyingMovementMode();
+	
+	// Wall running
 	void PerformWallRun(float DeltaTime);
 	bool IsWallDetected(FHitResult& WallHit) const;
+	FVector CurrentWallNormal;
 	
 	FVector GetWallRunDirection(const FHitResult& WallHit) const;
+	FVector CurrentWallRunDirection;
+	bool InputDirectionWithinBounds() const;
+	bool AlignedToWallRunDirection() const;
+	
+	void EndWallRun(const bool bPushOffWall);
 	
 	UFUNCTION(BlueprintPure,
 		Category = "WallRunning")
@@ -36,25 +52,54 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Wall-run settings
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "WallRunning")
-	float WallRunSpeed = 600.f;
 	
+	// Speed at which the character moves along the wall during a wall-run
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "WallRunning")
-	float MinimumWallRunEntrySpeed = 50.f;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "WallRunning")
-	float WallDetectionRange = 100.f;
+	float WallRunSpeed = 1100.f;
 
+	// Minimum speed required for the character to initiate a wall-run
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "WallRunning")
-	float WallRunGravityScale = 0.5f;
+	float MinSpeedForWallRun = 150.f;
+
+	// Radius of the capsule used to detect nearby walls for wall-running
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float WallDetectionCapsuleRadius = 54.0f;
+
+	// Half-height of the capsule used to detect nearby walls for wall-running
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float WallDetectionCapsuleHeight = 54.0f;
+
+	// Gravity scale applied to the character while wall-running
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	FVector WallRunGravity = FVector(0.0f, 0.0f, -60.0f);
+
+	// Strength of the impulse applied to the character outwards when transitioning off a wall-run
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float EndWallRunOutImpulseStrength = 900.0f;
+	
+	// Strength of the impulse applied to the character upwards when transitioning off a wall-run
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float EndWallRunUpImpulseStrength = 900.0f;
+
+	// Speed at which the character rotates to align with the wall during wall-run initiation
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float OntoWallRotationSpeed = 10.0f;
 
 private:
 	GENERATED_BODY()

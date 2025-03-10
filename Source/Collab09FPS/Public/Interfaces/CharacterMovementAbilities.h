@@ -23,19 +23,39 @@ class COLLAB09FPS_API ICharacterMovementAbilities
 public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
-		Category = "Component")
+		Category = "Components")
 	UCharacterMovementComponent* ActorCharacterMovementComponent();
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
-		Category = "Component")
+		Category = "Movement")
 	FVector GetMovementInput();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementMove(FVector MoveInput);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementCanStartWallRun();
+	
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementEndWallRun();
 	
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Movement")
 	void CharacterMovementJump();
 
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementLanded();
+	
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Movement")
