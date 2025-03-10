@@ -13,29 +13,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Config/DefaultGameplayTags.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_WallRun.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_AirDash.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_AirJump.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_GroundDash.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_Jump.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_Knockback.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_Movement.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/Motion/GA_WallRun.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayAbilities.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayAbilities.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayData.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/Tags/GameplayEvents.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/Tags/GameplayEvents.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_AirDash.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_AirDash.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_Movement.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_Movement.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementFire.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Elements/GE_ElementFire.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Movement/GE_AirActionsReset.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Movement/GE_AirActionsReset.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/Movement/GE_WallRun.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_AirDash.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_AirJump.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_GroundDash.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_Jump.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_Movement.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Abilities/GA_WallRun.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprint/GAS/Effects/GE_Heal.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprint/Player/Level/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/Player/Level/BP_PlayerCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Data/DT_PlayerCharacterAttributes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Data/DT_PlayerCharacterAttributes.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Map/_GENERATED/Personal/CubeGridToolOutput_58269B3B.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/_GENERATED/Personal/CubeGridToolOutput_58269B3B.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Map/MP_MapBase/6/6D/V56L36HBY7MWZ33IR0EFWS.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Map/MP_MapBase/A/AC/S45A32EQZGHIKK22F6DA0V.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterMovementComponentBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterMovementComponentBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/Interfaces/CharacterMovementAbilities.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/Interfaces/CharacterMovementAbilities.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterMovementComponentBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Character/CharacterMovementComponentBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterMovementAbilities.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Public/Interfaces/CharacterMovementAbilities.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +44,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
@@ -74,6 +72,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/PhysicsEngine/BodyInstance.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/PrimitiveComponentPhysics.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/PhysicsCore/Public/CollisionShape.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/Collab09FPS/UHT/CharacterMovementAbilities.gen.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Private/Projectile/ProjectileBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Public/Weapon/WeaponBase.h" root0="FORCE_HIGHLIGHTING" />
@@ -93,34 +92,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.AutomationTool.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;C++ Project.Collab09FPS.executor&quot;: &quot;Run&quot;,
-    &quot;C/C++ Project.Collab09FPS.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;CppUnrealEngineOptionsId&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.AutomationTool.executor": "Run",
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "C++ Project.Collab09FPS.executor": "Run",
+    "C/C++ Project.Collab09FPS.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "(C++)-NewDesignerGameplayEffects",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\r012783m\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\r012783m\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\r012783m\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\r012783m\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\r012783m\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\r012783m\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="C++ Project.Collab09FPS">
     <configuration name="Collab09FPS" type="CppProject" factoryName="C++ Project">
       <configuration_1>
