@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
@@ -132,7 +131,6 @@ void ACharacterBase::AddNativeCharacterAbilities()
 		{
 			if (Ability)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Ability"));
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
 			}
 		}
