@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "F:/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
-#include "F:/Epic Games/UE_5.4/Engine/Source/Runtime/AIModule/Classes/BehaviorTree/Tasks/BTTask_BlackboardBase.h"
+#include "CoreMinimal.h"
+#include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 #include "TestTaskNode.generated.h"
 
 /**
