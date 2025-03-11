@@ -24,14 +24,6 @@ ACharacterBase::ACharacterBase()
 	WallCapsuleCollision->ShapeColor = FColor::Blue;
 	WallCapsuleCollision->SetLineThickness(1);
 	WallCapsuleCollision->SetCapsuleSize(GetCapsuleComponent()->GetScaledCapsuleRadius() + WallCapsuleDetectionOffsetRadius, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
-	
-	
-	// Create attribute sets
-	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("Health Attribute Set"));
-	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("AirAction Attribute Set"));
-	DashAttributeSet = CreateDefaultSubobject<UDashAttributeSet>(TEXT("Dash Attribute Set"));
-	CMCAttributeSet = CreateDefaultSubobject<UCMCAttributeSet>(TEXT("CMC Attribute Set"));
-	InitCharacterMovementComponent();
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -80,6 +72,7 @@ void ACharacterBase::PossessedBy(AController* NewController)
 		AddInitialCharacterAttributeSets();
 		
 		// Add initial character abilities to ability system
+		AddNativeCharacterAbilities();
 		AddInitialCharacterAbilities();
 
 		// Add initial effects to ability system
@@ -93,45 +86,57 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 	{
 		// Initialize attribute sets
 		// Health
-		AbilitySystemComponent->InitStats(UHealthAttributeSet::StaticClass(),
-			CharacterAttributeDataTable);
+		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
 
 		// Air Actions
-		AbilitySystemComponent->InitStats(UAirActionAttributeSet::StaticClass(),
-			CharacterAttributeDataTable);
+		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
 
 		// Dash
-		AbilitySystemComponent->InitStats(UDashAttributeSet::StaticClass(),
-			CharacterAttributeDataTable);
-
+		AbilitySystemComponent->AddSet<UDashAttributeSet>();
+		
 		// CMC
-		AbilitySystemComponent->InitStats(UCMCAttributeSet::StaticClass(),
-			CharacterMovementAttributeDataTable);
+		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
 	}
 }
 
 void ACharacterBase::InitCharacterMovementComponent() const
 {
-	GetCharacterMovement()->Mass = CMCAttributeSet->Mass.GetBaseValue();
-	GetCharacterMovement()->MaxWalkSpeed = CMCAttributeSet->MaxWalkSpeed.GetBaseValue();
-	GetCharacterMovement()->MaxAcceleration = CMCAttributeSet->MaxAcceleration.GetBaseValue();
-	GetCharacterMovement()->MaxWalkSpeedCrouched = CMCAttributeSet->MaxWalkSpeedCrouched.GetBaseValue();
-	GetCharacterMovement()->MinAnalogWalkSpeed = CMCAttributeSet->MinAnalogWalkSpeed.GetBaseValue();
-	GetCharacterMovement()->GroundFriction = CMCAttributeSet->GroundFriction.GetBaseValue();
-	GetCharacterMovement()->bUseSeparateBrakingFriction = CMCAttributeSet->bUseSeparateBrakingFactor.GetBaseValue();
-	GetCharacterMovement()->BrakingFrictionFactor = CMCAttributeSet->BrakingFrictionFactor.GetBaseValue();
-	GetCharacterMovement()->BrakingFriction = CMCAttributeSet->BrakingFriction.GetBaseValue();
-	GetCharacterMovement()->BrakingDecelerationWalking = CMCAttributeSet->BrakingDecelerationWalking.GetBaseValue();
-	GetCharacterMovement()->BrakingDecelerationFalling = CMCAttributeSet->BrakingDecelarationFalling.GetBaseValue();
-	GetCharacterMovement()->MaxStepHeight = CMCAttributeSet->MaxStepHeight.GetBaseValue();
-	GetCharacterMovement()->SetWalkableFloorAngle(CMCAttributeSet->WalkableFloorAngle.GetBaseValue());
-	GetCharacterMovement()->CrouchedHalfHeight = CMCAttributeSet->CrouchedHalfHeight.GetBaseValue();
-	GetCharacterMovement()->GravityScale = CMCAttributeSet->GravityScale.GetBaseValue();
-	GetCharacterMovement()->JumpZVelocity = CMCAttributeSet->JumpZVelocity.GetBaseValue();
-	GetCharacterMovement()->AirControl = CMCAttributeSet->AirControl.GetBaseValue();
-	GetCharacterMovement()->AirControlBoostMultiplier = CMCAttributeSet->AirControlBoostMultiplier.GetBaseValue();
-	GetCharacterMovement()->AirControlBoostVelocityThreshold = CMCAttributeSet->AirControlBoostVelocityThreshold.GetBaseValue();
-	GetCharacterMovement()->FallingLateralFriction = CMCAttributeSet->FallingLateralFriction.GetBaseValue();
+	GetCharacterMovement()->Mass = CMCAttributeSet->Mass.GetCurrentValue();
+	GetCharacterMovement()->MaxWalkSpeed = CMCAttributeSet->MaxWalkSpeed.GetCurrentValue();
+	GetCharacterMovement()->MaxAcceleration = CMCAttributeSet->MaxAcceleration.GetCurrentValue();
+	GetCharacterMovement()->MaxWalkSpeedCrouched = CMCAttributeSet->MaxWalkSpeedCrouched.GetCurrentValue();
+	GetCharacterMovement()->MinAnalogWalkSpeed = CMCAttributeSet->MinAnalogWalkSpeed.GetCurrentValue();
+	GetCharacterMovement()->GroundFriction = CMCAttributeSet->GroundFriction.GetCurrentValue();
+	GetCharacterMovement()->bUseSeparateBrakingFriction = CMCAttributeSet->bUseSeparateBrakingFactor.GetCurrentValue();
+	GetCharacterMovement()->BrakingFrictionFactor = CMCAttributeSet->BrakingFrictionFactor.GetCurrentValue();
+	GetCharacterMovement()->BrakingFriction = CMCAttributeSet->BrakingFriction.GetCurrentValue();
+	GetCharacterMovement()->BrakingDecelerationWalking = CMCAttributeSet->BrakingDecelerationWalking.GetCurrentValue();
+	GetCharacterMovement()->BrakingDecelerationFalling = CMCAttributeSet->BrakingDecelarationFalling.GetCurrentValue();
+	GetCharacterMovement()->MaxStepHeight = CMCAttributeSet->MaxStepHeight.GetCurrentValue();
+	GetCharacterMovement()->SetWalkableFloorAngle(CMCAttributeSet->WalkableFloorAngle.GetCurrentValue());
+	GetCharacterMovement()->SetCrouchedHalfHeight(CMCAttributeSet->CrouchedHalfHeight.GetCurrentValue());
+	GetCharacterMovement()->GravityScale = CMCAttributeSet->GravityScale.GetCurrentValue();
+	GetCharacterMovement()->JumpZVelocity = CMCAttributeSet->JumpZVelocity.GetCurrentValue();
+	GetCharacterMovement()->AirControl = CMCAttributeSet->AirControl.GetCurrentValue();
+	GetCharacterMovement()->AirControlBoostMultiplier = CMCAttributeSet->AirControlBoostMultiplier.GetCurrentValue();
+	GetCharacterMovement()->AirControlBoostVelocityThreshold = CMCAttributeSet->AirControlBoostVelocityThreshold.GetCurrentValue();
+	GetCharacterMovement()->FallingLateralFriction = CMCAttributeSet->FallingLateralFriction.GetCurrentValue();
+}
+
+// Give native character abilities
+void ACharacterBase::AddNativeCharacterAbilities()
+{
+	if (NativeAbilities.Num() > 0)
+	{
+		for (TSubclassOf<UNativeGameplayAbility> Ability : NativeAbilities)
+		{
+			if (Ability)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Ability"));
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
+			}
+		}
+	}
 }
 
 // Add initial character abilities
@@ -157,11 +162,15 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 	{
 		for (TSubclassOf<UGameplayEffect> GameplayEffect : InitialGameplayEffects)
 		{
-			// Create an outgoing spec for the Gameplay Effect
-			FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
+			// Valid gameplay effect
+			if (GameplayEffect)
+			{
+				// Create an outgoing spec for the Gameplay Effect
+				FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
 			
-			// Apply the effect to the Ability System Component
-			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+				// Apply the effect to the Ability System Component
+				AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+			}
 		}
 	}
 }
@@ -198,7 +207,6 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	// Movement class is valid
 	if (MovementComponent)
 	{
-		// Other actor is valid and it is not this class
 		if (OtherActor && OtherActor != this)
 		{
 			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
@@ -206,7 +214,7 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 				// Create a gameplay event payload
 				FGameplayEventData EventData;
 				EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
-				
+
 				AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
 			}
 		}

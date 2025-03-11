@@ -43,30 +43,38 @@ public:
 	//*//
 	// Ground dash speed
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Dash | ",
-		ReplicatedUsing=OnRep_GroundDashSpeed)
+		Category="Attributes | Dash | ")
 	FGameplayAttributeData GroundDashSpeed;
-	UFUNCTION()
-	virtual void OnRep_GroundDashSpeed();
-
-	// Dash Speed Attribute Accessor
+	
+	// Ground Dash Speed Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UDashAttributeSet, GroundDashSpeed)
 
 	//*//
 	// Air dash speed
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Dash | ",
-		ReplicatedUsing=OnRep_AirDashSpeed)
+		Category="Attributes | Dash | ")
 	FGameplayAttributeData AirDashSpeed;
-	UFUNCTION()
-	virtual void OnRep_AirDashSpeed();
 
-	// Dash Speed Attribute Accessor
+	// Air Dash Speed Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UDashAttributeSet, AirDashSpeed)
 
-	//*//
-	// Get LifetimeReplicatedProps override
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	// Air dash cost
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Dash | ")
+	FGameplayAttributeData AirDashStaminaCost;
+
+	// Air Dash Stamina Cost Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UDashAttributeSet, AirDashStaminaCost)
+
+	// Ground dash cost
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Dash | ")
+	FGameplayAttributeData GroundDashStaminaCost;
+
+	// Ground Dash StaminaCost Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UDashAttributeSet, GroundDashStaminaCost)
+
+
 protected:
 	void virtual PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	

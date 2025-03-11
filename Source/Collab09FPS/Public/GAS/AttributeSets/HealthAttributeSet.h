@@ -34,11 +34,8 @@ public:
 	//*//
 	// Max Health Attribute
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Health | ",
-		ReplicatedUsing=OnRep_MaxHealth)
+		Category="Attributes | Health | ")
 	FGameplayAttributeData MaxHealth;
-	UFUNCTION()
-	virtual void OnRep_MaxHealth();
 	
 	// Max Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MaxHealth)
@@ -46,21 +43,14 @@ public:
 	//*//
 	// Current Health Attribute
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Health | ",
-		ReplicatedUsing=OnRep_CurrentHealth)
+		Category="Attributes | Health | ")
 	FGameplayAttributeData CurrentHealth;
-	UFUNCTION()
-	virtual void OnRep_CurrentHealth();
 
 	// Current Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentHealth)
 
-	//*//
-	// Get LifetimeReplicatedProps override
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 protected:
-	// Called before attribute changes
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	void virtual PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	
 private:
 	GENERATED_BODY()

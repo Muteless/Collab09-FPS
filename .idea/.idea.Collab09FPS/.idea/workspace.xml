@@ -14,17 +14,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68aceeb5-3028-4e2f-994a-f19e766f3df5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BP_DeepSeek.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/Test.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Collab09FPS.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Collab09FPS.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BP_ChatGPT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BP_ChatGPT.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BT_ChatGPT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/AI/EnemyAI/TestAI/BT_ChatGPT.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/Private/AIUtilities/BaseNavLinkProxy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/AIUtilities/BaseNavLinkProxy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/TestTaskNode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Collab09FPS/Private/AINodes/Tasks/TestTaskNode.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Collab09FPS/TestTaskNode.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,48 +27,6 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://F:/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/GameplayStatics.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Private/Projectile/ProjectileBase.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Public/GAS/AbilitySystemComponentBase.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Public/Weapon/WeaponBase.h" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 2
-}</component>
-  <component name="ProjectId" id="2ttKcCqZjdCSljl1KF5DQCREBqo" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.AutomationTool.executor": "Run",
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "C++ Project.Collab09FPS.executor": "Run",
-    "C/C++ Project.Collab09FPS.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "(C++)EnemyBase",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CppUnrealEngineOptionsId",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
   <component name="RunManager" selected="C/C++ Project.Collab09FPS">
     <configuration name="Collab09FPS" type="CppProject" factoryName="C++ Project">
       <configuration_1 setup="1">
@@ -597,9 +544,6 @@
       <workItem from="1741543909746" duration="38345000" />
       <workItem from="1741599595698" duration="6741000" />
       <workItem from="1741606480641" duration="13496000" />
-      <workItem from="1741623831574" duration="6202000" />
-      <workItem from="1741716654862" duration="96000" />
-      <workItem from="1741716842563" duration="2557000" />
     </task>
     <servers />
   </component>
