@@ -34,11 +34,8 @@ public:
 	//*//
 	// Max Stamina Attribute
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Health | ",
-		ReplicatedUsing=OnRep_MaxStamina)
+		Category="Attributes | Stamina | ")
 	FGameplayAttributeData MaxStamina;
-	UFUNCTION()
-	virtual void OnRep_MaxStamina();
 	
 	// Max Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, MaxStamina)
@@ -46,21 +43,25 @@ public:
 	//*//
 	// Current Stamina Attribute
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Health | ",
-		ReplicatedUsing=OnRep_CurrentStamina)
+		Category="Attributes | Stamina | ")
 	FGameplayAttributeData CurrentStamina;
-	UFUNCTION()
-	virtual void OnRep_CurrentStamina();
 	
 	// Max Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, CurrentStamina)
 
+	//*//
+	// Stamina Drain Rate Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Stamina | ")
+	FGameplayAttributeData StaminaReplenishRate;
+	
+	// Max Health Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, StaminaReplenishRate)
+
 protected:
 	// Called before attribute changes
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-
-	// Get LifetimeReplicatedProps override
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
 private:
 	GENERATED_BODY()
 };

@@ -10,6 +10,7 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
+#include "GAS/Abilities/Native/NativeGameplayAbility.h"
 
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
@@ -130,6 +131,12 @@ protected:
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> OnLandedEffects;
 
+	// Grants native abilities
+	void AddNativeCharacterAbilities();
+	// Abilities granted when the ability system is initialized
+	UPROPERTY(EditDefaultsOnly, meta = (AdvancedDisplay = "NativeAbilities"))
+	TArray<TSubclassOf<UNativeGameplayAbility>> NativeAbilities;
+	
 	// Grants initial abilities
 	void AddInitialCharacterAbilities();
 	// Abilities granted when the ability system is initialized
@@ -137,7 +144,7 @@ protected:
 		BlueprintReadOnly,
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
-
+	
 	// Grant initial gameplay effects
 	void AddInitialCharacterGameplayEffects();
 	// Initial gameplay effects
@@ -165,14 +172,6 @@ protected:
 	// AirAction attribute set
 	UPROPERTY()
 	UAirActionAttributeSet* AirActionAttributeSet;
-
-	//* CMC *//
-	// Character movement attribute set
-	//* Health *//
-	// Health attribute set
-	UPROPERTY()
-	UCMCAttributeSet* CMCAttributeSet;
-	
 	
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
@@ -188,19 +187,26 @@ protected:
 	// Dash attribute set
 	UPROPERTY()
 	UDashAttributeSet* DashAttributeSet;
+
+	//* CMC *//
+	// Character movement attribute set
+	//* Health *//
+	// Health attribute set
+	UPROPERTY()
+	UCMCAttributeSet* CMCAttributeSet;
 	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets();
 	
-	//* Data Tables *//
-	UPROPERTY(BlueprintReadOnly,
-		Category = "GAS")
-	TObjectPtr<UDataTable> CharacterAttributeDataTable;
-
-	//* Data Tables *//
-	UPROPERTY(BlueprintReadOnly,
-		Category = "GAS")
-	TObjectPtr<UDataTable> CharacterMovementAttributeDataTable;
+	// //* Data Tables *//
+	// UPROPERTY(BlueprintReadOnly,
+	// 	Category = "GAS")
+	// TObjectPtr<UDataTable> CharacterAttributeDataTable;
+	//
+	// //* Data Tables *//
+	// UPROPERTY(BlueprintReadOnly,
+	// 	Category = "GAS")
+	// TObjectPtr<UDataTable> CharacterMovementAttributeDataTable;
 
 	void InitCharacterMovementComponent() const;
 

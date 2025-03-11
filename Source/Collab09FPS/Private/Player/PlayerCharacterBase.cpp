@@ -55,12 +55,11 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()
 {
 	Super::AddInitialCharacterAttributeSets();
+	
 	if (AbilitySystemComponent)
 	{
-		// Initialize attribute sets
 		// Stamina
-		AbilitySystemComponent->InitStats(UStaminaAttributeSet::StaticClass(),
-			CharacterAttributeDataTable);
+		AbilitySystemComponent->AddSet<UStaminaAttributeSet>();
 	}
 }
 

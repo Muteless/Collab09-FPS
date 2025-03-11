@@ -21,10 +21,11 @@ GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 UCLASS()
 class COLLAB09FPS_API UCMCAttributeSet : public UAttributeSet
 {
+	
+public:
 	// Constructor
 	UCMCAttributeSet();
-
-public:
+	
 	//*// Base CMC
 	// Gravity Scale
 	UPROPERTY(BlueprintReadOnly,
