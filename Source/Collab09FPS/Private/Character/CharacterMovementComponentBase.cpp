@@ -61,7 +61,7 @@ void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
 bool UCharacterMovementComponentBase::CanWallRun() const
 {
 	FHitResult WallHit;
-	return IsFalling() && Velocity.Length() > MinSpeedForWallRun && IsWallDetected(WallHit);
+	return IsFalling() && Velocity.Length() > MinSpeedForWallRun;
 }
 
 void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
@@ -186,8 +186,16 @@ bool UCharacterMovementComponentBase::IsWallDetected(FHitResult& WallHit) const
 			ECC_Visibility,
 			FCollisionShape::MakeCapsule(WallDetectionCapsuleRadius,
 				WallDetectionCapsuleHeight),
-			QueryParams
-		);
+			QueryParams);
+			
+		UE_LOG(LogTemp, Warning, TEXT("WallDetectionCapsuleRadius: %f, WallDetectionCapsuleHeight: %f, UpperHitStart: %s, LowerHitStart: %s, bUpperHit: %s, bLowerHit: %s"), 
+			   WallDetectionCapsuleRadius, 
+			   WallDetectionCapsuleHeight, 
+			   *UpperHitStart.ToString(), 
+			   *LowerHitStart.ToString(), 
+			   bUpperHit ? TEXT("true") : TEXT("false"), 
+			   bLowerHit ? TEXT("true") : TEXT("false"));
+			   
 		return bHit; // Return true if a wall was detected
 	}
 	return false;

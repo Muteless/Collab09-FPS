@@ -1,0 +1,10 @@
+---,BaseValue,MinValue,MaxValue,DerivedAttributeInfo,bCanStack
+HealthAttributeSet.MaxHealth,300,0,300,,FALSE
+HealthAttributeSet.CurrentHealth,300,0,300,,FALSE
+StaminaAttributeSet.MaxStamina,100,0,100,,FALSE
+StaminaAttributeSet.CurrentStamina,100,0,100,,FALSE
+StaminaAttributeSet.StaminaDrainRate,0.2,0,0.2,,FALSE
+AirActionAttributeSet.MaxAirActions,2,0,2,,FALSE
+AirActionAttributeSet.CurrentAirActions,2,0,2,,FALSE
+DashAttributeSet.GroundDashSpeed,3000,0,3000,,FALSE
+DashAttributeSet.AirDashSpeed,4000,0,4000,,FALSE

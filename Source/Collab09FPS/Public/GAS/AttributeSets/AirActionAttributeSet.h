@@ -29,33 +29,21 @@ public:
 	//*//
 	// Max AirActions Attribute
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Actions | ",
-		ReplicatedUsing=OnRep_MaxAirActions)
+		Category="Attributes | Actions | ")
 	FGameplayAttributeData MaxAirActions;
-	UFUNCTION()
-	virtual void OnRep_MaxAirActions();
 	
 	// Max AirAction Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UAirActionAttributeSet, MaxAirActions)
 
 	// Current AirActions Attribute
 	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | Actions | ",
-		ReplicatedUsing=OnRep_CurrentAirActions)
+		Category="Attributes | Actions | ")
 	FGameplayAttributeData CurrentAirActions;
-	UFUNCTION()
-	virtual void OnRep_CurrentAirActions();
 	
 	// Current AirAction Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UAirActionAttributeSet, CurrentAirActions)
 
-	//*//
-	// Get LifetimeReplicatedProps override
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 protected:
-	// Called before attribute changes
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 private:
 	GENERATED_BODY()
 };
