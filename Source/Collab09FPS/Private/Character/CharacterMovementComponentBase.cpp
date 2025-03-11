@@ -75,14 +75,14 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	
 	// Get the direction in which the character should move along the wall
 	FVector WallRunDirection = GetWallRunDirection(WallHit);
-		
+	
 	CurrentWallNormal = WallHit.Normal; // Set current wall normal
 	CurrentWallRunDirection = WallRunDirection; // Set current wall run direction
 	
 	// override velocity to follow the wall
-	Velocity = WallRunDirection * WallRunSpeed;
+	Velocity = WallRunDirection * MaxCustomMovementSpeed;
 	Velocity += WallRunGravity;
-
+	
 	// Check if floor is detected (and within walkable distance)
 	FFindFloorResult FloorResult;
 	
@@ -216,7 +216,7 @@ bool UCharacterMovementComponentBase::InputDirectionWithinBounds() const
 	InputDirection.Z = 0; // Ignore vertical component
 	InputDirection.Normalize();
 	
-	return FVector::DotProduct(CurrentWallRunDirection, InputDirection) >= 0.5f;
+	return FVector::DotProduct(CurrentWallRunDirection, InputDirection) >= 0.4f;
 }
 
 void UCharacterMovementComponentBase::ExitWallRunImpulse()

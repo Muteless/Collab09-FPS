@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
@@ -31,7 +30,6 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
-
 
 // Get character movement component
 UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
@@ -132,7 +130,6 @@ void ACharacterBase::AddNativeCharacterAbilities()
 		{
 			if (Ability)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Ability"));
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
 			}
 		}
@@ -165,6 +162,7 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 			// Valid gameplay effect
 			if (GameplayEffect)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Adding initial gameplay effect: %s"), *GameplayEffect->GetName());
 				// Create an outgoing spec for the Gameplay Effect
 				FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
 			
