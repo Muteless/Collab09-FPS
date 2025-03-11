@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestTaskNode.h"
+#include "AINodes/Tasks/TestTaskNode.h"
 
 #include "AIController.h"
 #include "NavigationSystem.h"
