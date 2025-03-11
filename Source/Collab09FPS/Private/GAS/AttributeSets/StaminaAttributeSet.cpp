@@ -9,11 +9,10 @@ UStaminaAttributeSet::UStaminaAttributeSet()
 
 void UStaminaAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	// FGameplayAttribute Stamina = GetCurrentStaminaAttribute();
 	//Clamp current stamina value
 	if (Attribute == GetCurrentStaminaAttribute())
 	{
-		NewValue = FMath::Clamp<float>(NewValue, 0, GetCurrentStamina());
+		NewValue = FMath::Clamp<float>(NewValue, 0, GetMaxStamina());
 	}
 	
 	Super::PreAttributeChange(Attribute, NewValue);

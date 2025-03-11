@@ -1,7 +1,7 @@
 ---,1
 HealthAttributeSet.MaxHealth,100
-StaminaAttributeSet.MaxStamina,50
-StaminaAttributeSet.StaminaReplenishAmount,10
+StaminaAttributeSet.MaxStamina,100
+StaminaAttributeSet.StaminaReplenishAmount,2
 StaminaAttributeSet.StaminaReplenishRate,0.2
 AirActionAttributeSet.MaxAirActions,2
 DashAttributeSet.GroundDashSpeed,4000

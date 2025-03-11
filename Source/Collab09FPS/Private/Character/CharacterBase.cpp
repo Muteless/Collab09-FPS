@@ -31,7 +31,6 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-
 // Get character movement component
 UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
 {
@@ -163,6 +162,7 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 			// Valid gameplay effect
 			if (GameplayEffect)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Adding initial gameplay effect: %s"), *GameplayEffect->GetName());
 				// Create an outgoing spec for the Gameplay Effect
 				FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
 			
