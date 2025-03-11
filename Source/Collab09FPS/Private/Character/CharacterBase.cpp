@@ -221,6 +221,9 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	}
 }
 
+// MADE A CHANGE
+// LETS PULL REQUEST
+
 void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
 	UPrimitiveComponent* OtherComp,
