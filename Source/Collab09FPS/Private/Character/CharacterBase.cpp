@@ -209,8 +209,6 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	{
 		if (OtherActor && OtherActor != this)
 		{
-			bool canWall = MovementComponent->CanWallRun();
-			UE_LOG(LogTemp, Warning, TEXT("CanWallRun: %d"), canWall);
 			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
 			{
 				// Create a gameplay event payload
