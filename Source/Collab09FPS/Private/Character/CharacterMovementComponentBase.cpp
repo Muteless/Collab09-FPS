@@ -69,7 +69,6 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	FHitResult WallHit;
 	if (!IsWallDetected(WallHit))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("IsWallDetected"))
 		EndWallRun(false);
 		return;
 	}
@@ -89,7 +88,6 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	
 	if (!InputDirectionWithinBounds())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("InputDirectionWithinBounds"))
 		EndWallRun(true);
 		return;
 	}
@@ -187,15 +185,6 @@ bool UCharacterMovementComponentBase::IsWallDetected(FHitResult& WallHit) const
 			FCollisionShape::MakeCapsule(WallDetectionCapsuleRadius,
 				WallDetectionCapsuleHeight),
 			QueryParams);
-			
-		UE_LOG(LogTemp, Warning, TEXT("WallDetectionCapsuleRadius: %f, WallDetectionCapsuleHeight: %f, UpperHitStart: %s, LowerHitStart: %s, bUpperHit: %s, bLowerHit: %s"), 
-			   WallDetectionCapsuleRadius, 
-			   WallDetectionCapsuleHeight, 
-			   *UpperHitStart.ToString(), 
-			   *LowerHitStart.ToString(), 
-			   bUpperHit ? TEXT("true") : TEXT("false"), 
-			   bLowerHit ? TEXT("true") : TEXT("false"));
-			   
 		return bHit; // Return true if a wall was detected
 	}
 	return false;
