@@ -24,6 +24,11 @@
 class UCameraComponent;
 class USpringArmComponent;
 
+/**
+ * APlayerCharacterBase class represents the player-controlled character in the game.
+ * It inherits from ACharacterBase and implements ICharacterInput.
+ */
+
 UCLASS()
 class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase,
 public ICharacterInput

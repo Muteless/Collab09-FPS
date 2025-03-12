@@ -7,7 +7,12 @@
 #include "DamageMMC.generated.h"
 
 /**
- * 
+ * \class UDamageMMC
+ *
+ * \brief A class to calculate the magnitude of damage for gameplay effects.
+ *
+ * This class extends UGameplayModMagnitudeCalculation and provides implementation
+ * for calculating the base magnitude of damage for gameplay effects.
  */
 UCLASS()
 class COLLAB09FPS_API UDamageMMC : public UGameplayModMagnitudeCalculation

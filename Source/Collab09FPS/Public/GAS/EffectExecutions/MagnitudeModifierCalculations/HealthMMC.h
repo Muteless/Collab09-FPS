@@ -7,7 +7,7 @@
 #include "HealthMMC.generated.h"
 
 /**
- * 
+ * Class for calculating the magnitude of a gameplay effect related to health modification.
  */
 UCLASS()
 class COLLAB09FPS_API UHealthMMC : public UGameplayModMagnitudeCalculation
