@@ -7,13 +7,13 @@
 
 #include "EnhancedInput/Public/InputMappingContext.h"
 #include "EnhancedInput/Public/InputAction.h"
+#include "Interfaces/CharacterController.h"
 
 #include "PlayerControllerBase.generated.h"
 
 // Forward declaration of classes
 class UInputAction;
 class UInputMappingContext;
-
 
 /**
  * @class APlayerControllerBase
@@ -27,7 +27,9 @@ class UInputMappingContext;
  * gameplay logic and input.
  */
 UCLASS(Abstract)
-class COLLAB09FPS_API APlayerControllerBase : public APlayerController
+class COLLAB09FPS_API APlayerControllerBase :
+public APlayerController,
+public ICharacterController
 {
 public:
 	// Input Mapping Context
@@ -35,6 +37,8 @@ public:
 		BlueprintReadWrite,
 		Category = "Input")
 	TObjectPtr<UInputMappingContext> InputMappingContext;
+
+	virtual void Possessed_Implementation(const ACharacterBase* InCharacter) override;
 
 private:
 	GENERATED_BODY()

@@ -2,3 +2,8 @@
 
 
 #include "Player/HUDBase.h"
+
+void AHUDBase::CreateHUD_Implementation(const ACharacterBase* Character)
+{
+	
+}
