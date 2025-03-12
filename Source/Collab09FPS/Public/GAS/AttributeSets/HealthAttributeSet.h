@@ -53,14 +53,22 @@ public:
 	// Meta Damage Attribute
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | Health | ")
-	FGameplayAttributeData Damage;
-
+	FGameplayAttributeData MetaDamage;
+	
 	// Meta Damage Attribute Accessor
-	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, Damage)
+	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaDamage)
+
+	// Meta Heal Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Health | ")
+	FGameplayAttributeData MetaHeal;
+
+	// Meta Heal Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaHeal)
 
 protected:
-	void virtual PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	
+	void virtual PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	void virtual PostAttributeBaseChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) const override;
 private:
 	GENERATED_BODY()
 };

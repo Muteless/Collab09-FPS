@@ -60,7 +60,6 @@ void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
 
 bool UCharacterMovementComponentBase::CanWallRun() const
 {
-	FHitResult WallHit;
 	return IsFalling() && Velocity.Length() > MinSpeedForWallRun;
 }
 
