@@ -11,6 +11,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
 #include "GAS/Abilities/Native/NativeGameplayAbility.h"
+#include "GameplayEffectTypes.h"
 
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
@@ -107,6 +108,7 @@ public:
 
 	// Wall running
 	virtual void CharacterMovementWallRun_Implementation() override;
+	
 	virtual void CharacterMovementEndWallRun_Implementation() override;
 	
 	// Landed
