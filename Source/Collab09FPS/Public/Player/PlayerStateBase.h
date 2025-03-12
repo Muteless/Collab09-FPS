@@ -18,6 +18,7 @@
  * It is intended to be extended for specialized functionalities or behaviors
  * related to the player's state during gameplay.
  */
+
 UCLASS(Abstract)
 class COLLAB09FPS_API APlayerStateBase : public APlayerState
 {

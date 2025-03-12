@@ -16,7 +16,7 @@ GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 /**
- * 
+ * Class for defining an attribute set related to Character Movement Component (CMC).
  */
 UCLASS()
 class COLLAB09FPS_API UCMCAttributeSet : public UAttributeSet

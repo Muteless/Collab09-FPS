@@ -26,6 +26,7 @@ class UInputMappingContext;
  * The class is designed for extensibility and can be derived to implement custom
  * gameplay logic and input.
  */
+
 UCLASS(Abstract)
 class COLLAB09FPS_API APlayerControllerBase : public APlayerController
 {
