@@ -49,6 +49,15 @@ public:
 	// Current Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentHealth)
 
+	//*//
+	// Meta Damage Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Health | ")
+	FGameplayAttributeData Damage;
+
+	// Meta Damage Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, Damage)
+
 protected:
 	void virtual PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	
