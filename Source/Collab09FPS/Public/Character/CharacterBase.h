@@ -187,28 +187,9 @@ protected:
 	// Dash attribute set
 	UPROPERTY()
 	UDashAttributeSet* DashAttributeSet;
-
-	//* CMC *//
-	// Character movement attribute set
-	//* Health *//
-	// Health attribute set
-	UPROPERTY()
-	UCMCAttributeSet* CMCAttributeSet;
 	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets();
-	
-	// //* Data Tables *//
-	// UPROPERTY(BlueprintReadOnly,
-	// 	Category = "GAS")
-	// TObjectPtr<UDataTable> CharacterAttributeDataTable;
-	//
-	// //* Data Tables *//
-	// UPROPERTY(BlueprintReadOnly,
-	// 	Category = "GAS")
-	// TObjectPtr<UDataTable> CharacterMovementAttributeDataTable;
-
-	void InitCharacterMovementComponent() const;
 
 private:
 	GENERATED_BODY()

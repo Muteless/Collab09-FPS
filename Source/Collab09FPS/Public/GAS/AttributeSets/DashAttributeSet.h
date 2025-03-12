@@ -66,13 +66,29 @@ public:
 	// Air Dash Stamina Cost Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UDashAttributeSet, AirDashStaminaCost)
 
+	// Air dash cooldown
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Dash | ")
+	FGameplayAttributeData AirDashCooldown;
+
+	// Air dash cooldown Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UDashAttributeSet, AirDashCooldown)
+
 	// Ground dash cost
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | Dash | ")
 	FGameplayAttributeData GroundDashStaminaCost;
 
-	// Ground Dash StaminaCost Attribute Accessor
+	// Ground Dash stamina cost Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UDashAttributeSet, GroundDashStaminaCost)
+
+	// Ground dash cooldown
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Dash | ")
+	FGameplayAttributeData GroundDashCooldown;
+
+	// Ground dash cooldown Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UDashAttributeSet, GroundDashCooldown)
 
 
 protected:

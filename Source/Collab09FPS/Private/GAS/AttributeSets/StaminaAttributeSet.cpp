@@ -7,7 +7,7 @@ UStaminaAttributeSet::UStaminaAttributeSet()
 	
 }
 
-void UStaminaAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UStaminaAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
 	//Clamp current stamina value
 	if (Attribute == GetCurrentStaminaAttribute())
@@ -15,10 +15,5 @@ void UStaminaAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribut
 		NewValue = FMath::Clamp<float>(NewValue, 0, GetMaxStamina());
 	}
 	
-	Super::PreAttributeChange(Attribute, NewValue);
-}
-
-void UStaminaAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
-{
-	Super::PostGameplayEffectExecute(Data);
+	Super::PreAttributeBaseChange(Attribute, NewValue);
 }

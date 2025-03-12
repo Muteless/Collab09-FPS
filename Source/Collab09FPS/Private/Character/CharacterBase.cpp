@@ -91,34 +91,7 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 
 		// Dash
 		AbilitySystemComponent->AddSet<UDashAttributeSet>();
-		
-		// CMC
-		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
 	}
-}
-
-void ACharacterBase::InitCharacterMovementComponent() const
-{
-	GetCharacterMovement()->Mass = CMCAttributeSet->Mass.GetCurrentValue();
-	GetCharacterMovement()->MaxWalkSpeed = CMCAttributeSet->MaxWalkSpeed.GetCurrentValue();
-	GetCharacterMovement()->MaxAcceleration = CMCAttributeSet->MaxAcceleration.GetCurrentValue();
-	GetCharacterMovement()->MaxWalkSpeedCrouched = CMCAttributeSet->MaxWalkSpeedCrouched.GetCurrentValue();
-	GetCharacterMovement()->MinAnalogWalkSpeed = CMCAttributeSet->MinAnalogWalkSpeed.GetCurrentValue();
-	GetCharacterMovement()->GroundFriction = CMCAttributeSet->GroundFriction.GetCurrentValue();
-	GetCharacterMovement()->bUseSeparateBrakingFriction = CMCAttributeSet->bUseSeparateBrakingFactor.GetCurrentValue();
-	GetCharacterMovement()->BrakingFrictionFactor = CMCAttributeSet->BrakingFrictionFactor.GetCurrentValue();
-	GetCharacterMovement()->BrakingFriction = CMCAttributeSet->BrakingFriction.GetCurrentValue();
-	GetCharacterMovement()->BrakingDecelerationWalking = CMCAttributeSet->BrakingDecelerationWalking.GetCurrentValue();
-	GetCharacterMovement()->BrakingDecelerationFalling = CMCAttributeSet->BrakingDecelarationFalling.GetCurrentValue();
-	GetCharacterMovement()->MaxStepHeight = CMCAttributeSet->MaxStepHeight.GetCurrentValue();
-	GetCharacterMovement()->SetWalkableFloorAngle(CMCAttributeSet->WalkableFloorAngle.GetCurrentValue());
-	GetCharacterMovement()->SetCrouchedHalfHeight(CMCAttributeSet->CrouchedHalfHeight.GetCurrentValue());
-	GetCharacterMovement()->GravityScale = CMCAttributeSet->GravityScale.GetCurrentValue();
-	GetCharacterMovement()->JumpZVelocity = CMCAttributeSet->JumpZVelocity.GetCurrentValue();
-	GetCharacterMovement()->AirControl = CMCAttributeSet->AirControl.GetCurrentValue();
-	GetCharacterMovement()->AirControlBoostMultiplier = CMCAttributeSet->AirControlBoostMultiplier.GetCurrentValue();
-	GetCharacterMovement()->AirControlBoostVelocityThreshold = CMCAttributeSet->AirControlBoostVelocityThreshold.GetCurrentValue();
-	GetCharacterMovement()->FallingLateralFriction = CMCAttributeSet->FallingLateralFriction.GetCurrentValue();
 }
 
 // Give native character abilities

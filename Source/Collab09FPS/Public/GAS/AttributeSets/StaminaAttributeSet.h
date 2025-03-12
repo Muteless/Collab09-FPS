@@ -66,12 +66,19 @@ public:
 	
 	// Stamina Replenish Amount Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, StaminaReplenishAmount)
+	
+	//*//
+	// Stamina Replenish Inhibit Duration Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Stamina | ")
+	FGameplayAttributeData StaminaReplenishInhibitDuration;
+	
+	// Stamina Replenish Amount Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, StaminaReplenishInhibitDuration)
 
 protected:
 	// Called before attribute changes
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-
-	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 private:
 	GENERATED_BODY()
 };
