@@ -23,7 +23,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "HUD")
-	void Possessed(const ACharacterBase* Character);
+	void CharacterPossessed(ACharacterBase* Character);
 	
 protected:
 private:
