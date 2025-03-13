@@ -25,26 +25,15 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase,
-public ICharacterInput
+class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase
 {
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
 
-	// Input
-	UFUNCTION(Category = "Input")
-	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
-	
 	UFUNCTION(Category = "Input")
 	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
 
-	UFUNCTION(Category = "Input")
-	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
-	
 	//* Stamina *//
 	// Stamina attribute set
 	UPROPERTY()

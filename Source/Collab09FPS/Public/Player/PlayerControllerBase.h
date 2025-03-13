@@ -38,8 +38,6 @@ public:
 		Category = "Input")
 	TObjectPtr<UInputMappingContext> InputMappingContext;
 
-	virtual void Possessed_Implementation(const ACharacterBase* InCharacter) override;
-
 private:
 	GENERATED_BODY()
 };
