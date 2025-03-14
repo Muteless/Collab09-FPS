@@ -63,96 +63,6 @@ void APlayerCharacterBase::AddInitialCharacterAttributeSets()
 	}
 }
 
-void APlayerCharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
-{
-	ICharacterInput::InputActionMove_Implementation(InputType, Input);
-	
-	switch (InputType)
-	{
-		default: return;
-		case EInputTypes::Triggered:
-			if (!AbilitySystemComponent)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("AbilitySystemComponent is null."));
-				return;
-			}
-
-			// Create a gameplay event payload
-			FGameplayEventData EventData;
-			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Movement"));
-
-			// Create TargetData to hold FVector
-			FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
-	    
-			// Populate TargetData with a fake hit result for our input (hacky I know)
-			FHitResult HitResult;
-			HitResult.Location = FVector(Input.X, Input.Y, 0.0f); // Set the FVector here
-			TargetData->HitResult = HitResult;
-
-			// Add TargetData to the GameplayEventData
-			EventData.TargetData = FGameplayAbilityTargetDataHandle(TargetData);
-
-			// Trigger the event
-			AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
-	}
-}
-
-// Camera
-void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType, FVector2D Input)
-{
-	AddControllerYawInput(bInvertedYaw ? Input.X : -Input.X);
-	AddControllerPitchInput(bInvertedPitch ? Input.Y : -Input.Y);
-}
-
-void APlayerCharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
-{
-	switch (InputType)
-	{
-		default: return;
-	case EInputTypes::Started:
-		if (AbilitySystemComponent)
-		{
-			if (!GetCharacterMovement()->IsFalling())
-			{
-				// Ground jump
-				// Define optional event data
-				FGameplayEventData Payload;
-		
-				// Trigger jump ability event
-				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Jump")), &Payload);
-			}
-			else
-			{
-				// Air jump
-				// Define optional event data
-				FGameplayEventData Payload;
-
-				// Trigger air jump ability events
-				// Trigger jump ability event
-				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirJump")), &Payload);
-			}
-		}
-	}
-}
-
-void APlayerCharacterBase::InputActionDash_Implementation(const EInputTypes InputType, const bool Input)
-{
-	switch (InputType)
-	{
-		case EInputTypes::Started:
-			if (!GetCharacterMovement()->IsFalling())
-			{
-				// Ground dash
-				Execute_CharacterMovementGroundDash(this);
-			}
-			else
-			{
-				// Air dash
-				Execute_CharacterMovementAirDash(this);
-			}
-	}
-}
-
 // Tick
 void APlayerCharacterBase::Tick(float DeltaTime)
 {
@@ -160,6 +70,13 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 
 	// Update FOV based on speed
 	UpdateFOVBasedOnSpeed(DeltaTime);
+}
+
+// Camera
+void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType, FVector2D Input)
+{
+	AddControllerYawInput(bInvertedYaw ? Input.X : -Input.X);
+	AddControllerPitchInput(bInvertedPitch ? Input.Y : -Input.Y);
 }
 
 void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const

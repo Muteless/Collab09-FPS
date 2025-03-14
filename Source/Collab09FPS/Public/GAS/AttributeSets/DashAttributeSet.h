@@ -8,13 +8,6 @@
 
 #include "DashAttributeSet.generated.h"
 
-// Attribute accessors
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
-
 /**
  * @class UDashAttributeSet
  * @brief The UDashAtrributeSet class is a subclass of UAttributeSet, used to define and manage gameplay attributes
@@ -37,6 +30,13 @@ UCLASS()
 class COLLAB09FPS_API UDashAttributeSet : public UAttributeSet
 {
 public:
+	// Attribute accessors
+	#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
+	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
+	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
+	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
+	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+	
 	// Constructor
 	UDashAttributeSet();
 	

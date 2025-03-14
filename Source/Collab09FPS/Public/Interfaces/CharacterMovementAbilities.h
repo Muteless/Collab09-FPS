@@ -49,7 +49,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Movement")
-	void CharacterMovementJump();
+	void CharacterMovementJump(FVector ForceDirection, float Strength, bool bSetZVelocityToZero);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,

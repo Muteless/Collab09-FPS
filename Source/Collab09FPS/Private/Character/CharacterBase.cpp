@@ -37,6 +37,96 @@ UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Imp
 	return GetCharacterMovement();
 }
 
+
+void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
+{
+	switch (InputType)
+	{
+		default: return;
+		case EInputTypes::Triggered:
+			if (!AbilitySystemComponent)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("AbilitySystemComponent is null."));
+				return;
+			}
+
+			// Create a gameplay event payload
+			FGameplayEventData EventData;
+			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Movement"));
+
+			// Create TargetData to hold FVector
+			FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
+	    
+			// Populate TargetData with a fake hit result for our input (hacky I know)
+			FHitResult HitResult;
+			HitResult.Location = FVector(Input.X, Input.Y, 0.0f); // Set the FVector here
+			TargetData->HitResult = HitResult;
+
+			// Add TargetData to the GameplayEventData
+			EventData.TargetData = FGameplayAbilityTargetDataHandle(TargetData);
+
+			// Trigger the event
+			AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+	}
+}
+
+void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
+{
+	switch (InputType)
+	{
+		default: return;
+	case EInputTypes::Started:
+		if (AbilitySystemComponent)
+		{
+			if (!GetCharacterMovement()->IsFalling())
+			{
+				// Ground jump
+				// Define optional event data
+				FGameplayEventData Payload;
+			
+				// Trigger jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Jump")), &Payload);
+			}
+			else if (!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Ability.WallRun"))))
+			{
+				// Air jump
+				// Define optional event data
+				FGameplayEventData Payload;
+			
+				// Trigger air jump ability events
+				// Trigger jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirJump")), &Payload);
+			} else if (AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Ability.WallRun"))))
+			{
+				// Wall jump
+				// Define optional event data
+				FGameplayEventData Payload;
+				
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallJump")), &Payload);
+			}
+		}
+	}
+}
+
+void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType)
+	{
+		case EInputTypes::Started:
+			if (!GetCharacterMovement()->IsFalling())
+			{
+				// Ground dash
+				Execute_CharacterMovementGroundDash(this);
+			}
+			else
+			{
+				// Air dash
+				Execute_CharacterMovementAirDash(this);
+			}
+	}
+}
+
+
 FVector ACharacterBase::GetMovementInput_Implementation()
 {
 	return GetLastMovementInputVector();
@@ -82,15 +172,10 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 {
 	if (AbilitySystemComponent)
 	{
-		// Initialize attribute sets
-		// Health
 		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
-
-		// Air Actions
 		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
-
-		// Dash
 		AbilitySystemComponent->AddSet<UDashAttributeSet>();
+		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
 	}
 }
 
@@ -147,22 +232,20 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 }
 
 // Make the character ground jump
-void ACharacterBase::CharacterMovementJump_Implementation()
+void ACharacterBase::CharacterMovementJump_Implementation(FVector ForceDirection, float Strength, bool bSetZVelocityToZero)
 {
-	Jump();
+	if (bSetZVelocityToZero)
+	{
+		FVector CurrentVelocity = GetCharacterMovement()->Velocity;
+		GetCharacterMovement()->Velocity = FVector(CurrentVelocity.X, CurrentVelocity.Y, 0.0f);
+	}
+	GetCharacterMovement()->AddImpulse(ForceDirection * Strength, true);
 }
 
 // Air jump
 void ACharacterBase::CharacterMovementAirJump_Implementation()
 {
-	// Reset Z Velocity
-	GetCharacterMovement()->Velocity.Z = 0.0f;
 	
-	// Add jump impulse
-	GetCharacterMovement()->AddImpulse(FVector(0.0f,
-		0.0f,
-		(GetCharacterMovement()->JumpZVelocity)),
-		true);
 }
 
 

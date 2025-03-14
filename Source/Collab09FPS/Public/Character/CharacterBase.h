@@ -11,6 +11,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
 #include "GAS/Abilities/Native/NativeGameplayAbility.h"
+#include "GameplayEffectTypes.h"
 
 // Attribute sets
 #include "GAS/AttributeSets/HealthAttributeSet.h"
@@ -25,9 +26,12 @@
 #include "Engine/DataTable.h"
 #include "Components/CapsuleComponent.h"
 
+// Interfaces
+#include "Interfaces/CharacterMovementAbilities.h"
+#include "Interfaces/CharacterInput.h"
+
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
-#include "Interfaces/CharacterMovementAbilities.h"
 
 #include "CharacterBase.generated.h"
 
@@ -47,12 +51,23 @@
 
 UCLASS(Abstract)
 class COLLAB09FPS_API ACharacterBase : public ACharacter,
+public ICharacterInput,
 public IAbilitySystemInterface,
 public ICharacterMovementAbilities
 {
 public:
 	// Sets default values for this character's properties
 	ACharacterBase();
+
+	// Input
+	UFUNCTION(Category = "Input")
+	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
+	
+	UFUNCTION(Category = "Input")
+	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
+
+	UFUNCTION(Category = "Input")
+	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
 
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
@@ -100,13 +115,14 @@ public:
 	virtual void CharacterMovementMove_Implementation(FVector MoveInput) override;
 
 	// Jump
-	virtual void CharacterMovementJump_Implementation() override;
+	virtual void CharacterMovementJump_Implementation(FVector ForceDirection, float Strength, bool bSetZVelocityToZero) override;
 
 	// Air Jump
 	virtual void CharacterMovementAirJump_Implementation() override;
 
 	// Wall running
 	virtual void CharacterMovementWallRun_Implementation() override;
+	
 	virtual void CharacterMovementEndWallRun_Implementation() override;
 	
 	// Landed
@@ -120,6 +136,11 @@ public:
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
+	
+	//* CMC *//
+	// Character Movement attribute set
+	UPROPERTY()
+	UCMCAttributeSet* CMCAttributeSet;
 	
 protected:
 	// Possessed by controller
@@ -187,6 +208,8 @@ protected:
 	// Dash attribute set
 	UPROPERTY()
 	UDashAttributeSet* DashAttributeSet;
+
+	
 	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets();
