@@ -15,10 +15,14 @@ public:
 	// Sets default values for this actor's properties
 	ABaseNavLinkProxy();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TEST")
-	float TossSpeed;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Custom Link Settings")
+	float JumpModification;
+	UPROPERTY(EditInstanceOnly, Category = "Custom Link Settings")
+	float CustomArcSettings;
 
 protected:
+	UFUNCTION()
+	virtual void BeginPlay() override;
 	UFUNCTION()
 	virtual void OnNavLinkReached(AActor* MovingActor, const FVector& DestinationPoint);
 
