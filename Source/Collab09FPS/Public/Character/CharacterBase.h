@@ -105,7 +105,7 @@ public:
 		Category = "Collision")
 	float WallCapsuleDetectionOffsetRadius = 10.0f;
 
-	// Get  Character Movement Component
+	// Get Character Movement Component
 	virtual UCharacterMovementComponent* ActorCharacterMovementComponent_Implementation() override;
 
 	UFUNCTION(Category = "Input")
@@ -122,6 +122,8 @@ public:
 
 	// Wall running
 	virtual void CharacterMovementWallRun_Implementation() override;
+
+	virtual void CharacterMovementWallJump_Implementation(FVector Direction, float Strength) override;
 	
 	virtual void CharacterMovementEndWallRun_Implementation() override;
 	

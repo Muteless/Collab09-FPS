@@ -34,6 +34,7 @@ public:
 	// Wall running
 	bool IsWallDetected(FHitResult& WallHit) const;
 	void PerformWallRun(float DeltaTime);
+	bool bExitWallRun = false;
 	void ExitWallRunImpulse();
 	FVector CurrentWallNormal;
 	
@@ -64,7 +65,7 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "WallRunning")
-	float MinSpeedForWallRun = 150.f;
+	float MinSpeedForWallRun = 100.f;
 
 	// Radius of the capsule used to detect nearby walls for wall-running
 	UPROPERTY(EditAnywhere,

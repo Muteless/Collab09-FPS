@@ -10,8 +10,6 @@
 // Constructor
 UCharacterMovementComponentBase::UCharacterMovementComponentBase()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -65,6 +63,12 @@ bool UCharacterMovementComponentBase::CanWallRun() const
 
 void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 {
+	if (bExitWallRun)
+	{
+		EndWallRun(true);
+		return;
+	}
+	
 	FHitResult WallHit;
 	if (!IsWallDetected(WallHit))
 	{
@@ -81,16 +85,16 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	// override velocity to follow the wall
 	Velocity = WallRunDirection * MaxCustomMovementSpeed;
 	Velocity += WallRunGravity;
-	
-	// Check if floor is detected (and within walkable distance)
-	FFindFloorResult FloorResult;
-	
+
 	if (!InputDirectionWithinBounds())
 	{
 		EndWallRun(true);
 		return;
 	}
-
+	
+	// Check if floor is detected (and within walkable distance)
+	FFindFloorResult FloorResult;
+	
 	FindFloor(UpdatedComponent->GetComponentLocation(), FloorResult, false);
 	if (FloorResult.IsWalkableFloor())
 	{
@@ -245,4 +249,5 @@ void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
 	{
 		ICharacterMovementAbilities::Execute_CharacterMovementEndWallRun(CharacterOwner);
 	}
+	bExitWallRun = false;
 }
