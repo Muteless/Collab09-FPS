@@ -13,7 +13,6 @@
 #include "GameFramework/SpringArmComponent.h"
 
 // Weapon
-#include "Weapon/WeaponBase.h"
 
 // Attribute Sets
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
@@ -109,12 +108,6 @@ protected:
 		BlueprintReadOnly,
 		Category = "Camera")
 	USpringArmComponent* SpringArmComponent;
-
-	//* Weapon *//
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "Weapon | ")
-	TSubclassOf<AWeaponBase> Weapon;
 
 private:
 	GENERATED_BODY()
