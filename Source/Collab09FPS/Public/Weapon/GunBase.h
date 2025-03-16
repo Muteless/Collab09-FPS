@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
+#include "TimerManager.h"
+
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Projectile/BulletBase.h"
@@ -18,14 +20,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoConsumed);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartedReload);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToReloadFullMagazine);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToReload);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponMelee);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToMelee);
-
-
-UCLASS()
+UCLASS(Abstract)
 class COLLAB09FPS_API AGunBase : public AActor
 {
 public:
@@ -43,6 +42,9 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	bool HasAmmo() const;
+
+	UFUNCTION(BlueprintCallable)
+	void ConsumeAmmo(const int AmmoAmountToConsume);
 
 	UFUNCTION(BlueprintCallable)
 	void StartReload();
@@ -85,20 +87,26 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnWeaponFailedToReload WeaponFailedToReload;
 
+	// Called when weapon has failed to reload
+	UPROPERTY(BlueprintAssignable)
+	FOnWeaponFailedToReloadFullMagazine WeaponFailedToReloadFullMagazine;
+
 protected:
 	// Location object used when spawning the projectile
-	UPROPERTY(VisibleAnywhere,
-		meta=(DisplayName="Projectile Spawn Location"),
-		Category="Weapon|Firing|Projectile|")
+	UPROPERTY(VisibleAnywhere)
 	UArrowComponent* ProjectileSpawnLocation;
 
 	// Skeletal mesh used by the weapon
-	UPROPERTY(VisibleAnywhere,
-		meta=(DisplayName="Weapon Mesh"),
-		Category="Weapon|")
+	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* WeaponMesh;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float RateOfFire;
+	FTimerHandle RateOfFireTimerHandle;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
 	TArray<TSubclassOf<class ABulletBase>> ProjectileClasses;
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)

@@ -14,6 +14,12 @@ public:
 	// Sets default values for this actor's properties
 	ABulletBase();
 
+	// Amount of ammo consumed on shot
+	UPROPERTY(EditAnywhere)
+	float AmmoConsumedOnShot;
+	
+protected:
+	
 private:
 	GENERATED_BODY()
 };
