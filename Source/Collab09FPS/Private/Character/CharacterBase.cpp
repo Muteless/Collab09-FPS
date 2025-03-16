@@ -46,7 +46,6 @@ void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType,
 		case EInputTypes::Triggered:
 			if (!AbilitySystemComponent)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("AbilitySystemComponent is null."));
 				return;
 			}
 
@@ -70,6 +69,12 @@ void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType,
 	}
 }
 
+/** TODO: slightly hard coded implementation of wall jumping, air jumping and ground jumping.
+/ * Now, we as a team do not appear to want to change the types of jumps the player can do
+	(or this list would expand quite rapidly) so I have come to this solution
+	Grounded? Ground Jump
+	IsNotWallRunnning && IsNotGrounded? Air Jump
+	IsWallRunning? WallRun Jump*/
 void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
 {
 	switch (InputType)
@@ -78,30 +83,32 @@ void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool 
 	case EInputTypes::Started:
 		if (AbilitySystemComponent)
 		{
-			if (!GetCharacterMovement()->IsFalling())
+			if (!GetCharacterMovement()->IsFalling() &&
+				!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
 			{
 				// Ground jump
 				// Define optional event data
 				FGameplayEventData Payload;
-			
+				
 				// Trigger jump ability event
 				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Jump")), &Payload);
 			}
-			else if (!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Ability.WallRun"))))
+			else if (!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
 			{
 				// Air jump
 				// Define optional event data
 				FGameplayEventData Payload;
-			
-				// Trigger air jump ability events
-				// Trigger jump ability event
+				
+				// Trigger air jump ability event
 				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirJump")), &Payload);
-			} else if (AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Ability.WallRun"))))
+			}
+			if (AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
 			{
 				// Wall jump
 				// Define optional event data
 				FGameplayEventData Payload;
 				
+				// Trigger wall jump ability event
 				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallJump")), &Payload);
 			}
 		}
@@ -220,7 +227,6 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 			// Valid gameplay effect
 			if (GameplayEffect)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Adding initial gameplay effect: %s"), *GameplayEffect->GetName());
 				// Create an outgoing spec for the Gameplay Effect
 				FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
 			
@@ -248,7 +254,7 @@ void ACharacterBase::CharacterMovementAirJump_Implementation()
 	
 }
 
-
+// TODO: refactor this into an ability? it is disgusting to look at //dan
 void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
 	UPrimitiveComponent* OtherComp,
@@ -258,18 +264,26 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
 		(GetCharacterMovement());
 	
-	// Movement class is valid
+	// Movement component pointer is valid
 	if (MovementComponent)
 	{
 		if (OtherActor && OtherActor != this)
 		{
 			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
 			{
-				// Create a gameplay event payload
-				FGameplayEventData EventData;
-				EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
-
-				AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+				FHitResult HitResult;
+				if (MovementComponent->IsWallDetected(HitResult))
+				{
+					MovementComponent->CurrentWallRunDirection = MovementComponent->GetWallRunDirection(HitResult);
+					if (MovementComponent->InputDirectionWithinBounds())
+					{
+						// Create a gameplay event payload
+						FGameplayEventData EventData;
+						EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
+				
+						AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+					}
+				}
 			}
 		}
 	}
@@ -291,11 +305,20 @@ void ACharacterBase::CharacterMovementWallRun_Implementation()
 	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 }
 
+void ACharacterBase::CharacterMovementWallJump_Implementation(FVector Direction, float Strength)
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	MovementComponent->bExitWallRun = true;
+}
+
 void ACharacterBase::CharacterMovementEndWallRun_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("WallRunEnd"))
 	if (AbilitySystemComponent)
 	{
+		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+		
 		// Create a gameplay event payload
 		FGameplayEventData EventData;
 		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRunEnd"));
