@@ -63,6 +63,12 @@ bool UCharacterMovementComponentBase::CanWallRun() const
 
 void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 {
+	if (Velocity.Size() <= MinSpeedForWallRun)
+	{
+		EndWallRun(false);
+		return;
+	}
+	
 	if (bExitWallRun)
 	{
 		EndWallRun(true);
