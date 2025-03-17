@@ -25,6 +25,7 @@
 // Components
 #include "Engine/DataTable.h"
 #include "Components/CapsuleComponent.h"
+#include "Weapon/WeaponBase.h"
 
 // Interfaces
 #include "Interfaces/CharacterMovementAbilities.h"
@@ -122,9 +123,7 @@ public:
 
 	// Wall running
 	virtual void CharacterMovementWallRun_Implementation() override;
-
 	virtual void CharacterMovementWallJump_Implementation(FVector Direction, float Strength) override;
-	
 	virtual void CharacterMovementEndWallRun_Implementation() override;
 	
 	// Landed
@@ -153,6 +152,22 @@ protected:
 		BlueprintReadOnly,
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> OnLandedEffects;
+
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite)
+	USceneComponent* WeaponLocation;
+	
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	TSubclassOf<AWeaponBase> WeaponClass;
+	UPROPERTY(BlueprintReadWrite)
+	AWeaponBase* WeaponInstance;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	FName WeaponSocketName;
+	
+	UFUNCTION(BlueprintCallable)
+	void SpawnWeapon();
 
 	// Grants native abilities
 	void AddNativeCharacterAbilities();
@@ -205,13 +220,11 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Character|Actions|")
 	float GetMaxAirActions() const;
-
+	
 	//* Dash *//
 	// Dash attribute set
 	UPROPERTY()
 	UDashAttributeSet* DashAttributeSet;
-
-	
 	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets();

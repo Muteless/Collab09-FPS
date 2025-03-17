@@ -1,10 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
+
+#include "../../../../../../../AppData/Local/Temp/SandboxFiles/Conoreq/Gosemag.h"
+#include "../../../../../../../AppData/Local/Temp/SandboxFiles/Conoreq/Gosemag.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
-ACharacterBase::ACharacterBase()
+ACharacterBase::ACharacterBase() :
+WeaponSocketName("WeaponSocket")
 {
 	//* Ability System Component *//
 	// Create AbilitySystemComponent
@@ -23,6 +27,9 @@ ACharacterBase::ACharacterBase()
 	WallCapsuleCollision->ShapeColor = FColor::Blue;
 	WallCapsuleCollision->SetLineThickness(1);
 	WallCapsuleCollision->SetCapsuleSize(GetCapsuleComponent()->GetScaledCapsuleRadius() + WallCapsuleDetectionOffsetRadius, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+
+	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
+	WeaponLocation->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -183,6 +190,55 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
 		AbilitySystemComponent->AddSet<UDashAttributeSet>();
 		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
+	}
+}
+
+void ACharacterBase::SpawnWeapon()
+{
+	// Check to see if weapon class is valid
+	if (WeaponClass)
+	{
+		FTransform SpawnTransform;
+		
+		// Use weapon location as spawn location
+		if (WeaponLocation)
+		{
+			SpawnTransform = WeaponLocation->GetComponentTransform();
+		}
+		else
+		{
+			SpawnTransform = FTransform(FRotator::ZeroRotator, GetActorLocation());
+		}
+
+		// Spawn weapon
+		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
+
+		if (WeaponInstance)
+		{
+			// Set owner
+			WeaponInstance->SetOwner(this);
+			
+			// Attach the weapon to the weapon location OR socket if available
+			if (WeaponLocation)
+			{
+				WeaponInstance->AttachToComponent(WeaponLocation, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			}
+			else if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+			{
+				WeaponInstance->AttachToComponent(CharacterMesh,
+					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn weapon of class %s"),
+				*WeaponClass->GetName());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponClass is not set in %s"),
+			*GetName());
 	}
 }
 

@@ -9,30 +9,57 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Weapon/GunBase.h"
+#include "Weapon/MeleeBase.h"
 
 #include "WeaponBase.generated.h"
 
 UCLASS(Abstract)
-class COLLAB09FPS_API AWeaponBase : public AActor
+class COLLAB09FPS_API AWeaponBase : public AActor,
+public IWeaponInput
 {
 public:
 	// Sets default values for this actor's properties
 	AWeaponBase();
-
-	UFUNCTION()
-	void WeaponFire_Implementation();
-
-	UFUNCTION()
-	void WeaponReload_Implementation();
-
-protected:
-	UPROPERTY(EditDefaultsOnly,
+	
+	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
-	TArray<TSubclassOf<AGunBase>> GunClass;
+	TSubclassOf<AGunBase> GunWeaponClass;
+
+	UPROPERTY()
+	AGunBase* GunWeaponInstance;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
+	TSubclassOf<AMeleeBase> MeleeWeaponClass;
+
+	UPROPERTY()
+	AMeleeBase* MeleeWeaponInstance;
+
+	UFUNCTION(BlueprintCallable)
+	void Initialize();
+	
+	void WeaponFire_Implementation() override;
+	void WeaponReload_Implementation() override;
+	void WeaponReloadInterrupt_Implementation() override;
+	void WeaponSwitch_Implementation() override;
+	bool GetWeaponMode_Implementation();
+
+	void SetWeaponModeToGun();
+	void SetWeaponModeToMelee();
+	
+protected:
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
 	bool bGunMode;
+
+#pragma region Internal Attributes
+	UPROPERTY()
+	FName Name;
+
+	UPROPERTY()
+	USkeletalMeshComponent* Mesh;
+	
+#pragma endregion Internal Attributes
 	
 private:
 	GENERATED_BODY()
