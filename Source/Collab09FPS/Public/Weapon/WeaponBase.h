@@ -8,8 +8,8 @@
 #include "Interfaces/WeaponInput.h"
 
 #include "Components/SkeletalMeshComponent.h"
-#include "Weapon/GunBase.h"
-#include "Weapon/MeleeBase.h"
+#include "WeaponData/MeleeAssetData.h"
+#include "WeaponData/GunAssetData.h"
 
 #include "WeaponBase.generated.h"
 
@@ -20,44 +20,79 @@ public IWeaponInput
 public:
 	// Sets default values for this actor's properties
 	AWeaponBase();
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	TSubclassOf<AGunBase> GunWeaponClass;
-
-	UPROPERTY()
-	AGunBase* GunWeaponInstance;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	TSubclassOf<AMeleeBase> MeleeWeaponClass;
-
-	UPROPERTY()
-	AMeleeBase* MeleeWeaponInstance;
 
 	UFUNCTION(BlueprintCallable)
 	void Initialize();
-	
-	void WeaponFire_Implementation() override;
-	void WeaponReload_Implementation() override;
-	void WeaponReloadInterrupt_Implementation() override;
-	void WeaponSwitch_Implementation() override;
-	bool GetWeaponMode_Implementation();
 
+	virtual void WeaponFire_Implementation() override;
+	virtual void WeaponReload_Implementation() override;
+	virtual void WeaponReloadInterrupt_Implementation() override;
+	virtual void WeaponSwitch_Implementation() override;
+	virtual bool GetWeaponMode_Implementation() override;
+
+	void SetupGunVariables();
 	void SetWeaponModeToGun();
+
+	void SetupMeleeVariables();
 	void SetWeaponModeToMelee();
 	
 protected:
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	bool bGunMode;
-
-#pragma region Internal Attributes
 	UPROPERTY()
 	FName Name;
 
 	UPROPERTY()
 	USkeletalMeshComponent* Mesh;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UGunAssetData* GunAssetData;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UMeleeAssetData* MeleeAssetData;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	bool bGunMode;
+
+#pragma region Internal Attributes
+#pragma region Melee
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	TArray<UAnimMontage*> MeleeAnimations;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float MeleeDamage;
+	
+#pragma endregion Melee
+	
+#pragma region Gun
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UAnimMontage* GunReloadAnimation;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float GunDamage;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float RateOfFire;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float Range;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	int32 MagazineSize;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float ReloadTime;
+	
+#pragma endregion Gun
 	
 #pragma endregion Internal Attributes
 	
