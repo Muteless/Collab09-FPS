@@ -2,8 +2,6 @@
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 
-#include "../../../../../../../AppData/Local/Temp/SandboxFiles/Conoreq/Gosemag.h"
-#include "../../../../../../../AppData/Local/Temp/SandboxFiles/Conoreq/Gosemag.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
