@@ -5,7 +5,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
-ACharacterBase::ACharacterBase()
+ACharacterBase::ACharacterBase() :
+WeaponSocketName("WeaponSocket")
 {
 	//* Ability System Component *//
 	// Create AbilitySystemComponent
@@ -24,6 +25,9 @@ ACharacterBase::ACharacterBase()
 	WallCapsuleCollision->ShapeColor = FColor::Blue;
 	WallCapsuleCollision->SetLineThickness(1);
 	WallCapsuleCollision->SetCapsuleSize(GetCapsuleComponent()->GetScaledCapsuleRadius() + WallCapsuleDetectionOffsetRadius, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+
+	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
+	WeaponLocation->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -32,12 +36,108 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-
 // Get character movement component
 UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
 {
 	return GetCharacterMovement();
 }
+
+
+void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
+{
+	switch (InputType)
+	{
+		default: return;
+		case EInputTypes::Triggered:
+			if (!AbilitySystemComponent)
+			{
+				return;
+			}
+
+			// Create a gameplay event payload
+			FGameplayEventData EventData;
+			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Movement"));
+
+			// Create TargetData to hold FVector
+			FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
+	    
+			// Populate TargetData with a fake hit result for our input (hacky I know)
+			FHitResult HitResult;
+			HitResult.Location = FVector(Input.X, Input.Y, 0.0f); // Set the FVector here
+			TargetData->HitResult = HitResult;
+
+			// Add TargetData to the GameplayEventData
+			EventData.TargetData = FGameplayAbilityTargetDataHandle(TargetData);
+
+			// Trigger the event
+			AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+	}
+}
+
+/** TODO: slightly hard coded implementation of wall jumping, air jumping and ground jumping.
+/ * Now, we as a team do not appear to want to change the types of jumps the player can do
+	(or this list would expand quite rapidly) so I have come to this solution
+	Grounded? Ground Jump
+	IsNotWallRunnning && IsNotGrounded? Air Jump
+	IsWallRunning? WallRun Jump*/
+void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
+{
+	switch (InputType)
+	{
+		default: return;
+	case EInputTypes::Started:
+		if (AbilitySystemComponent)
+		{
+			if (!GetCharacterMovement()->IsFalling() &&
+				!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
+			{
+				// Ground jump
+				// Define optional event data
+				FGameplayEventData Payload;
+				
+				// Trigger jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Jump")), &Payload);
+			}
+			else if (!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
+			{
+				// Air jump
+				// Define optional event data
+				FGameplayEventData Payload;
+				
+				// Trigger air jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirJump")), &Payload);
+			}
+			if (AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
+			{
+				// Wall jump
+				// Define optional event data
+				FGameplayEventData Payload;
+				
+				// Trigger wall jump ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallJump")), &Payload);
+			}
+		}
+	}
+}
+
+void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType)
+	{
+		case EInputTypes::Started:
+			if (!GetCharacterMovement()->IsFalling())
+			{
+				// Ground dash
+				Execute_CharacterMovementGroundDash(this);
+			}
+			else
+			{
+				// Air dash
+				Execute_CharacterMovementAirDash(this);
+			}
+	}
+}
+
 
 FVector ACharacterBase::GetMovementInput_Implementation()
 {
@@ -84,43 +184,60 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 {
 	if (AbilitySystemComponent)
 	{
-		// Initialize attribute sets
-		// Health
 		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
-
-		// Air Actions
 		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
-
-		// Dash
 		AbilitySystemComponent->AddSet<UDashAttributeSet>();
-		
-		// CMC
 		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
 	}
 }
 
-void ACharacterBase::InitCharacterMovementComponent() const
+void ACharacterBase::SpawnWeapon()
 {
-	GetCharacterMovement()->Mass = CMCAttributeSet->Mass.GetCurrentValue();
-	GetCharacterMovement()->MaxWalkSpeed = CMCAttributeSet->MaxWalkSpeed.GetCurrentValue();
-	GetCharacterMovement()->MaxAcceleration = CMCAttributeSet->MaxAcceleration.GetCurrentValue();
-	GetCharacterMovement()->MaxWalkSpeedCrouched = CMCAttributeSet->MaxWalkSpeedCrouched.GetCurrentValue();
-	GetCharacterMovement()->MinAnalogWalkSpeed = CMCAttributeSet->MinAnalogWalkSpeed.GetCurrentValue();
-	GetCharacterMovement()->GroundFriction = CMCAttributeSet->GroundFriction.GetCurrentValue();
-	GetCharacterMovement()->bUseSeparateBrakingFriction = CMCAttributeSet->bUseSeparateBrakingFactor.GetCurrentValue();
-	GetCharacterMovement()->BrakingFrictionFactor = CMCAttributeSet->BrakingFrictionFactor.GetCurrentValue();
-	GetCharacterMovement()->BrakingFriction = CMCAttributeSet->BrakingFriction.GetCurrentValue();
-	GetCharacterMovement()->BrakingDecelerationWalking = CMCAttributeSet->BrakingDecelerationWalking.GetCurrentValue();
-	GetCharacterMovement()->BrakingDecelerationFalling = CMCAttributeSet->BrakingDecelarationFalling.GetCurrentValue();
-	GetCharacterMovement()->MaxStepHeight = CMCAttributeSet->MaxStepHeight.GetCurrentValue();
-	GetCharacterMovement()->SetWalkableFloorAngle(CMCAttributeSet->WalkableFloorAngle.GetCurrentValue());
-	GetCharacterMovement()->SetCrouchedHalfHeight(CMCAttributeSet->CrouchedHalfHeight.GetCurrentValue());
-	GetCharacterMovement()->GravityScale = CMCAttributeSet->GravityScale.GetCurrentValue();
-	GetCharacterMovement()->JumpZVelocity = CMCAttributeSet->JumpZVelocity.GetCurrentValue();
-	GetCharacterMovement()->AirControl = CMCAttributeSet->AirControl.GetCurrentValue();
-	GetCharacterMovement()->AirControlBoostMultiplier = CMCAttributeSet->AirControlBoostMultiplier.GetCurrentValue();
-	GetCharacterMovement()->AirControlBoostVelocityThreshold = CMCAttributeSet->AirControlBoostVelocityThreshold.GetCurrentValue();
-	GetCharacterMovement()->FallingLateralFriction = CMCAttributeSet->FallingLateralFriction.GetCurrentValue();
+	// Check to see if weapon class is valid
+	if (WeaponClass)
+	{
+		FTransform SpawnTransform;
+		
+		// Use weapon location as spawn location
+		if (WeaponLocation)
+		{
+			SpawnTransform = WeaponLocation->GetComponentTransform();
+		}
+		else
+		{
+			SpawnTransform = FTransform(FRotator::ZeroRotator, GetActorLocation());
+		}
+
+		// Spawn weapon
+		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
+
+		if (WeaponInstance)
+		{
+			// Set owner
+			WeaponInstance->SetOwner(this);
+			
+			// Attach the weapon to the weapon location OR socket if available
+			if (WeaponLocation)
+			{
+				WeaponInstance->AttachToComponent(WeaponLocation, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			}
+			else if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+			{
+				WeaponInstance->AttachToComponent(CharacterMesh,
+					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn weapon of class %s"),
+				*WeaponClass->GetName());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponClass is not set in %s"),
+			*GetName());
+	}
 }
 
 // Give native character abilities
@@ -132,7 +249,6 @@ void ACharacterBase::AddNativeCharacterAbilities()
 		{
 			if (Ability)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Ability"));
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
 			}
 		}
@@ -176,25 +292,23 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 }
 
 // Make the character ground jump
-void ACharacterBase::CharacterMovementJump_Implementation()
+void ACharacterBase::CharacterMovementJump_Implementation(FVector ForceDirection, float Strength, bool bSetZVelocityToZero)
 {
-	Jump();
+	if (bSetZVelocityToZero)
+	{
+		FVector CurrentVelocity = GetCharacterMovement()->Velocity;
+		GetCharacterMovement()->Velocity = FVector(CurrentVelocity.X, CurrentVelocity.Y, 0.0f);
+	}
+	GetCharacterMovement()->AddImpulse(ForceDirection * Strength, true);
 }
 
 // Air jump
 void ACharacterBase::CharacterMovementAirJump_Implementation()
 {
-	// Reset Z Velocity
-	GetCharacterMovement()->Velocity.Z = 0.0f;
 	
-	// Add jump impulse
-	GetCharacterMovement()->AddImpulse(FVector(0.0f,
-		0.0f,
-		(GetCharacterMovement()->JumpZVelocity)),
-		true);
 }
 
-
+// TODO: refactor this into an ability? it is disgusting to look at //dan
 void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
 	UPrimitiveComponent* OtherComp,
@@ -204,18 +318,26 @@ void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedCo
 	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
 		(GetCharacterMovement());
 	
-	// Movement class is valid
+	// Movement component pointer is valid
 	if (MovementComponent)
 	{
 		if (OtherActor && OtherActor != this)
 		{
 			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
 			{
-				// Create a gameplay event payload
-				FGameplayEventData EventData;
-				EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
-
-				AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+				FHitResult HitResult;
+				if (MovementComponent->IsWallDetected(HitResult))
+				{
+					MovementComponent->CurrentWallRunDirection = MovementComponent->GetWallRunDirection(HitResult);
+					if (MovementComponent->InputDirectionWithinBounds())
+					{
+						// Create a gameplay event payload
+						FGameplayEventData EventData;
+						EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
+				
+						AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+					}
+				}
 			}
 		}
 	}
@@ -237,11 +359,20 @@ void ACharacterBase::CharacterMovementWallRun_Implementation()
 	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 }
 
+void ACharacterBase::CharacterMovementWallJump_Implementation(FVector Direction, float Strength)
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	MovementComponent->bExitWallRun = true;
+}
+
 void ACharacterBase::CharacterMovementEndWallRun_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("WallRunEnd"))
 	if (AbilitySystemComponent)
 	{
+		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+		
 		// Create a gameplay event payload
 		FGameplayEventData EventData;
 		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRunEnd"));

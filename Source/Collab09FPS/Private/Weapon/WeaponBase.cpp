@@ -1,145 +1,125 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Collab09FPS/Public/Weapon/WeaponBase.h"
+#include "Weapon/WeaponBase.h"
 
 
 // Sets default values
-AWeaponBase::AWeaponBase()
+AWeaponBase::AWeaponBase():
+	GunWeaponInstance(nullptr),
+	MeleeWeaponInstance(nullptr),
+	bGunMode(false)
 {
-	// Default variables
-	RateOfFire = BaseRateOfFire;
-	ReloadSpeed = BaseReloadSpeed;
-	CurrentAmmoAmount = MaxAmmoAmount;
-	CurrentProjectileIndex = 0;
-	CurrentMeleeAbilityIndex = 0;
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	SetRootComponent(Mesh);
+}
 
-	// Create weapon SkeletalMeshComponent
-	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
+void AWeaponBase::Initialize()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = GetInstigator();
+
+	// Spawn the gun weapon at the root component's location
+	GunWeaponInstance = GetWorld()->SpawnActor<AGunBase>(GunWeaponClass,
+		GetActorTransform(),
+		SpawnParams);
+
+	// Spawn the melee weapon at the root component's location
+	MeleeWeaponInstance = GetWorld()->SpawnActor<AMeleeBase>(MeleeWeaponClass,
+		GetActorTransform(),
+		SpawnParams);
 	
-	// Create ProjectileSpawnLocation UArrowComponent
-	ProjectileSpawnLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("Projectile Spawn Location"));
-	ProjectileSpawnLocation->ArrowSize = 0.5;
-	ProjectileSpawnLocation->ArrowColor = FColor::FromHex("FFFF00FF");
-}
-
-// Returns if fire can be executed
-bool AWeaponBase::CanFire() const
-{
-	return !RateOfFireTimerHandle.IsValid() && CurrentAmmoAmount > 0;
-}
-
-// Fire weapon
-void AWeaponBase::Fire(const int AmmoConsumption, bool bIncrementCurrentIndex)
-{
-	// If weapon can Fire & projectile class is valid
-	if (CanFire() && ProjectileClasses[CurrentProjectileIndex] != nullptr)
+	if (GunWeaponClass)
 	{
-		// Setup spawn parameters
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = this;
-		SpawnParams.Instigator = GetInstigator();
-
-		// Get spawn location from ProjectileSpawnLocation
-		const FVector SpawnLocation = ProjectileSpawnLocation->GetComponentLocation();
-
-		//Get spawn rotation from ProjectileSpawnLocation
-		const FRotator SpawnRotation = ProjectileSpawnLocation->GetComponentRotation();
-
-		// Spawn projectile at ProjectileSpawn
-		GetWorld()->SpawnActor<AProjectileBase>(ProjectileClasses[CurrentProjectileIndex], SpawnLocation, SpawnRotation, SpawnParams);
-
-		// Start rate of fire timer
-		GetWorld()->GetTimerManager().SetTimer(RateOfFireTimerHandle, RateOfFire, false);
-
-		// Increment current index
-		if (bIncrementCurrentIndex)
+		// Gun weapon instance
+		if (GunWeaponInstance)
 		{
-			CurrentProjectileIndex++;
-			if (CurrentProjectileIndex >= ProjectileClasses.Num())
-			{
-				CurrentProjectileIndex = 0;
-			}
+			GunWeaponInstance->Initialize();
+			
+			// Attach gun instance to skeletal mesh
+			GunWeaponInstance->AttachToComponent(Mesh,
+				FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Warning, TEXT("GunWeapon instance spawned and attached"));
 		}
-		
-		// Consume ammo
-		ConsumeAmmo(AmmoConsumption);
-	}	else 
-	{
-		// weapon has failed to fire
-		WeaponFailedToFire.Broadcast();
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn GunWeaponClass at: %s"),
+				*GetOwner()->GetName());
+		}
 	}
-}
-
-// Can reload
-bool AWeaponBase::CanReload() const
-{
-	return CurrentAmmoAmount < MaxAmmoAmount;
-}
-
-// Reload weapon
-void AWeaponBase::Reload()
-{
-	if (CanReload())
+	
+	// Melee weapon instance
+	if (MeleeWeaponInstance)
 	{
-		// Bind timer handle when finished
-		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle,
-			this,
-			&AWeaponBase::ReloadComplete,
-			ReloadSpeed,
-			false);
-
-		// Broadcast that we have started to reload
-		WeaponStartedReload.Broadcast();
+		MeleeWeaponInstance->Initialize();
+			
+		MeleeWeaponInstance->AttachToComponent(Mesh,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		UE_LOG(LogTemp, Warning, TEXT("MeleeWeapon instance spawned and attached"));
 	}
 	else
 	{
-		WeaponFailedToReload.Broadcast();
+		UE_LOG(LogTemp, Error, TEXT("Failed to spawn GunWeaponClass at: %s"),
+			*GetOwner()->GetName());
 	}
-}
-
-void AWeaponBase::ReloadComplete()
-{
-	// Reset current ammo to max ammo
-	CurrentAmmoAmount = MaxAmmoAmount;
-	WeaponReloaded.Broadcast();
-}
-
-// Consumes ammo
-void AWeaponBase::ConsumeAmmo(const int AmmoConsumption)
-{
-	CurrentAmmoAmount -= AmmoConsumption;
-	WeaponAmmoConsumed.Broadcast();
-}
-
-// Melee attack
-TSubclassOf<UMeleeAbilityBase> AWeaponBase::Melee(const bool bIncrementCurrentIndex)
-{
-	if (CanMelee())
+	
+	if (bGunMode)
 	{
-		// Increment current index
-		if (bIncrementCurrentIndex)
-		{
-			CurrentMeleeAbilityIndex++;
-			if (CurrentMeleeAbilityIndex >= MeleeAbilityClasses.Num())
-			{
-				CurrentMeleeAbilityIndex = 0;
-			}
-		}
-		WeaponMelee.Broadcast();
-		return MeleeAbilityClasses[CurrentMeleeAbilityIndex];
+		SetWeaponModeToGun();
 	}
 	else
 	{
-		// Weapon has failed to melee
-		WeaponFailedToMelee.Broadcast();
+		SetWeaponModeToMelee();
 	}
-	
-	return nullptr;
 }
 
-bool AWeaponBase::CanMelee() const
+void AWeaponBase::WeaponFire_Implementation()
 {
-	// Melee classes can't be empty
-	return !MeleeAbilityClasses.IsEmpty();
+	
+}
+
+void AWeaponBase::WeaponReload_Implementation()
+{
+	
+}
+
+void AWeaponBase::WeaponReloadInterrupt_Implementation()
+{
+	
+}
+
+void AWeaponBase::WeaponSwitch_Implementation()
+{
+	bGunMode = !bGunMode;
+
+	if (bGunMode)
+	{
+		SetWeaponModeToGun();
+	}
+	else
+	{
+		SetWeaponModeToMelee();
+	}
+}
+
+bool AWeaponBase::GetWeaponMode_Implementation()
+{
+	return bGunMode;
+}
+
+void AWeaponBase::SetWeaponModeToGun()
+{
+	if (GunWeaponInstance)
+	{
+		Mesh->SetSkeletalMesh(GunWeaponInstance->GetWeaponMesh());
+	}
+}
+
+void AWeaponBase::SetWeaponModeToMelee()
+{
+	if (MeleeWeaponInstance)
+	{
+		Mesh->SetSkeletalMesh(MeleeWeaponInstance->GetWeaponMesh());
+	}
 }

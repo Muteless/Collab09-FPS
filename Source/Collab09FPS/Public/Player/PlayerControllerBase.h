@@ -7,13 +7,13 @@
 
 #include "EnhancedInput/Public/InputMappingContext.h"
 #include "EnhancedInput/Public/InputAction.h"
+#include "Interfaces/CharacterController.h"
 
 #include "PlayerControllerBase.generated.h"
 
 // Forward declaration of classes
 class UInputAction;
 class UInputMappingContext;
-
 
 /**
  * @class APlayerControllerBase
@@ -26,8 +26,11 @@ class UInputMappingContext;
  * The class is designed for extensibility and can be derived to implement custom
  * gameplay logic and input.
  */
+
 UCLASS(Abstract)
-class COLLAB09FPS_API APlayerControllerBase : public APlayerController
+class COLLAB09FPS_API APlayerControllerBase :
+public APlayerController,
+public ICharacterController
 {
 public:
 	// Input Mapping Context

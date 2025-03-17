@@ -40,6 +40,11 @@ public:
 		BlueprintCallable,
 		Category = "Movement")
 	void CharacterMovementWallRun();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementWallJump(FVector Direction, float Strength);
 	
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
@@ -49,7 +54,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Movement")
-	void CharacterMovementJump();
+	void CharacterMovementJump(FVector ForceDirection, float Strength, bool bSetZVelocityToZero);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,

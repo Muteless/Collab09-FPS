@@ -13,7 +13,6 @@
 #include "GameFramework/SpringArmComponent.h"
 
 // Weapon
-#include "Weapon/WeaponBase.h"
 
 // Attribute Sets
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
@@ -24,27 +23,21 @@
 class UCameraComponent;
 class USpringArmComponent;
 
+/**
+ * APlayerCharacterBase class represents the player-controlled character in the game.
+ * It inherits from ACharacterBase and implements ICharacterInput.
+ */
+
 UCLASS()
-class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase,
-public ICharacterInput
+class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase
 {
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
 
-	// Input
-	UFUNCTION(Category = "Input")
-	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
-	
 	UFUNCTION(Category = "Input")
 	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
 
-	UFUNCTION(Category = "Input")
-	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
-	
 	//* Stamina *//
 	// Stamina attribute set
 	UPROPERTY()
@@ -115,12 +108,6 @@ protected:
 		BlueprintReadOnly,
 		Category = "Camera")
 	USpringArmComponent* SpringArmComponent;
-
-	//* Weapon *//
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "Weapon | ")
-	TSubclassOf<AWeaponBase> Weapon;
 
 private:
 	GENERATED_BODY()

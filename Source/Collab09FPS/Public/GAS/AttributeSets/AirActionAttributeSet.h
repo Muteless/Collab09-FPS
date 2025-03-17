@@ -18,7 +18,7 @@ GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 /**
- * 
+ * Class for managing AirAction attributes of a character. Extends from UAttributeSet.
  */
 UCLASS()
 class COLLAB09FPS_API UAirActionAttributeSet : public UAttributeSet

@@ -10,8 +10,6 @@
 // Constructor
 UCharacterMovementComponentBase::UCharacterMovementComponentBase()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -60,12 +58,23 @@ void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
 
 bool UCharacterMovementComponentBase::CanWallRun() const
 {
-	FHitResult WallHit;
 	return IsFalling() && Velocity.Length() > MinSpeedForWallRun;
 }
 
 void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 {
+	if (Velocity.Size() <= MinSpeedForWallRun)
+	{
+		EndWallRun(false);
+		return;
+	}
+	
+	if (bExitWallRun)
+	{
+		EndWallRun(true);
+		return;
+	}
+	
 	FHitResult WallHit;
 	if (!IsWallDetected(WallHit))
 	{
@@ -75,23 +84,23 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	
 	// Get the direction in which the character should move along the wall
 	FVector WallRunDirection = GetWallRunDirection(WallHit);
-		
+	
 	CurrentWallNormal = WallHit.Normal; // Set current wall normal
 	CurrentWallRunDirection = WallRunDirection; // Set current wall run direction
 	
 	// override velocity to follow the wall
-	Velocity = WallRunDirection * WallRunSpeed;
+	Velocity = WallRunDirection * MaxCustomMovementSpeed;
 	Velocity += WallRunGravity;
 
-	// Check if floor is detected (and within walkable distance)
-	FFindFloorResult FloorResult;
-	
 	if (!InputDirectionWithinBounds())
 	{
 		EndWallRun(true);
 		return;
 	}
-
+	
+	// Check if floor is detected (and within walkable distance)
+	FFindFloorResult FloorResult;
+	
 	FindFloor(UpdatedComponent->GetComponentLocation(), FloorResult, false);
 	if (FloorResult.IsWalkableFloor())
 	{
@@ -216,7 +225,7 @@ bool UCharacterMovementComponentBase::InputDirectionWithinBounds() const
 	InputDirection.Z = 0; // Ignore vertical component
 	InputDirection.Normalize();
 	
-	return FVector::DotProduct(CurrentWallRunDirection, InputDirection) >= 0.5f;
+	return FVector::DotProduct(CurrentWallRunDirection, InputDirection) >= 0.4f;
 }
 
 void UCharacterMovementComponentBase::ExitWallRunImpulse()
@@ -246,4 +255,5 @@ void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
 	{
 		ICharacterMovementAbilities::Execute_CharacterMovementEndWallRun(CharacterOwner);
 	}
+	bExitWallRun = false;
 }

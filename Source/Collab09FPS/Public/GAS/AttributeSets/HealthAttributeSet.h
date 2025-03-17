@@ -9,11 +9,7 @@
 #include "HealthAttributeSet.generated.h"
 
 // Attribute accessors
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
 
 /**
  * @class UHealthAttributeSet
@@ -28,6 +24,12 @@ UCLASS()
 class COLLAB09FPS_API UHealthAttributeSet : public UAttributeSet
 {
 public:
+	#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
+	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
+	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
+	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
+	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+	
 	// Constructor
 	UHealthAttributeSet();
 	
@@ -49,9 +51,26 @@ public:
 	// Current Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentHealth)
 
-protected:
-	void virtual PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	//*//
+	// Meta Damage Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Health | ")
+	FGameplayAttributeData MetaDamage;
 	
+	// Meta Damage Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaDamage)
+
+	// Meta Heal Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Health | ")
+	FGameplayAttributeData MetaHeal;
+
+	// Meta Heal Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaHeal)
+
+protected:
+	void virtual PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	void virtual PostAttributeBaseChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) const override;
 private:
 	GENERATED_BODY()
 };

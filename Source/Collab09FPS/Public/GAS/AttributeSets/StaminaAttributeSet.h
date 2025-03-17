@@ -37,7 +37,7 @@ public:
 		Category="Attributes | Stamina | ")
 	FGameplayAttributeData MaxStamina;
 	
-	// Max Health Attribute Accessor
+	// Max Stamina Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, MaxStamina)
 
 	//*//
@@ -46,22 +46,39 @@ public:
 		Category="Attributes | Stamina | ")
 	FGameplayAttributeData CurrentStamina;
 	
-	// Max Health Attribute Accessor
+	// Current Stamina Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, CurrentStamina)
 
 	//*//
-	// Stamina Drain Rate Attribute
+	// Stamina Replenish Rate Attribute
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | Stamina | ")
 	FGameplayAttributeData StaminaReplenishRate;
 	
-	// Max Health Attribute Accessor
+	// Stamina Replenish Rate Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, StaminaReplenishRate)
+
+	//*//
+	// Stamina Replenish Amount Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Stamina | ")
+	FGameplayAttributeData StaminaReplenishAmount;
+	
+	// Stamina Replenish Amount Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, StaminaReplenishAmount)
+	
+	//*//
+	// Stamina Replenish Inhibit Duration Attribute
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Stamina | ")
+	FGameplayAttributeData StaminaReplenishInhibitDuration;
+	
+	// Stamina Replenish Amount Attribute Accessor
+	ATTRIBUTE_ACCESSORS(UStaminaAttributeSet, StaminaReplenishInhibitDuration)
 
 protected:
 	// Called before attribute changes
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 private:
 	GENERATED_BODY()
 };
