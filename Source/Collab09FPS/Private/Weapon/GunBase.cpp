@@ -7,23 +7,56 @@
 
 
 // Sets default values
-AGunBase::AGunBase():
-	ProjectileSpawnLocation(nullptr),
-	WeaponMesh(nullptr),
-	RateOfFire(1),
-	CurrentProjectileIndex(0),
-	MagazineSize(0),
-	CurrentAmmo(0),
-	bIsReloading(false)
+AGunBase::AGunBase()
 {
+	ProjectileSpawnLocation = nullptr;
+	WeaponMesh = nullptr;
+	CurrentProjectileIndex = 0;
+	CurrentAmmo = 0;
+	MagazineSize = 0;
+	RateOfFire = 1;
+	bIsReloading = false;
+	
+	if (GunAssetData)
+	{
+		Name = GunAssetData->Name;
+		Projectile = GunAssetData->Projectile;
+		Damage = GunAssetData->Damage;
+		RateOfFire = GunAssetData->RateOfFire;
+		Range = GunAssetData->Range;
+		MagazineSize = GunAssetData->MagazineSize;
+		ReloadTime = GunAssetData->ReloadTime;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GunAssetData not set for: %s"), *GetName());
+	}
+	
+	Root = CreateDefaultSubobject<USceneComponent>("Root");
+	SetRootComponent(Root);
+	
+	// Gun mesh
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
+	WeaponMesh->AttachToComponent(Root, FAttachmentTransformRules::KeepRelativeTransform);
+	
+	// Projectile spawn location
 	ProjectileSpawnLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnLocation"));
 	ProjectileSpawnLocation->SetupAttachment(WeaponMesh);
 }
 
+void AGunBase::Initialize()
+{
+	SetMeshVisibility(false);
+}
+
+USkeletalMesh* AGunBase::GetWeaponMesh()
+{
+	return WeaponMesh->GetSkeletalMeshAsset();
+}
+
 void AGunBase::Fire(bool bIncrementCurrentIndex)
 {
-	if (CanFire() && ProjectileClasses[CurrentProjectileIndex] != nullptr)
+	if (CanFire() && Projectiles[CurrentProjectileIndex] != nullptr)
 	{
 		// Get spawn location and rotation from the ProjectileSpawnLocation (Arrow Component)
 		const FVector SpawnLocation = ProjectileSpawnLocation ? ProjectileSpawnLocation->GetComponentLocation() : GetActorLocation();
@@ -35,11 +68,11 @@ void AGunBase::Fire(bool bIncrementCurrentIndex)
 
 		// Spawn the projectile
 		ABulletBase* SpawnedProjectile = GetWorld()->SpawnActor<ABulletBase>(
-			ProjectileClasses[CurrentProjectileIndex], // Projectile class (e.g., AProjectile)
-			SpawnLocation,                             // Location
-			SpawnRotation,                             // Rotation
-			SpawnParams                                // Parameters
-		);
+			Projectiles[CurrentProjectileIndex],
+			SpawnLocation,
+			SpawnRotation,
+			SpawnParams
+			);
 
 		if (SpawnedProjectile)
 		{
@@ -50,11 +83,16 @@ void AGunBase::Fire(bool bIncrementCurrentIndex)
 		GetWorld()->GetTimerManager().SetTimer(
 			RateOfFireTimerHandle,
 			this,
-			&AGunBase::FinishReload,
+			&AGunBase::RofFinished,
 			RateOfFire,
 			false
 			);
 	}
+}
+
+void AGunBase::RofFinished()
+{
+	
 }
 
 bool AGunBase::CanFire() const
@@ -95,6 +133,15 @@ void AGunBase::StartReload()
 	if (CanReload())
 	{
 		bIsReloading = true;
+		
+		// start reload timer
+		GetWorld()->GetTimerManager().SetTimer(
+			ReloadTimerHandle,
+			this,
+			&AGunBase::FinishReload,
+			RateOfFire,
+			false
+			);
 	}
 }
 
@@ -105,16 +152,23 @@ bool AGunBase::IsReloading() const
 
 void AGunBase::FinishReload()
 {
-	
+	CurrentAmmo = MagazineSize;
+	WeaponReloaded.Broadcast();
 }
 
 bool AGunBase::CanReload() const
 {
-	return CurrentAmmo < MagazineSize;
+	return CurrentAmmo < MagazineSize && !GetWorld()->GetTimerManager().IsTimerActive(ReloadTimerHandle);
 }
 
-void AGunBase::Initialize()
+void AGunBase::SetMeshVisibility(bool bVisible)
 {
-	
+	if (bVisible)
+	{
+		WeaponMesh->SetVisibility(true);
+	}
+	else
+	{
+		WeaponMesh->SetVisibility(false);
+	}
 }
-

@@ -9,20 +9,24 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
+
 #include "Projectile/BulletBase.h"
+#include "Weapon/GunAssetData.h"
+
 
 #include "GunBase.generated.h"
 
 // Delegates
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFired);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoConsumed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireNoAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoConsumed);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartedReload);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToReloadFullMagazine);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToReload);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
+
 
 UCLASS(Abstract)
 class COLLAB09FPS_API AGunBase : public AActor
@@ -31,11 +35,21 @@ public:
 	// Sets default values for this actor's properties
 	AGunBase();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void Initialize();
+
+	UFUNCTION()
+	USkeletalMesh* GetWeaponMesh();
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UGunAssetData* GunAssetData;
 	
 	UFUNCTION(BlueprintCallable)
 	void Fire(bool bIncrementCurrentIndex);
+
+	UFUNCTION()
+	void RofFinished();
 	
 	UFUNCTION(BlueprintPure)
 	bool CanFire() const;
@@ -57,6 +71,9 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 	bool CanReload() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetMeshVisibility(bool bVisible);
 	
 	// Delegates, We want these public so UI or other actors can access it
 	// Called when weapon fires
@@ -92,34 +109,48 @@ public:
 	FOnWeaponFailedToReloadFullMagazine WeaponFailedToReloadFullMagazine;
 
 protected:
-	// Location object used when spawning the projectile
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Root;
+	
 	UPROPERTY(VisibleAnywhere)
 	UArrowComponent* ProjectileSpawnLocation;
 
-	// Skeletal mesh used by the weapon
-	UPROPERTY(VisibleAnywhere)
-	class USkeletalMeshComponent* WeaponMesh;
-
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
+	TArray<TSubclassOf<ABulletBase>> Projectiles;
+
+	UPROPERTY(BlueprintReadWrite)
+	float CurrentProjectileIndex;
+
+	UPROPERTY()
+	FName Name;
+
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* WeaponMesh;
+	
+	UPROPERTY()
+	TSubclassOf<ABulletBase> Projectile;
+	
+	UPROPERTY()
+	float Damage;
+
+	UPROPERTY()
 	float RateOfFire;
 	FTimerHandle RateOfFireTimerHandle;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	TArray<TSubclassOf<class ABulletBase>> ProjectileClasses;
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	int CurrentProjectileIndex;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	float MagazineSize;
 
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+	UPROPERTY()
+	float Range;
+
+	UPROPERTY()
+	int32 MagazineSize;
+
+	UPROPERTY()
 	float CurrentAmmo;
 
+	UPROPERTY()
+	float ReloadTime;
+	FTimerHandle ReloadTimerHandle;
+	
 	bool bIsReloading;
 
 private:

@@ -30,6 +30,13 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
 	void WeaponReloadInterrupt();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void WeaponSwitch();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	bool GetWeaponMode();
 	
 private:
 	GENERATED_BODY()
