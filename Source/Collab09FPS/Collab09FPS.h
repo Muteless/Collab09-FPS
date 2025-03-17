@@ -17,6 +17,9 @@ enum class EInputTypes : uint8
 	Completed UMETA(DisplayName = "Completed")
 };
 
+UENUM(BlueprintType)
+enum class E
+
 USTRUCT(BlueprintType)
 struct FBoolInput
 {

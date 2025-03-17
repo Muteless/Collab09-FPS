@@ -11,6 +11,7 @@ AMeleeBase::AMeleeBase()
 	
 	// Melee mesh
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
+	WeaponMesh->SetVisibility(false);
 }
 
 USkeletalMesh* AMeleeBase::GetWeaponMesh()
@@ -21,6 +22,32 @@ USkeletalMesh* AMeleeBase::GetWeaponMesh()
 void AMeleeBase::SetMeshVisibility(bool bVisibility)
 {
 	WeaponMesh->SetVisibility(bVisibility);
+}
+
+void AMeleeBase::Melee()
+{
+	if (CanMelee())
+	{
+		
+	}
+}
+
+bool AMeleeBase::CanMelee()
+{
+	return true;
+}
+
+void AMeleeBase::StartUpMeleePhase()
+{
+	
+}
+
+void AMeleeBase::ActiveMeleePhase()
+{
+}
+
+void AMeleeBase::RecoveryPhase()
+{
 }
 
 void AMeleeBase::Initialize()

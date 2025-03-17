@@ -20,6 +20,21 @@ public:
 	void SetMeshVisibility(bool bVisibility);
 
 	UFUNCTION()
+	void Melee();
+
+	UFUNCTION()
+	bool CanMelee();
+
+	UFUNCTION()
+	void StartUpMeleePhase();
+
+	UFUNCTION()
+	void ActiveMeleePhase();
+
+	UFUNCTION()
+	void RecoveryPhase();
+
+	UFUNCTION()
 	void Initialize();
 
 protected:
@@ -28,6 +43,18 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* WeaponMesh;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float StartUpFrames;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float ActiveFrames;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float RecoveryFrames;
 	
 private:
 	GENERATED_BODY()
