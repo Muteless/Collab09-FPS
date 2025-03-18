@@ -41,7 +41,6 @@ UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Imp
 	return GetCharacterMovement();
 }
 
-
 void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
 {
 	switch (InputType)

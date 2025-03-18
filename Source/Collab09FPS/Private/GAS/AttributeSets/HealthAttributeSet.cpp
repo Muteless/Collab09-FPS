@@ -4,7 +4,10 @@
 
 UHealthAttributeSet::UHealthAttributeSet()
 {
-	
+	MaxHealth.SetBaseValue(100);
+	CurrentHealth.SetBaseValue(100);
+	MetaDamage.SetBaseValue(0);
+	MetaHeal.SetBaseValue(0);
 }
 
 void UHealthAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const

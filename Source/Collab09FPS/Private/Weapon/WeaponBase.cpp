@@ -137,7 +137,7 @@ void AWeaponBase::WeaponReload_Implementation()
 	
 }
 
-void AWeaponBase::WeaponMelee_Implmentation()
+void AWeaponBase::WeaponMelee_Implementation()
 {
 	
 }

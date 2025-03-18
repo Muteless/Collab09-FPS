@@ -74,7 +74,7 @@ public:
 #pragma endregion GunMode
 
 #pragma region MeleeMode
-	virtual void WeaponMelee_Implmentation();
+	virtual void WeaponMelee_Implementation();
 	bool CanMelee();
 
 #pragma endregion MeleeMode
