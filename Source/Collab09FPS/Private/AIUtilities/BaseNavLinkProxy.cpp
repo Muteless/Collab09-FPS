@@ -51,7 +51,7 @@ void ABaseNavLinkProxy::OnNavLinkReached(AActor* MovingActor, const FVector& Des
     DrawDebugLine(GetWorld(), StartLocation, e, FColor::Cyan, false, 5.0f, 0, 2.0f);
 
     bool bSuccess = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), LaunchVelocity, StartLocation, e, 0, CustomArcSettings);
-
+    
     if (bSuccess)
     {
         UE_LOG(LogTemp, Log, TEXT("Launch Velocity Calculated: %s"), *LaunchVelocity.ToString());

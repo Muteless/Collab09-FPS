@@ -17,6 +17,31 @@ enum class EInputTypes : uint8
 	Completed UMETA(DisplayName = "Completed")
 };
 
+UENUM(BlueprintType)
+enum class EEnemyTypes : uint8
+{
+	DeepSeek UMETA(DisplayName = "DeepSeek"),
+	Ranger UMETA(DisplayName = "Ranger"),
+	HeavyRanger UMETA(DisplayName = "HeavyRanger"),
+	Melee UMETA(DisplayName = "Melee"),
+	HeavyMelee UMETA(DisplayName = "HeavyMelee")
+};
+
+
+UENUM(BlueprintType)
+enum class ESpawnMode : uint8
+{
+	OnStart UMETA(DisplayName = "On Start"),
+	OnEvent UMETA(DisplayName = "On Event"),
+};
+
+UENUM(BlueprintType)
+enum class ERespawnMode : uint8
+{
+	Never UMETA(DisplayName = "Never"),
+	OnTimer UMETA(DisplayName = "On Timer")
+};
+
 USTRUCT(BlueprintType)
 struct FBoolInput
 {
