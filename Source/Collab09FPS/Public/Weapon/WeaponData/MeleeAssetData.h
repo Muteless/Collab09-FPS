@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 
 #include "Animation/AnimMontage.h"
+#include "GameplayEffect.h"
 
 #include "MeleeAssetData.generated.h"
 
@@ -19,6 +20,14 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
 	FName Name;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	USkeletalMesh* Mesh;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	TArray<TSubclassOf<UGameplayEffect>> OnHitGameplayEffects;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)

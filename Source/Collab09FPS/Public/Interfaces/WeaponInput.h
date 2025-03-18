@@ -21,6 +21,10 @@ class COLLAB09FPS_API IWeaponInput
 public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
+	void WeaponPrimaryAction();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
 	void WeaponFire();
 
 	UFUNCTION(BlueprintNativeEvent,

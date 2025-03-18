@@ -23,11 +23,23 @@ public:
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
-	TSubclassOf<ABulletBase> Projectile;
+	USkeletalMesh* Mesh;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	TArray<TSubclassOf<ABulletBase>> Projectile;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UAnimMontage* GunReloadAnimation;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
 	float Damage;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	float AmmoPerShot;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
@@ -39,7 +51,7 @@ public:
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
-	int32 MagazineSize;
+	int MagazineSize;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)

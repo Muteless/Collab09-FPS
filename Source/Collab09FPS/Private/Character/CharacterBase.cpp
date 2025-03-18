@@ -209,7 +209,7 @@ void ACharacterBase::SpawnWeapon()
 
 		// Spawn weapon
 		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
-
+		
 		if (WeaponInstance)
 		{
 			// Set owner
