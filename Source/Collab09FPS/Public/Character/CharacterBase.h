@@ -18,6 +18,7 @@
 #include "GAS/AttributeSets/AirActionAttributeSet.h"
 #include "GAS/AttributeSets/DashAttributeSet.h"
 #include "GAS/AttributeSets/CMCAttributeSet.h"
+#include "GAS/AttributeSets/MetaEffectsAttributeSet.h"
 
 // Gameplay tags
 #include "GameplayTagContainer.h"
@@ -225,6 +226,11 @@ protected:
 	// Dash attribute set
 	UPROPERTY()
 	UDashAttributeSet* DashAttributeSet;
+
+	//* Meta Effects *//
+	// Meta effects attribute aet
+	UPROPERTY()
+	UMetaEffectsAttributeSet* MetaEffectsAttributeSet;
 	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets();

@@ -186,6 +186,7 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
 		AbilitySystemComponent->AddSet<UDashAttributeSet>();
 		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
+		AbilitySystemComponent->AddSet<UMetaEffectsAttributeSet>();
 	}
 }
 
