@@ -160,7 +160,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite)
 	TSubclassOf<AWeaponBase> WeaponClass;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	AWeaponBase* WeaponInstance;
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite)

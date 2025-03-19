@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
@@ -41,7 +40,6 @@ UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Imp
 {
 	return GetCharacterMovement();
 }
-
 
 void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
 {
@@ -210,7 +208,7 @@ void ACharacterBase::SpawnWeapon()
 
 		// Spawn weapon
 		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
-
+		
 		if (WeaponInstance)
 		{
 			// Set owner
