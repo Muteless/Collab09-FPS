@@ -3,12 +3,19 @@
 
 #include "Weapon/WeaponBase.h"
 
+#include "Projectile/ProjectileBase.h"
+
 // Sets default values
 AWeaponBase::AWeaponBase():
 	bGunMode(false)
 {
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
+
+	ProjectileSpawnLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnLocation"));
+	ProjectileSpawnLocation->SetupAttachment(Mesh);
+	ProjectileSpawnLocation->ArrowSize = 0.5;
+	ProjectileSpawnLocation->ArrowLength = 50;
 }
 
 void AWeaponBase::Initialize()
@@ -44,9 +51,9 @@ void AWeaponBase::SetupGunVariables()
 {
 	if (GunAssetData != nullptr)
 	{
-		if (!GunAssetData->Projectile.IsEmpty())
+		if (!GunAssetData->Projectiles.IsEmpty())
 		{
-			Projectile = GunAssetData->Projectile;
+			Projectiles = GunAssetData->Projectiles;
 		}
 
 		if (GunAssetData->GunReloadAnimation)
@@ -58,6 +65,7 @@ void AWeaponBase::SetupGunVariables()
 		AmmoPerShot = GunAssetData->AmmoPerShot;
 		RateOfFire = GunAssetData->RateOfFire;
 		MagazineSize = GunAssetData->MagazineSize;
+		CurrentAmmo = GunAssetData->MagazineSize;
 		ReloadTime = GunAssetData->ReloadTime;
 	}
 	else
@@ -110,11 +118,70 @@ void AWeaponBase::WeaponPrimaryAction_Implementation()
 
 void AWeaponBase::WeaponFire_Implementation()
 {
+	TSubclassOf<ABulletBase> ProjectileClass = Projectiles[CurrentProjectileIndex];
+	if (!*ProjectileClass) // Validate if the class exists
+	{
+		UE_LOG(LogTemp,
+			Error,
+			TEXT("Projectile class at index %f is invalid!"),
+			CurrentProjectileIndex);
+		return;
+	}
+
+#pragma region SpawnProjectile
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = GetInstigator();
+	
+	FVector SpawnLocation = ProjectileSpawnLocation->GetComponentLocation();
+	FRotator SpawnRotation = ProjectileSpawnLocation->GetComponentRotation();
+	
+	ABulletBase* BulletSpawned = GetWorld()->SpawnActor<ABulletBase>(ProjectileClass,
+		SpawnLocation,
+		SpawnRotation,
+		SpawnParams);
+
+	BulletSpawned->SetOwner(this);
+	
+	
+	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
+	ConsumeAmmo();
+	
+#pragma endregion SpawnProjectile
+
+	// Start Timer
+	GetWorld()->GetTimerManager().SetTimer(
+		RateOfFireTimerHandle,
+		this,
+		&AWeaponBase::RateOfFireTimerEnded,
+		RateOfFire,
+		false);
+}
+
+void AWeaponBase::RateOfFireTimerEnded()
+{
 	
 }
 
 bool AWeaponBase::CanFire()
 {
+	// Validate that the array has elements
+	if (Projectiles.IsEmpty())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Projectile array is empty!"));
+		return false;
+	}
+
+	// Ensure the index is valid
+	if (!Projectiles.IsValidIndex(CurrentProjectileIndex))
+	{
+		UE_LOG(LogTemp,
+			Error,
+			TEXT("Invalid projectile index: %f! Check CurrentProjectileIndex."),
+			CurrentProjectileIndex);
+		return false;
+	}
+	
 	return !WeaponFireOnCooldown() && EnoughAmmoToShoot();
 }
 
@@ -124,12 +191,17 @@ bool AWeaponBase::EnoughAmmoToShoot() const
 	{
 		
 	}
-	return CurrentAmmo > AmmoPerShot;
+	return CurrentAmmo >= AmmoPerShot;
 }
 
 bool AWeaponBase::WeaponFireOnCooldown() const
 {
-	return !GetWorld()->GetTimerManager().IsTimerActive(RateOfFireTimerHandle);
+	return GetWorld()->GetTimerManager().IsTimerActive(RateOfFireTimerHandle);
+}
+
+void AWeaponBase::ConsumeAmmo()
+{
+	CurrentAmmo = FMath::Clamp(CurrentAmmo - AmmoPerShot, 0, MagazineSize);
 }
 
 void AWeaponBase::WeaponReload_Implementation()

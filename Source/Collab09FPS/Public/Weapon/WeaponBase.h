@@ -10,6 +10,7 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "AbilitySystemComponent.h"
+#include "Components/ArrowComponent.h"
 #include "WeaponData/MeleeAssetData.h"
 #include "WeaponData/GunAssetData.h"
 
@@ -60,12 +61,18 @@ public:
 
 	UPROPERTY()
 	UAbilitySystemComponent* OwnerActorASC;
+
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite)
+	UArrowComponent* ProjectileSpawnLocation;
 	
 #pragma region GunMode
 	virtual void WeaponFire_Implementation() override;
+	void RateOfFireTimerEnded();
 	bool CanFire();
 	bool EnoughAmmoToShoot() const;
 	bool WeaponFireOnCooldown() const;
+	void ConsumeAmmo();
 	FTimerHandle RateOfFireTimerHandle;
 
 	virtual void WeaponReload_Implementation() override;
@@ -94,7 +101,8 @@ protected:
 	UPROPERTY()
 	FName Name;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite)
 	USkeletalMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere,
@@ -140,7 +148,7 @@ protected:
 	UAnimMontage* GunToMeleeSwitchAnimation;
 	
 	UPROPERTY()
-	TArray<TSubclassOf<ABulletBase>> Projectile;
+	TArray<TSubclassOf<ABulletBase>> Projectiles;
 
 	UPROPERTY(EDitAnywhere,
 		BlueprintReadWrite,

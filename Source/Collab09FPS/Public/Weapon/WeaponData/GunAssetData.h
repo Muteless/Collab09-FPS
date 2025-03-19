@@ -27,7 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
-	TArray<TSubclassOf<ABulletBase>> Projectile;
+	TArray<TSubclassOf<ABulletBase>> Projectiles;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
@@ -37,8 +37,7 @@ public:
 		BlueprintReadWrite)
 	float Damage;
 
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+	UPROPERTY()
 	float AmmoPerShot;
 
 	UPROPERTY(EditAnywhere,
