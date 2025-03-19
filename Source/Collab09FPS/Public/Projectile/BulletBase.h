@@ -22,7 +22,7 @@ public:
 	void ApplyEffectToAbilitySystemComponent
 		(UAbilitySystemComponent* AbilitySystemComponent,
 		TSubclassOf<UGameplayEffect> GameplayEffect,
-		float Magnitude);
+		float Magnitude, FHitResult HitResult);
 	
 	// Amount of ammo consumed on shot
 	UPROPERTY(EditAnywhere,
