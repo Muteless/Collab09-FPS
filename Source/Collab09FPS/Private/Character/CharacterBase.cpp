@@ -161,7 +161,7 @@ void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType,
 	}
 }
 
-/** TODO: slightly hard coded implementation of wall jumping, air jumping and ground jumping.
+/** TODO: refactor this as it is a slightly hard coded implementation of wall jumping, air jumping and ground jumping.
 / * Now, we as a team do not appear to want to change the types of jumps the player can do
 	(or this list would expand quite rapidly) so I have come to this solution
 	Grounded? Ground Jump
@@ -178,7 +178,7 @@ void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool 
 			if (!GetCharacterMovement()->IsFalling() &&
 				!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
 			{
-				// Ground jump
+				// Ground jump payload
 				// Define optional event data
 				FGameplayEventData Payload;
 				
@@ -225,6 +225,39 @@ void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType,
 	}
 }
 
+void ACharacterBase::InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType)
+	{
+		case EInputTypes::Started:
+			{
+				// Start crouching
+				if (AbilitySystemComponent)
+				{
+					// Crouch payload
+					FGameplayEventData Payload;
+					
+					// Use crouch ability event
+					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Crouch")), &Payload);
+					break;
+				}
+			}
+		
+		case EInputTypes::Completed:
+			{
+				// Stop crouching
+				if (AbilitySystemComponent)
+				{
+					// Crouch payload
+					FGameplayEventData Payload;
+					
+					// Use crouch ability event
+					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.UnCrouch")), &Payload);
+					break;
+				}
+			}
+	}
+}
 
 FVector ACharacterBase::GetMovementInput_Implementation()
 {
@@ -496,6 +529,18 @@ float ACharacterBase::GetMaxHealth() const
 bool ACharacterBase::IsAirborne_Implementation()
 {
 	return GetCharacterMovement()->IsFalling();
+}
+
+void ACharacterBase::CharacterMovementCrouch_Implementation()
+{
+	GetCharacterMovement()->bWantsToCrouch = true;
+	Crouch();
+}
+
+void ACharacterBase::CharacterMovementUncrouch_Implementation()
+{
+	GetCharacterMovement()->bWantsToCrouch = false;
+	UnCrouch();
 }
 
 // Get current air actions

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "Character/CharacterMovementComponentBase.h"
 #include "Interfaces/MovementComponentAttributeUpdate.h"
 
 #include "CMCAttributeSet.generated.h"
@@ -30,9 +29,6 @@ public:
 	
 	// Constructor
 	UCMCAttributeSet();
-
-	UPROPERTY()
-	UCharacterMovementComponentBase* CharacterMovementComponent;
 	
 	// Max Walk Speed
 	UPROPERTY(BlueprintReadOnly,
@@ -84,6 +80,12 @@ public:
 		Category="Attributes | CMC | ")
 	FGameplayAttributeData PushOffWallVerticalImpulseStrength;
 	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, PushOffWallVerticalImpulseStrength);
+
+	// Crouching & Sliding
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | CMC | ")
+	FGameplayAttributeData SlidingMinSpeed;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingMinSpeed);
 	
 protected:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute,
