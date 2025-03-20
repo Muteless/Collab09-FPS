@@ -74,6 +74,9 @@ public:
 	UFUNCTION(Category = "Input")
 	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
 
+	UFUNCTION(Category = "Input")
+	virtual void InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input) override;
+	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadOnly,
@@ -112,7 +115,9 @@ public:
 
 	// Get Character Movement Component
 	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
+	
 #pragma region CMCAttributeSetChanges
+	
 	virtual void SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed) override;
 	virtual void SetCMCMaxAcceleration_Implementation(float MaxAcceleration) override;
 	virtual void SetCMCGravityScale_Implementation(float GravityScale) override;
@@ -121,10 +126,13 @@ public:
 	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
 	
 #pragma endregion CMCAttributeSetChanges
-	
+
 	UFUNCTION(Category = "Input")
 	virtual FVector GetMovementInput_Implementation() override;
 
+	
+#pragma region Actions
+	
 	// Move
 	virtual void CharacterMovementMove_Implementation(FVector MoveInput) override;
 
@@ -150,6 +158,14 @@ public:
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
+
+	// Crouch
+	virtual void CharacterMovementCrouch_Implementation() override;
+
+	// Uncrouch
+	virtual void CharacterMovementUncrouch_Implementation() override;
+
+#pragma endregion Actions
 	
 protected:
 	// Possessed by controller

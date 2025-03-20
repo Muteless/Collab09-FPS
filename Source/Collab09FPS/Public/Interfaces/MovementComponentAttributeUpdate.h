@@ -48,7 +48,7 @@ public:
 		BlueprintCallable,
 		Category = "CMCAttributeSet")
 	void SetCMCPushOffWallVerticalSpeed(float PushOffWallVerticalSpeed);
-
+	
 private:
 	GENERATED_BODY()
 };

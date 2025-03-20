@@ -4,8 +4,7 @@
 #include "GAS/AttributeSets/CMCAttributeSet.h"
 #include "Character/CharacterBase.h"
 
-UCMCAttributeSet::UCMCAttributeSet():
-CharacterMovementComponent(nullptr)
+UCMCAttributeSet::UCMCAttributeSet()
 {
 	
 }
