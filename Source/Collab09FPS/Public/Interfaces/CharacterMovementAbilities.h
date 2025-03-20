@@ -24,7 +24,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Components")
-	UCharacterMovementComponent* ActorCharacterMovementComponent();
+	UCharacterMovementComponent* GetActorCharacterMovementComponent();
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,

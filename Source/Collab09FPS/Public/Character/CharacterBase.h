@@ -29,11 +29,13 @@
 #include "Weapon/WeaponBase.h"
 
 // Interfaces
+#include "Interfaces/MovementComponentAttributeUpdate.h"
 #include "Interfaces/CharacterMovementAbilities.h"
 #include "Interfaces/CharacterInput.h"
 
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
+#include "Interfaces/MovementComponentAttributeUpdate.h"
 
 #include "CharacterBase.generated.h"
 
@@ -55,7 +57,8 @@ UCLASS(Abstract)
 class COLLAB09FPS_API ACharacterBase : public ACharacter,
 public ICharacterInput,
 public IAbilitySystemInterface,
-public ICharacterMovementAbilities
+public ICharacterMovementAbilities,
+public IMovementComponentAttributeUpdate
 {
 public:
 	// Sets default values for this character's properties
@@ -108,8 +111,17 @@ public:
 	float WallCapsuleDetectionOffsetRadius = 10.0f;
 
 	// Get Character Movement Component
-	virtual UCharacterMovementComponent* ActorCharacterMovementComponent_Implementation() override;
-
+	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
+#pragma region CMCAttributeSetChanges
+	virtual void SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed) override;
+	virtual void SetCMCMaxAcceleration_Implementation(float MaxAcceleration) override;
+	virtual void SetCMCGravityScale_Implementation(float GravityScale) override;
+	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
+	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
+	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
+	
+#pragma endregion CMCAttributeSetChanges
+	
 	UFUNCTION(Category = "Input")
 	virtual FVector GetMovementInput_Implementation() override;
 
@@ -138,11 +150,6 @@ public:
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
-	
-	//* CMC *//
-	// Character Movement attribute set
-	UPROPERTY()
-	UCMCAttributeSet* CMCAttributeSet;
 	
 protected:
 	// Possessed by controller
@@ -221,6 +228,11 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Character|Actions|")
 	float GetMaxAirActions() const;
+
+	//* CMC *//
+	// Character Movement attribute set
+	UPROPERTY()
+	UCMCAttributeSet* CMCAttributeSet;
 	
 	//* Dash *//
 	// Dash attribute set
