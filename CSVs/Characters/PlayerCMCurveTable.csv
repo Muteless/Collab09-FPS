@@ -1,0 +1,10 @@
+---,1.000000
+CMCAttributeSet.MaxWalkSpeed,900.000000
+CMCAttributeSet.MaxAcceleration,3048.000000
+CMCAttributeSet.GroundJumpZVelocity,900.000000
+CMCAttributeSet.AirJumpZVelocity,900.000000
+CMCAttributeSet.WallJumpZVelocity,1600.000000
+CMCAttributeSet.GravityScale,2.600000
+CMCAttributeSet.WallRunSpeed,1100.000000
+CMCAttributeSet.PushOffWallHorizontalImpulseStrength,1100.000000
+CMCAttributeSet.PushOffWallVerticalImpulseStrength,900.000000

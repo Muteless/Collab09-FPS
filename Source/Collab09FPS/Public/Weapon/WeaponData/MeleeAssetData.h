@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 
-#include "Components/SkeletalMeshComponent.h"
-#include "Projectile/BulletBase.h"
+#include "Animation/AnimMontage.h"
+#include "GameplayEffect.h"
 
-#include "GunAssetData.generated.h"
+#include "MeleeAssetData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class COLLAB09FPS_API UGunAssetData : public UDataAsset
+class COLLAB09FPS_API UMeleeAssetData : public UDataAsset
 {
 public:
 	UPROPERTY(EditAnywhere,
@@ -23,27 +23,19 @@ public:
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
-	TSubclassOf<ABulletBase> Projectile;
+	USkeletalMesh* Mesh;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	TArray<TSubclassOf<UGameplayEffect>> OnHitGameplayEffects;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	TArray<UAnimMontage*> MeleeAnimations;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
 	float Damage;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	float RateOfFire;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	float Range;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	int32 MagazineSize;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	float ReloadTime;
 	
 protected:
 private:

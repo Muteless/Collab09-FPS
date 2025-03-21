@@ -1,7 +1,7 @@
----,1
-HealthAttributeSet.MaxHealth,100
-AirActionAttributeSet.MaxAirActions,2
-DashAttributeSet.GroundDashSpeed,4000
-DashAttributeSet.GroundDashStaminaCost,25
-DashAttributeSet.AirDashSpeed,4000
-DashAttributeSet.AirDashStaminaCost,25
+---,1.000000
+HealthAttributeSet.MaxHealth,100.000000
+AirActionAttributeSet.MaxAirActions,2.000000
+DashAttributeSet.GroundDashSpeed,4000.000000
+DashAttributeSet.GroundDashStaminaCost,25.000000
+DashAttributeSet.AirDashSpeed,4000.000000
+DashAttributeSet.AirDashStaminaCost,25.000000
