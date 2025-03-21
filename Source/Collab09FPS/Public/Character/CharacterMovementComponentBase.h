@@ -48,6 +48,18 @@ public:
 	UFUNCTION(BlueprintPure,
 		Category = "WallRunning")
 	bool CanWallRun() const;
+
+	// Strength of the impulse applied to the character outwards when transitioning off a wall-run
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float EndWallRunOutImpulseStrength = 900.0f;
+	
+	// Strength of the impulse applied to the character upwards when transitioning off a wall-run
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "WallRunning")
+	float EndWallRunUpImpulseStrength = 900.0f;
 	
 protected:
 	// Called when the game starts
@@ -84,18 +96,6 @@ protected:
 		BlueprintReadWrite,
 		Category = "WallRunning")
 	FVector WallRunGravity = FVector(0.0f, 0.0f, -60.0f);
-
-	// Strength of the impulse applied to the character outwards when transitioning off a wall-run
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "WallRunning")
-	float EndWallRunOutImpulseStrength = 900.0f;
-	
-	// Strength of the impulse applied to the character upwards when transitioning off a wall-run
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "WallRunning")
-	float EndWallRunUpImpulseStrength = 900.0f;
 
 	// Speed at which the character rotates to align with the wall during wall-run initiation
 	UPROPERTY(EditAnywhere,

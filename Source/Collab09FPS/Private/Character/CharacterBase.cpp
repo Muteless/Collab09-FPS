@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Constructor
@@ -37,11 +36,99 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 }
 
 // Get character movement component
-UCharacterMovementComponent* ACharacterBase::ActorCharacterMovementComponent_Implementation()
+UCharacterMovementComponent* ACharacterBase::GetActorCharacterMovementComponent_Implementation()
 {
 	return GetCharacterMovement();
 }
 
+// Called when character has been possessed
+void ACharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	// Initialize wall capsule collision
+	if (WallCapsuleCollision)
+	{
+		// Begin & end overlap events
+		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleBeginOverlap);
+		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleEndOverlap);
+	}
+	
+	// Initialize AbilitySystemComponent
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		
+		// Set initial character attribute sets
+		AddInitialCharacterAttributeSets();
+		
+		// Add initial character abilities to ability system
+		AddNativeCharacterAbilities();
+		AddInitialCharacterAbilities();
+
+		// Add initial effects to ability system
+		AddInitialCharacterGameplayEffects();
+	}
+}
+
+#pragma region CMCAttributeSetChanges
+
+void ACharacterBase::SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
+}
+
+void ACharacterBase::SetCMCMaxAcceleration_Implementation(float MaxAcceleration)
+{
+	GetCharacterMovement()->MaxAcceleration = MaxAcceleration;
+}
+
+void ACharacterBase::SetCMCGravityScale_Implementation(float GravityScale)
+{
+	GetCharacterMovement()->GravityScale = GravityScale;
+}
+
+void ACharacterBase::SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed)
+{
+	GetCharacterMovement()->MaxCustomMovementSpeed = MaxWallRunSpeed;
+}
+
+void ACharacterBase::SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed)
+{
+	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+
+	if (MovementComponentBase)
+	{
+		MovementComponentBase->EndWallRunOutImpulseStrength = PushOffWallHorizontalSpeed;
+	}
+}
+
+void ACharacterBase::SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed)
+{
+	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+
+	if (MovementComponentBase)
+	{
+		MovementComponentBase->EndWallRunUpImpulseStrength = PushOffWallVerticalSpeed;
+	}
+}
+
+#pragma endregion CMCAttributeSetChanges
+
+
+void ACharacterBase::AddInitialCharacterAttributeSets()
+{
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
+		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
+		AbilitySystemComponent->AddSet<UDashAttributeSet>();
+		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
+		AbilitySystemComponent->AddSet<UMetaEffectsAttributeSet>();
+	}
+}
 
 void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
 {
@@ -74,7 +161,7 @@ void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType,
 	}
 }
 
-/** TODO: slightly hard coded implementation of wall jumping, air jumping and ground jumping.
+/** TODO: refactor this as it is a slightly hard coded implementation of wall jumping, air jumping and ground jumping.
 / * Now, we as a team do not appear to want to change the types of jumps the player can do
 	(or this list would expand quite rapidly) so I have come to this solution
 	Grounded? Ground Jump
@@ -91,7 +178,7 @@ void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool 
 			if (!GetCharacterMovement()->IsFalling() &&
 				!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
 			{
-				// Ground jump
+				// Ground jump payload
 				// Define optional event data
 				FGameplayEventData Payload;
 				
@@ -138,6 +225,39 @@ void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType,
 	}
 }
 
+void ACharacterBase::InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType)
+	{
+		case EInputTypes::Started:
+			{
+				// Start crouching
+				if (AbilitySystemComponent)
+				{
+					// Crouch payload
+					FGameplayEventData Payload;
+					
+					// Use crouch ability event
+					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Crouch")), &Payload);
+					break;
+				}
+			}
+		
+		case EInputTypes::Completed:
+			{
+				// Stop crouching
+				if (AbilitySystemComponent)
+				{
+					// Crouch payload
+					FGameplayEventData Payload;
+					
+					// Use crouch ability event
+					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.UnCrouch")), &Payload);
+					break;
+				}
+			}
+	}
+}
 
 FVector ACharacterBase::GetMovementInput_Implementation()
 {
@@ -148,47 +268,6 @@ void ACharacterBase::CharacterMovementMove_Implementation(FVector MoveInput)
 {
 	AddMovementInput(GetActorRightVector(), MoveInput.X, false);
 	AddMovementInput(GetActorForwardVector(), MoveInput.Y, false);
-}
-
-// Called when character has been possessed
-void ACharacterBase::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-	
-	// Initialize wall capsule collision
-	if (WallCapsuleCollision)
-	{
-		// Begin & end overlap events
-		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleBeginOverlap);
-		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleEndOverlap);
-	}
-	
-	// Initialize AbilitySystemComponent
-	if (AbilitySystemComponent)
-	{
-		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-		
-		// Set initial character attribute sets
-		AddInitialCharacterAttributeSets();
-		
-		// Add initial character abilities to ability system
-		AddNativeCharacterAbilities();
-		AddInitialCharacterAbilities();
-
-		// Add initial effects to ability system
-		AddInitialCharacterGameplayEffects();
-	}
-}
-
-void ACharacterBase::AddInitialCharacterAttributeSets()
-{
-	if (AbilitySystemComponent)
-	{
-		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
-		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
-		AbilitySystemComponent->AddSet<UDashAttributeSet>();
-		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
-	}
 }
 
 void ACharacterBase::SpawnWeapon()
@@ -210,7 +289,7 @@ void ACharacterBase::SpawnWeapon()
 
 		// Spawn weapon
 		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
-
+		
 		if (WeaponInstance)
 		{
 			// Set owner
@@ -370,9 +449,6 @@ void ACharacterBase::CharacterMovementEndWallRun_Implementation()
 {
 	if (AbilitySystemComponent)
 	{
-		UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-		
 		// Create a gameplay event payload
 		FGameplayEventData EventData;
 		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRunEnd"));
@@ -453,6 +529,18 @@ float ACharacterBase::GetMaxHealth() const
 bool ACharacterBase::IsAirborne_Implementation()
 {
 	return GetCharacterMovement()->IsFalling();
+}
+
+void ACharacterBase::CharacterMovementCrouch_Implementation()
+{
+	GetCharacterMovement()->bWantsToCrouch = true;
+	Crouch();
+}
+
+void ACharacterBase::CharacterMovementUncrouch_Implementation()
+{
+	GetCharacterMovement()->bWantsToCrouch = false;
+	UnCrouch();
 }
 
 // Get current air actions

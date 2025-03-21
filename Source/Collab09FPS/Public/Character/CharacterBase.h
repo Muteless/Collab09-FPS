@@ -18,6 +18,7 @@
 #include "GAS/AttributeSets/AirActionAttributeSet.h"
 #include "GAS/AttributeSets/DashAttributeSet.h"
 #include "GAS/AttributeSets/CMCAttributeSet.h"
+#include "GAS/AttributeSets/MetaEffectsAttributeSet.h"
 
 // Gameplay tags
 #include "GameplayTagContainer.h"
@@ -28,11 +29,13 @@
 #include "Weapon/WeaponBase.h"
 
 // Interfaces
+#include "Interfaces/MovementComponentAttributeUpdate.h"
 #include "Interfaces/CharacterMovementAbilities.h"
 #include "Interfaces/CharacterInput.h"
 
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
+#include "Interfaces/MovementComponentAttributeUpdate.h"
 
 #include "CharacterBase.generated.h"
 
@@ -54,7 +57,8 @@ UCLASS(Abstract)
 class COLLAB09FPS_API ACharacterBase : public ACharacter,
 public ICharacterInput,
 public IAbilitySystemInterface,
-public ICharacterMovementAbilities
+public ICharacterMovementAbilities,
+public IMovementComponentAttributeUpdate
 {
 public:
 	// Sets default values for this character's properties
@@ -70,6 +74,9 @@ public:
 	UFUNCTION(Category = "Input")
 	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
 
+	UFUNCTION(Category = "Input")
+	virtual void InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input) override;
+	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadOnly,
@@ -107,11 +114,25 @@ public:
 	float WallCapsuleDetectionOffsetRadius = 10.0f;
 
 	// Get Character Movement Component
-	virtual UCharacterMovementComponent* ActorCharacterMovementComponent_Implementation() override;
+	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
+	
+#pragma region CMCAttributeSetChanges
+	
+	virtual void SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed) override;
+	virtual void SetCMCMaxAcceleration_Implementation(float MaxAcceleration) override;
+	virtual void SetCMCGravityScale_Implementation(float GravityScale) override;
+	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
+	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
+	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
+	
+#pragma endregion CMCAttributeSetChanges
 
 	UFUNCTION(Category = "Input")
 	virtual FVector GetMovementInput_Implementation() override;
 
+	
+#pragma region Actions
+	
 	// Move
 	virtual void CharacterMovementMove_Implementation(FVector MoveInput) override;
 
@@ -137,11 +158,14 @@ public:
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
-	
-	//* CMC *//
-	// Character Movement attribute set
-	UPROPERTY()
-	UCMCAttributeSet* CMCAttributeSet;
+
+	// Crouch
+	virtual void CharacterMovementCrouch_Implementation() override;
+
+	// Uncrouch
+	virtual void CharacterMovementUncrouch_Implementation() override;
+
+#pragma endregion Actions
 	
 protected:
 	// Possessed by controller
@@ -160,7 +184,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite)
 	TSubclassOf<AWeaponBase> WeaponClass;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	AWeaponBase* WeaponInstance;
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite)
@@ -220,11 +244,21 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Character|Actions|")
 	float GetMaxAirActions() const;
+
+	//* CMC *//
+	// Character Movement attribute set
+	UPROPERTY()
+	UCMCAttributeSet* CMCAttributeSet;
 	
 	//* Dash *//
 	// Dash attribute set
 	UPROPERTY()
 	UDashAttributeSet* DashAttributeSet;
+
+	//* Meta Effects *//
+	// Meta effects attribute aet
+	UPROPERTY()
+	UMetaEffectsAttributeSet* MetaEffectsAttributeSet;
 	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets();

@@ -1,4 +1,4 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Weapon/GunAssetData.h"
+#include "Weapon/WeaponData/GunAssetData.h"

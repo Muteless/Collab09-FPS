@@ -24,7 +24,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Components")
-	UCharacterMovementComponent* ActorCharacterMovementComponent();
+	UCharacterMovementComponent* GetActorCharacterMovementComponent();
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
@@ -75,6 +75,16 @@ public:
 		BlueprintCallable,
 		Category = "Movement")
 	void CharacterMovementAirDash();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementCrouch();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Movement")
+	void CharacterMovementUncrouch();
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,

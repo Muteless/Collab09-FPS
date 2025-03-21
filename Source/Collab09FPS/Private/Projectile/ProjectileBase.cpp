@@ -1,72 +1,43 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Collab09FPS/Public/Projectile/ProjectileBase.h"
-#include "GAS/AbilitySystemComponentBase.h"
+
+#include "Projectile/ProjectileBase.h"
+#include "NiagaraComponent.h"
+
 
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
-	// Create collision component
-	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Collision Component"));
+	ProjectileMovementComponent = nullptr;
+	ProjectileMesh = nullptr;
+	NiagaraSystemComponent = nullptr;
+	Collision = nullptr;
+	InitialMovementSpeed = 3500.0;
+	MaxMovementSpeed = 3500.0;
+	RotationFollowsVelocity = true;
 	
-	// Set root component to be the collision component
-	RootComponent = CollisionComponent;
 	
-	// Configure collision settings
-	CollisionComponent->InitSphereRadius(15.0f);
-	CollisionComponent->BodyInstance.SetCollisionProfileName("Projectile");
-	CollisionComponent->SetNotifyRigidBodyCollision(true);
-	CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
-	
-	// Create projectile mesh and attach to collision
+	// Create the Sphere Collision Component
+	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+	Collision->InitSphereRadius(10.0f);
+	Collision->SetCollisionProfileName(TEXT("Projectile"));
+	Collision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	Collision->SetNotifyRigidBodyCollision(true);
+	SetRootComponent(Collision);
+
+	// Create the Static Mesh Component
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
-	ProjectileMesh->SetupAttachment(CollisionComponent);
-
-	// Create VFX component and attach to collision
-	VfxComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("VfxComponent"));
-	VfxComponent->SetupAttachment(CollisionComponent);
+	ProjectileMesh->SetupAttachment(Collision);
+	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 	
-	// Create ProjectileMovementComponent
+	// Create the Niagara component
+	NiagaraSystemComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Niagara System Component"));
+	NiagaraSystemComponent->SetupAttachment(RootComponent);
+	
+	// Create the Projectile Movement Component
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
-	ProjectileMovementComponent->InitialSpeed = 100;
-	ProjectileMovementComponent->MaxSpeed = 100;
-}
-
-// On collision hit
-void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComponent,
-	FVector NormalImpulse, const FHitResult& Hit)
-{
-	// when the projectile hits another object
-	if (OtherActor && OtherActor != this && OtherComponent)
-	{
-		// Apply gameplay effect to the target
-		ApplyGameplayEffect(OtherActor);
-	}
-}
-
-void AProjectileBase::ApplyGameplayEffect(AActor* Target) const
-{
-	if (!Target || !GameplayEffectClass)
-	{
-		return;
-	}
-
-	// Check if the target has an AbilitySystemComponent
-	UAbilitySystemComponent* TargetASC = Target->FindComponentByClass<UAbilitySystemComponentBase>();
-	
-	if (TargetASC)
-	{
-		// Create a gameplay effect spec handle
-		FGameplayEffectContextHandle EffectContextHandle;
-		FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.0f, EffectContextHandle);
-
-		if (SpecHandle.IsValid())
-		{
-			// Apply the gameplay effect to the target
-			TargetASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
-		}
-	}
-
+	ProjectileMovementComponent->InitialSpeed = InitialMovementSpeed;
+	ProjectileMovementComponent->MaxSpeed = MaxMovementSpeed;
+	ProjectileMovementComponent->bRotationFollowsVelocity = RotationFollowsVelocity;
+	ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
 }

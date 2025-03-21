@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "Interfaces/MovementComponentAttributeUpdate.h"
 
 #include "CMCAttributeSet.generated.h"
 
@@ -15,7 +16,8 @@
  * Class for defining an attribute set related to Character Movement Component (CMC).
  */
 UCLASS()
-class COLLAB09FPS_API UCMCAttributeSet : public UAttributeSet
+class COLLAB09FPS_API UCMCAttributeSet : public UAttributeSet,
+public IMovementComponentAttributeUpdate
 {
 	
 public:
@@ -27,7 +29,7 @@ public:
 	
 	// Constructor
 	UCMCAttributeSet();
-
+	
 	// Max Walk Speed
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | CMC | ")
@@ -61,58 +63,11 @@ public:
 	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, GravityScale);
 
 	//*// Wall Running
-	// Max Wall Running Speed
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData MaxWallRunningSpeed;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, MaxWallRunningSpeed);
-	
 	// Wall Run Speed
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | CMC | ")
-	FGameplayAttributeData WallRunSpeed;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, WallRunSpeed);
-
-	// Min Speed For Wall Run
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData MinWallRunSpeed;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, MinWallRunSpeed);
-
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData BrakingDecelerationWallRunning;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, BrakingDecelerationWallRunning);
-	
-	// Wall Detection Capsule Radius
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData WallDetectionCapsuleRadius;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, WallDetectionCapsuleRadius);
-
-	// Wall Detection Capsule Height
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData WallDetectionCapsuleHeight;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, WallDetectionCapsuleHeight);
-
-	// Wall Run Gravity Direction X
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData WallRunGravityX;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, WallRunGravityX);
-
-	// Wall Run Gravity Direction Y
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData WallRunGravityY;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, WallRunGravityY);
-	
-	// Wall Run Gravity Direction Z
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData WallRunGravityZ;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, WallRunGravityZ);
+	FGameplayAttributeData MaxWallRunSpeed;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, MaxWallRunSpeed);
 
 	// Applied on the XY axis when a character stops wall running
 	UPROPERTY(BlueprintReadOnly,
@@ -125,8 +80,16 @@ public:
 		Category="Attributes | CMC | ")
 	FGameplayAttributeData PushOffWallVerticalImpulseStrength;
 	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, PushOffWallVerticalImpulseStrength);
+
+	// Crouching & Sliding
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | CMC | ")
+	FGameplayAttributeData SlidingMinSpeed;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingMinSpeed);
 	
 protected:
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute,
+		float& NewValue) override;
 private:
 	GENERATED_BODY()
 };
