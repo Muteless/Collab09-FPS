@@ -42,13 +42,22 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "CMCAttributeSet")
+	void SetCMCGroundFriction(float GroundFriction);
+	
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "CMCAttributeSet")
+	void SetCMCBrakingFriction(float BrakingForce);
+	
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "CMCAttributeSet")
 	void SetCMCPushOffWallHorizontalSpeed(float PushOffWallHorizontalSpeed);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "CMCAttributeSet")
 	void SetCMCPushOffWallVerticalSpeed(float PushOffWallVerticalSpeed);
-	
 private:
 	GENERATED_BODY()
 };

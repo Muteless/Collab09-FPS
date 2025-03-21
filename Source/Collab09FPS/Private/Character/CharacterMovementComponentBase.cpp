@@ -42,6 +42,11 @@ void UCharacterMovementComponentBase::OnMovementModeChanged(EMovementMode PrevMo
 	{
 		EnteredFlyingMovementMode();
 	}
+
+	if (MovementMode == MOVE_Custom)
+	{
+		EnteredCustomMovementMode();
+	}
 	
 	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
 }
@@ -54,6 +59,11 @@ void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
 	{
 		ICharacterMovementAbilities::Execute_CharacterMovementLanded(CharacterOwner);
 	}
+}
+
+void UCharacterMovementComponentBase::EnteredCustomMovementMode()
+{
+	
 }
 
 bool UCharacterMovementComponentBase::CanWallRun() const
@@ -256,4 +266,33 @@ void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
 		ICharacterMovementAbilities::Execute_CharacterMovementEndWallRun(CharacterOwner);
 	}
 	bExitWallRun = false;
+}
+
+void UCharacterMovementComponentBase::PhysCustom(float deltaTime, int32 Iterations)
+{
+	if (CanSlide())
+	{
+		StartSliding();
+	}
+	else
+	{
+		EndSliding();
+	}
+	
+	Super::PhysCustom(deltaTime, Iterations);
+}
+
+bool UCharacterMovementComponentBase::CanSlide()
+{
+	return Velocity.Length() > MinimumSpeedToSlide;
+}
+
+void UCharacterMovementComponentBase::StartSliding()
+{
+	
+}
+
+void UCharacterMovementComponentBase::EndSliding()
+{
+	SetMovementMode(MOVE_Walking);
 }

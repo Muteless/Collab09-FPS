@@ -124,6 +124,8 @@ public:
 	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
 	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
 	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
+	virtual void SetCMCGroundFriction_Implementation(float GroundFriction) override;
+	virtual void SetCMCBrakingFriction_Implementation(float BrakingFriction) override;
 	
 #pragma endregion CMCAttributeSetChanges
 
@@ -164,6 +166,12 @@ public:
 
 	// Uncrouch
 	virtual void CharacterMovementUncrouch_Implementation() override;
+
+	// Start sliding
+	virtual void CharacterMovementStartSliding_Implementation() override;
+
+	// Stop sliding
+	virtual void CharacterMovementStopSliding_Implementation() override;
 
 #pragma endregion Actions
 	

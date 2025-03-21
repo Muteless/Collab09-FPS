@@ -21,15 +21,22 @@ public:
 	UCharacterMovementComponentBase();
 	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime,
+		ELevelTick TickType,
+		FActorComponentTickFunction* ThisTickFunction) override;
 
 	// Called every physics tick
-	virtual void PhysFlying(float deltaTime, int32 Iterations) override;
+	virtual void PhysFlying(float deltaTime,
+		int32 Iterations) override;
 
 	// respond to movement mode changes
-	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode) override;
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode,
+		uint8 PreviousCustomMode) override;
+	
 	virtual void EnteredFlyingMovementMode();
+	virtual void EnteredCustomMovementMode();
+
+#pragma region Wall Running
 	
 	// Wall running
 	bool IsWallDetected(FHitResult& WallHit) const;
@@ -60,6 +67,16 @@ public:
 		BlueprintReadWrite,
 		Category = "WallRunning")
 	float EndWallRunUpImpulseStrength = 900.0f;
+
+#pragma endregion Wall Running
+	
+	// Sliding
+	virtual void PhysCustom(float deltaTime,
+		int32 Iterations) override;
+	float MinimumSpeedToSlide;
+	bool CanSlide();
+	void StartSliding();
+	void EndSliding();
 	
 protected:
 	// Called when the game starts
