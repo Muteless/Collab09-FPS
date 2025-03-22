@@ -79,16 +79,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Movement")
-	void CharacterMovementCrouch();
-
-	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable,
-		Category = "Movement")
-	void CharacterMovementUncrouch();
-
-	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable,
-		Category = "Movement")
 	void CharacterMovementStartSliding();
 
 	UFUNCTION(BlueprintNativeEvent,

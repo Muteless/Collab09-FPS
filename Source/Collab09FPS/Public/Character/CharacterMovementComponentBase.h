@@ -35,6 +35,7 @@ public:
 	
 	virtual void EnteredFlyingMovementMode();
 	virtual void EnteredCustomMovementMode();
+	virtual bool CanCrouchInCurrentState() const override;
 
 #pragma region Wall Running
 	
@@ -73,10 +74,11 @@ public:
 	// Sliding
 	virtual void PhysCustom(float deltaTime,
 		int32 Iterations) override;
-	float MinimumSpeedToSlide;
 	bool CanSlide();
-	void StartSliding();
-	void EndSliding();
+	void Sliding();
+	void StopSliding();
+	FVector CurrentSlideDirection;
+	
 	
 protected:
 	// Called when the game starts
@@ -119,6 +121,18 @@ protected:
 		BlueprintReadWrite,
 		Category = "WallRunning")
 	float OntoWallRotationSpeed = 10.0f;
+
+	// Minimum speed required to enter sliding
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Sliding")
+	float MinimumSlideSpeed = 100.0f;
+
+	// Constant speed applied when sliding
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Sliding")
+	float SlideSpeed = 1100;
 
 private:
 	GENERATED_BODY()

@@ -36,7 +36,7 @@ void UCMCAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 		Execute_SetCMCBrakingFriction(GetOwningActor(), NewValue);
 	}
 
-	if (Attribute == GetGroundFrictionAttribute(), NewValue)
+	if (Attribute == GetGroundFrictionAttribute())
 	{
 		Execute_SetCMCGroundFriction(GetOwningActor(), NewValue);
 	}
@@ -51,6 +51,6 @@ void UCMCAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 		Execute_SetCMCPushOffWallVerticalSpeed(GetOwningActor(), NewValue);
 	}
 	
-	Super::PreAttributeChange(Attribute, NewValue);
+	// Super::PreAttributeChange(Attribute, NewValue);
 }
 

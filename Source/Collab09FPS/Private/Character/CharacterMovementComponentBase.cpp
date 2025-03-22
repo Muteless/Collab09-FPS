@@ -38,6 +38,14 @@ void UCharacterMovementComponentBase::PhysFlying(float deltaTime, int32 Iteratio
 
 void UCharacterMovementComponentBase::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
+	if (MovementMode == MOVE_Walking)
+	{
+    	if (PrevMovementMode == MOVE_Custom)
+    	{
+    		StopSliding();
+    	}
+	}
+	
 	if (MovementMode == MOVE_Flying)
 	{
 		EnteredFlyingMovementMode();
@@ -63,7 +71,16 @@ void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
 
 void UCharacterMovementComponentBase::EnteredCustomMovementMode()
 {
-	
+	if (GetPawnOwner()->GetLastMovementInputVector() == FVector::ZeroVector)
+	{
+		CurrentSlideDirection = FVector(GetPawnOwner()->GetActorForwardVector().X,
+			GetPawnOwner()->GetActorForwardVector().Y,
+			0); // ( 1, 0, 1
+	}
+	else
+	{
+		CurrentSlideDirection = GetPawnOwner()->GetLastMovementInputVector();
+	}
 }
 
 bool UCharacterMovementComponentBase::CanWallRun() const
@@ -268,15 +285,31 @@ void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
 	bExitWallRun = false;
 }
 
+bool UCharacterMovementComponentBase::CanCrouchInCurrentState() const
+{
+	if (MovementMode == MOVE_Custom)
+	{
+		return true;
+	}
+	
+	return Super::CanCrouchInCurrentState();
+}
+
 void UCharacterMovementComponentBase::PhysCustom(float deltaTime, int32 Iterations)
 {
 	if (CanSlide())
 	{
-		StartSliding();
+		bWantsToCrouch = true;
+		if (!IsCrouching())
+		{
+			Crouch();
+		}
+		
+		Sliding();
 	}
 	else
 	{
-		EndSliding();
+		StopSliding();
 	}
 	
 	Super::PhysCustom(deltaTime, Iterations);
@@ -284,15 +317,31 @@ void UCharacterMovementComponentBase::PhysCustom(float deltaTime, int32 Iteratio
 
 bool UCharacterMovementComponentBase::CanSlide()
 {
-	return Velocity.Length() > MinimumSpeedToSlide;
+	return !IsFalling();
 }
 
-void UCharacterMovementComponentBase::StartSliding()
+void UCharacterMovementComponentBase::Sliding()
 {
+	FVector CurrentVelocity = Velocity;
+	CurrentVelocity = CurrentSlideDirection.GetSafeNormal2D() * SlideSpeed;
 	
+	// Gravity
+	float GravityAcceleration = GetWorld()->GetGravityZ() * GravityScale;
+	CurrentVelocity.Z += GravityAcceleration * GetWorld()->GetDeltaSeconds();
+	
+	CurrentVelocity *= GetWorld()->GetDeltaSeconds();
+	
+	FHitResult HitResult;
+	SafeMoveUpdatedComponent(CurrentVelocity,
+		FRotator(0, CharacterOwner->GetActorRotation().Yaw, 0),
+		true,
+		HitResult,
+		ETeleportType::None);
 }
 
-void UCharacterMovementComponentBase::EndSliding()
+void UCharacterMovementComponentBase::StopSliding()
 {
-	SetMovementMode(MOVE_Walking);
+	bWantsToCrouch = false;
+	UnCrouch();
+	SetMovementMode(MOVE_Falling);
 }

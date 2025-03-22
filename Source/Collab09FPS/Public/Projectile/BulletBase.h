@@ -31,7 +31,7 @@ public:
 	float AmmoConsumedOnShot;
 	
 protected:
-	UPROPERTY(EditAnywhere,
+	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
 		Category = "Bullet |")
 	TMap<TSubclassOf<class UGameplayEffect>, float> OnHitGameplayEffect;

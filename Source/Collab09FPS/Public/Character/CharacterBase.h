@@ -75,7 +75,7 @@ public:
 	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
 
 	UFUNCTION(Category = "Input")
-	virtual void InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input) override;
+	virtual void InputActionSlide_Implementation(const EInputTypes InputType, const bool Input) override;
 	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
@@ -160,18 +160,6 @@ public:
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
-
-	// Crouch
-	virtual void CharacterMovementCrouch_Implementation() override;
-
-	// Uncrouch
-	virtual void CharacterMovementUncrouch_Implementation() override;
-
-	// Start sliding
-	virtual void CharacterMovementStartSliding_Implementation() override;
-
-	// Stop sliding
-	virtual void CharacterMovementStopSliding_Implementation() override;
 
 #pragma endregion Actions
 	

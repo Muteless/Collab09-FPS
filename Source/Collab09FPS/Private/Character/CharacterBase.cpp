@@ -117,7 +117,6 @@ void ACharacterBase::SetCMCPushOffWallVerticalSpeed_Implementation(float PushOff
 
 void ACharacterBase::SetCMCGroundFriction_Implementation(float GroundFriction)
 {
-	UE_LOG(LogTemp, Warning, TEXT("GroundFriction: %f"), GroundFriction);
 	GetCharacterMovement()->GroundFriction = GroundFriction;
 }
 
@@ -236,7 +235,7 @@ void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType,
 	}
 }
 
-void ACharacterBase::InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input)
+void ACharacterBase::InputActionSlide_Implementation(const EInputTypes InputType, const bool Input)
 {
 	switch (InputType)
 	{
@@ -251,7 +250,7 @@ void ACharacterBase::InputActionCrouch_Implementation(const EInputTypes InputTyp
 						FGameplayEventData Payload;
 					
 						// Use crouch ability event
-						AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Crouch")), &Payload);
+						AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StartSlide")), &Payload);
 						break;
 					}
 				}
@@ -259,18 +258,15 @@ void ACharacterBase::InputActionCrouch_Implementation(const EInputTypes InputTyp
 		
 		case EInputTypes::Completed:
 			{
-				if (!GetCharacterMovement()->IsFalling())
+				// Stop crouching
+				if (AbilitySystemComponent)
 				{
-					// Stop crouching
-					if (AbilitySystemComponent)
-					{
-						// Crouch payload
-						FGameplayEventData Payload;
+					// Crouch payload
+					FGameplayEventData Payload;
 					
-						// Use crouch ability event
-						AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.UnCrouch")), &Payload);
-						break;
-					}
+					// Use crouch ability event
+					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StopSlide")), &Payload);
+					break;
 				}
 			}
 	}
@@ -546,28 +542,6 @@ float ACharacterBase::GetMaxHealth() const
 bool ACharacterBase::IsAirborne_Implementation()
 {
 	return GetCharacterMovement()->IsFalling();
-}
-
-void ACharacterBase::CharacterMovementCrouch_Implementation()
-{
-	GetCharacterMovement()->bWantsToCrouch = true;
-	Crouch();
-}
-
-void ACharacterBase::CharacterMovementUncrouch_Implementation()
-{
-	GetCharacterMovement()->bWantsToCrouch = false;
-	UnCrouch();
-}
-
-void ACharacterBase::CharacterMovementStartSliding_Implementation()
-{
-	GetCharacterMovement()->SetMovementMode(MOVE_Custom);
-}
-
-void ACharacterBase::CharacterMovementStopSliding_Implementation()
-{
-	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
 
 // Get current air actions
