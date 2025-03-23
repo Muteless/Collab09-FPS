@@ -6,16 +6,7 @@
 #include "Engine/DataTable.h"
 #include "Collab09FPS.generated.h"
 
-
-UENUM(BlueprintType)
-enum class EInputTypes : uint8
-{
-	Triggered UMETA(DisplayName = "Triggered"),
-	Started UMETA(DisplayName = "Started"),
-	Ongoing UMETA(DisplayName = "Ongoing"),
-	Cancelled UMETA(DisplayName = "Cancelled"),
-	Completed UMETA(DisplayName = "Completed")
-};
+#pragma region Enemy Spawner
 
 UENUM(BlueprintType)
 enum class EEnemyTypes : uint8
@@ -41,6 +32,32 @@ enum class ERespawnMode : uint8
 	Never UMETA(DisplayName = "Never"),
 	OnTimer UMETA(DisplayName = "On Timer")
 };
+
+#pragma endregion Enemy Spawner
+
+#pragma region World State
+
+UENUM(BlueprintType)
+enum class EWorldState : uint8
+{
+	WorldOne UMETA(DisplayName = "World One"),
+	WorldTwo UMETA(DisplayName = "World Two"),
+};
+
+#pragma endregion World State
+
+#pragma region Input
+
+UENUM(BlueprintType)
+enum class EInputTypes : uint8
+{
+	Triggered UMETA(DisplayName = "Triggered"),
+	Started UMETA(DisplayName = "Started"),
+	Ongoing UMETA(DisplayName = "Ongoing"),
+	Cancelled UMETA(DisplayName = "Cancelled"),
+	Completed UMETA(DisplayName = "Completed")
+};
+
 
 USTRUCT(BlueprintType)
 struct FBoolInput
@@ -93,85 +110,4 @@ struct FVector2DInput
 	{}
 };
 
-USTRUCT(BlueprintType)
-struct FHealthCharacterData : public FTableRowBase
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxHealth;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float CurrentHealth;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxStamina;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float CurrentStamina;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxAirActions;
-};
-
-USTRUCT(BlueprintType)
-struct FPlayerCharacterData : public FTableRowBase
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxHealth;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float CurrentHealth;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxStamina;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float CurrentStamina;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxAirActions;
-};
-
-USTRUCT(BlueprintType)
-struct FCharacterData : public FTableRowBase
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxHealth;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float CurrentHealth;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Attributes")
-	float MaxAirActions;
-};
+#pragma endregion Input
