@@ -14,12 +14,16 @@ ABaseNavLinkProxy::ABaseNavLinkProxy()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	OnSmartLinkReached.AddDynamic(this, &ABaseNavLinkProxy::OnNavLinkReached);
-	UE_LOG(LogTemp,Log,TEXT("HELLO?"));
 }
 
 #include "DrawDebugHelpers.h"
+
+void ABaseNavLinkProxy::BeginPlay()
+{
+    OnSmartLinkReached.AddDynamic(this, &ABaseNavLinkProxy::OnNavLinkReached);
+    
+    Super::BeginPlay();
+}
 
 void ABaseNavLinkProxy::OnNavLinkReached(AActor* MovingActor, const FVector& DestinationPoint)
 {
@@ -27,9 +31,13 @@ void ABaseNavLinkProxy::OnNavLinkReached(AActor* MovingActor, const FVector& Des
 
     FVector StartLocation = MovingActor->GetActorLocation();
     FVector LaunchVelocity;
-    
+
+    // Calculate Z Offset Smartly
+    float zDist = DestinationPoint.Z - StartLocation.Z;
+    float JumpOffset = FMath::Clamp(zDist * JumpModification, 50.0f, 500.0f); // Prevent too low/high jumps
+
     FVector e = DestinationPoint;
-    e.Z += 300; // I should probably make this a variable with a gizmo so designers can see what is going on a lil better (Later me problem)
+    e.Z += JumpOffset;
 
     // Debug Sphere for Start Location
     DrawDebugSphere(GetWorld(), StartLocation, 50.0f, 12, FColor::Green, false, 5.0f);
@@ -37,13 +45,13 @@ void ABaseNavLinkProxy::OnNavLinkReached(AActor* MovingActor, const FVector& Des
 
     // Debug Sphere for Target Location
     DrawDebugSphere(GetWorld(), e, 50.0f, 12, FColor::Blue, false, 5.0f);
-    UE_LOG(LogTemp, Log, TEXT("Target Location (Adjusted): %s"), *e.ToString());
+    UE_LOG(LogTemp, Log, TEXT("Target Location (Adjusted): %s (Jump Offset: %.2f)"), *e.ToString(), JumpOffset);
 
     // Debug Line Between Start and Target
     DrawDebugLine(GetWorld(), StartLocation, e, FColor::Cyan, false, 5.0f, 0, 2.0f);
 
-    bool bSuccess = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), LaunchVelocity, StartLocation, e);
-
+    bool bSuccess = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), LaunchVelocity, StartLocation, e, 0, CustomArcSettings);
+    
     if (bSuccess)
     {
         UE_LOG(LogTemp, Log, TEXT("Launch Velocity Calculated: %s"), *LaunchVelocity.ToString());
@@ -67,11 +75,12 @@ void ABaseNavLinkProxy::OnNavLinkReached(AActor* MovingActor, const FVector& Des
     else
     {
         UE_LOG(LogTemp, Error, TEXT("SuggestProjectileVelocity failed, no valid trajectory found!"));
-        
+
         // Debug Sphere to mark failure at start location
         DrawDebugSphere(GetWorld(), StartLocation, 60.0f, 12, FColor::Red, false, 5.0f);
     }
 }
+
 
 
 
