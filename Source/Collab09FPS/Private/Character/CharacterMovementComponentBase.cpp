@@ -305,13 +305,13 @@ void UCharacterMovementComponentBase::StartSliding()
 	{
 		CurrentSlideDirection = FVector(GetPawnOwner()->GetActorForwardVector().X,
 			GetPawnOwner()->GetActorForwardVector().Y,
-			0);
+			0).GetSafeNormal2D();
 	}
 	else
 	{
 		CurrentSlideDirection = FVector(GetLastInputVector().X,
 			GetLastInputVector().Y,
-			0);
+			0).GetSafeNormal2D();
 	}
 
 	bWantsToSlide = true;
