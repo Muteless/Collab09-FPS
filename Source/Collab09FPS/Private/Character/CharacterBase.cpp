@@ -133,7 +133,6 @@ void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
 	if (MovementComponentBase)
 	{
 		MovementComponentBase->SlideSpeed = SlidingSpeed;
-		UE_LOG(LogTemp, Warning, TEXT("SetCMCSlidingSpeed: %f"), SlidingSpeed);
 	}
 }
 

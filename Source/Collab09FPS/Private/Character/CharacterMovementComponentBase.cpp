@@ -328,7 +328,6 @@ void UCharacterMovementComponentBase::Sliding()
 	
 	FHitResult HitResult;
 	SafeMoveUpdatedComponent(CurrentVelocity, CurrentRotation, true, HitResult, ETeleportType::None);
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %f"), Velocity.Size());
 }
 
 void UCharacterMovementComponentBase::CallToStopSliding()
