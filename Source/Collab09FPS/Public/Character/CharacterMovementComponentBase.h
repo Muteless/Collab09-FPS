@@ -21,15 +21,22 @@ public:
 	UCharacterMovementComponentBase();
 	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime,
+		ELevelTick TickType,
+		FActorComponentTickFunction* ThisTickFunction) override;
 
 	// Called every physics tick
-	virtual void PhysFlying(float deltaTime, int32 Iterations) override;
+	virtual void PhysFlying(float deltaTime,
+		int32 Iterations) override;
 
 	// respond to movement mode changes
-	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode) override;
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode,
+		uint8 PreviousCustomMode) override;
+	
 	virtual void EnteredFlyingMovementMode();
+	virtual void EnteredCustomMovementMode();
+
+#pragma region Wall Running
 	
 	// Wall running
 	bool IsWallDetected(FHitResult& WallHit) const;
@@ -60,18 +67,33 @@ public:
 		BlueprintReadWrite,
 		Category = "WallRunning")
 	float EndWallRunUpImpulseStrength = 900.0f;
+
+#pragma endregion Wall Running
+
+#pragma region Sliding
+	
+	// Sliding
+	bool CanSlide();
+	bool bWantsToSlide;
+	void StartSliding();
+	void Sliding();
+	void CallToStopSliding();
+	void StopSliding();
+	FVector CurrentSlideDirection;
+
+	// Constant speed applied when sliding
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Sliding")
+	float SlideSpeed = 1400;
+
+#pragma endregion Sliding
 	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	// Wall-run settings
-	
-	// Speed at which the character moves along the wall during a wall-run
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "WallRunning")
-	float WallRunSpeed = 1100.f;
 
 	// Minimum speed required for the character to initiate a wall-run
 	UPROPERTY(EditAnywhere,
