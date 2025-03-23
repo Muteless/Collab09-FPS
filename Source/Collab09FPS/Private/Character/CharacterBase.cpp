@@ -125,6 +125,18 @@ void ACharacterBase::SetCMCBrakingFriction_Implementation(float BrakingFriction)
 	GetCharacterMovement()->BrakingFriction = BrakingFriction;
 }
 
+void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
+{
+	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+
+	if (MovementComponentBase)
+	{
+		MovementComponentBase->SlideSpeed = SlidingSpeed;
+		UE_LOG(LogTemp, Warning, TEXT("SetCMCSlidingSpeed: %f"), SlidingSpeed);
+	}
+}
+
 #pragma endregion CMCAttributeSetChanges
 
 
@@ -243,13 +255,13 @@ void ACharacterBase::InputActionSlide_Implementation(const EInputTypes InputType
 			{
 				if (!GetCharacterMovement()->IsFalling())
 				{
-					// Start crouching
+					// Start sliding
 					if (AbilitySystemComponent)
 					{
-						// Crouch payload
+						// slide payload
 						FGameplayEventData Payload;
 					
-						// Use crouch ability event
+						// start slide ability event
 						AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StartSlide")), &Payload);
 						break;
 					}
@@ -258,13 +270,13 @@ void ACharacterBase::InputActionSlide_Implementation(const EInputTypes InputType
 		
 		case EInputTypes::Completed:
 			{
-				// Stop crouching
+				// Stop sliding
 				if (AbilitySystemComponent)
 				{
-					// Crouch payload
+					// slide payload
 					FGameplayEventData Payload;
-					
-					// Use crouch ability event
+
+					// stop sliding ability event
 					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StopSlide")), &Payload);
 					break;
 				}
@@ -400,6 +412,8 @@ void ACharacterBase::CharacterMovementAirJump_Implementation()
 	
 }
 
+#pragma region WallRun
+
 // TODO: refactor this into an ability? it is disgusting to look at //dan
 void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
@@ -455,6 +469,7 @@ void ACharacterBase::CharacterMovementWallJump_Implementation(FVector Direction,
 {
 	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
 		(GetCharacterMovement());
+	
 	MovementComponent->bExitWallRun = true;
 }
 
@@ -469,6 +484,8 @@ void ACharacterBase::CharacterMovementEndWallRun_Implementation()
 		AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
 	}
 }
+
+#pragma endregion WallRun
 
 // On landed
 void ACharacterBase::Landed(const FHitResult& Hit)
@@ -515,6 +532,22 @@ void ACharacterBase::CharacterMovementAirDash_Implementation()
 		// Use dash ability event
 		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirDash")), &Payload);
 	}
+}
+
+void ACharacterBase::CharacterMovementStartSliding_Implementation()
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	MovementComponent->StartSliding();
+}
+
+void ACharacterBase::CharacterMovementStopSliding_Implementation()
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	MovementComponent->StopSliding();
 }
 
 //* Blueprint Helper functions *//

@@ -50,7 +50,12 @@ void UCMCAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 	{
 		Execute_SetCMCPushOffWallVerticalSpeed(GetOwningActor(), NewValue);
 	}
+
+	if (Attribute == GetSlidingSpeedAttribute())
+	{
+		Execute_SetCMCSlidingSpeed(GetOwningActor(), NewValue);
+	}
 	
-	// Super::PreAttributeChange(Attribute, NewValue);
+	Super::PreAttributeChange(Attribute, NewValue);
 }
 

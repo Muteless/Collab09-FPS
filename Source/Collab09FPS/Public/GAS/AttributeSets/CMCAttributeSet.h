@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Interfaces/MovementComponentAttributeUpdate.h"
 
+
 #include "CMCAttributeSet.generated.h"
 
 // Attribute accessors
@@ -94,14 +95,9 @@ public:
 	// Crouching & Sliding
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | CMC | ")
-	FGameplayAttributeData SlidingMinSpeed;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingMinSpeed);
+	FGameplayAttributeData SlidingSpeed;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingSpeed);
 
-	UPROPERTY(BlueprintReadOnly,
-		Category="Attributes | CMC | ")
-	FGameplayAttributeData SlidingInitialBoost;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingInitialBoost);
-	
 protected:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute,
 		float& NewValue) override;

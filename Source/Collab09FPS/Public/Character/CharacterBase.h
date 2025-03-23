@@ -126,6 +126,7 @@ public:
 	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
 	virtual void SetCMCGroundFriction_Implementation(float GroundFriction) override;
 	virtual void SetCMCBrakingFriction_Implementation(float BrakingFriction) override;
+	virtual void SetCMCSlidingSpeed_Implementation(float SlidingSpeed) override;
 	
 #pragma endregion CMCAttributeSetChanges
 
@@ -157,6 +158,9 @@ public:
 
 	// Air dash
 	virtual void CharacterMovementAirDash_Implementation() override;
+
+	virtual void CharacterMovementStartSliding_Implementation() override;
+	virtual void CharacterMovementStopSliding_Implementation() override;
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
