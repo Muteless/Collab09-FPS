@@ -12,6 +12,21 @@ PlayerPawn(nullptr)
 	
 }
 
+void ALevelGameState::BeginPlay()
+{
+	// Get level data asset world collection
+	ULevelDataAsset* LevelDataAsset = IGameInstanceInterface::Execute_GetLevelData(GetGameInstance());
+	if (LevelDataAsset)
+	{
+		WorldCollection = LevelDataAsset->WorldCollection;
+	}
+
+	// Load initial world
+	LoadWorld(WorldState);
+	
+	Super::BeginPlay();
+}
+
 #pragma region World State
 
 void ALevelGameState::TransitionWorld()
@@ -31,7 +46,14 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 	{
 		if (World.Key == TargetWorldState)
 		{
+			// Set world state to new target world state
+			WorldState = TargetWorldState;
+			
 			FLatentActionInfo LatentInfo;
+			LatentInfo.CallbackTarget = this;
+			LatentInfo.ExecutionFunction = FName("WorldLoaded");
+			
+			// Stream level
 			UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),
 				World.Value,
 				true,
@@ -44,6 +66,11 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 	UnloadWorlds(TargetWorldState);
 }
 
+void ALevelGameState::WorldLoaded()
+{
+	OnWorldTransition.Broadcast(WorldState);
+}
+
 void ALevelGameState::UnloadWorlds(EWorldState AvoidWorldState)
 {
 	for (const TPair<EWorldState, TSoftObjectPtr<UWorld>>& World : WorldCollection)
@@ -51,6 +78,8 @@ void ALevelGameState::UnloadWorlds(EWorldState AvoidWorldState)
 		if (World.Key != AvoidWorldState)
 		{
 			FLatentActionInfo LatentInfo;
+
+			// Unload level
 			UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(),
 				World.Value,
 				LatentInfo,

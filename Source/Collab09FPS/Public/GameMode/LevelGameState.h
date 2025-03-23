@@ -7,34 +7,45 @@
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/GameInstanceInterface.h"
 #include "LevelGameState.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, NewWorldState);
 
 /**
  * 
  */
+
 UCLASS()
-class COLLAB09FPS_API ALevelGameState : public AGameStateBase
+class COLLAB09FPS_API ALevelGameState :
+public AGameStateBase,
+public IGameInstanceInterface
 {
 	ALevelGameState();
 
 public:
+	virtual void BeginPlay() override;
 	virtual void AddPlayerState(APlayerState* PlayerState) override;
 
 #pragma region World State
+
+	UPROPERTY(BlueprintAssignable)
+	FOnWorldTransition OnWorldTransition;
+
+	UFUNCTION()
+	void WorldLoaded();
 	
 	UFUNCTION(BlueprintCallable)
 	void TransitionWorld();
 	void LoadWorld(EWorldState TargetWorldState);
 	void UnloadWorlds(EWorldState AvoidWorldState);
 	
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
 		Category = "LevelStreaming")
 	EWorldState WorldState;
 
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "LevelStreaming")
+	UPROPERTY()
 	TMap<EWorldState, TSoftObjectPtr<UWorld>> WorldCollection;
 
 #pragma endregion World State
