@@ -94,7 +94,7 @@ public:
 	
 	// Event handlers for overlap
 	UFUNCTION()
-	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
+	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex,
@@ -102,7 +102,7 @@ public:
 		const FHitResult& SweepResult);
 	
 	UFUNCTION()
-	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, 
+	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
