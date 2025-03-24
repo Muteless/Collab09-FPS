@@ -103,14 +103,12 @@ void AWeaponBase::WeaponPrimaryAction_Implementation()
 	{
 		if (CanFire())
 		{
-			UE_LOG(LogTemp, Log, TEXT("Firing!"));
 			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Fire"));
 			OwnerActorASC->HandleGameplayEvent(EventData.EventTag, &EventData);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("Melee!"));
 		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Melee"));
 		OwnerActorASC->HandleGameplayEvent(EventData.EventTag, &EventData);
 	}
@@ -206,7 +204,13 @@ void AWeaponBase::ConsumeAmmo()
 
 void AWeaponBase::WeaponReload_Implementation()
 {
-	
+	// Start Timer
+	GetWorld()->GetTimerManager().SetTimer(
+		ReloadTimerHandle,
+		this,
+		&AWeaponBase::RateOfFireTimerEnded,
+		RateOfFire,
+		false);
 }
 
 void AWeaponBase::WeaponMelee_Implementation()

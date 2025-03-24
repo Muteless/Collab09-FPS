@@ -67,6 +67,7 @@ public:
 	UArrowComponent* ProjectileSpawnLocation;
 	
 #pragma region GunMode
+	
 	virtual void WeaponFire_Implementation() override;
 	void RateOfFireTimerEnded();
 	bool CanFire();
@@ -76,6 +77,8 @@ public:
 	FTimerHandle RateOfFireTimerHandle;
 
 	virtual void WeaponReload_Implementation() override;
+	// bool CanReload();
+	// void ReloadFinished();
 	FTimerHandle ReloadTimerHandle;
 	
 #pragma endregion GunMode

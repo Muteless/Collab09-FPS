@@ -29,14 +29,16 @@ void ALevelGameState::BeginPlay()
 
 #pragma region World State
 
-void ALevelGameState::TransitionWorld()
+void ALevelGameState::TransitionWorld_Implementation()
 {
 	switch (WorldState)
 	{
 		case EWorldState::WorldOne:
 			LoadWorld(EWorldState::WorldTwo);
+			break;
 		case EWorldState::WorldTwo:
 			LoadWorld(EWorldState::WorldOne);
+			break;
 	}
 }
 
@@ -46,9 +48,6 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 	{
 		if (World.Key == TargetWorldState)
 		{
-			// Set world state to new target world state
-			WorldState = TargetWorldState;
-			
 			FLatentActionInfo LatentInfo;
 			LatentInfo.CallbackTarget = this;
 			LatentInfo.ExecutionFunction = FName("WorldLoaded");
@@ -59,6 +58,9 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 				true,
 				false,
 				LatentInfo);
+
+			// Set world state to new target world state
+			WorldState = TargetWorldState;
 		}
 	}
 

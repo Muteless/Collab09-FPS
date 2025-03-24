@@ -94,8 +94,8 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 					
 				// start slide ability event
 				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.SwitchDimensions")), &Payload);
+				break;
 			}
-		break;
 	case EInputTypes::Ongoing:
 		break;
 	case EInputTypes::Cancelled:
