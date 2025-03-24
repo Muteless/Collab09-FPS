@@ -130,6 +130,8 @@ public:
 	
 #pragma endregion CMCAttributeSetChanges
 
+
+
 	UFUNCTION(Category = "Input")
 	virtual FVector GetMovementInput_Implementation() override;
 
