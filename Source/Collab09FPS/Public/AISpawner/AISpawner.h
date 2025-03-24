@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIBase/BaseAI.h"
 #include "Collab09FPS/Collab09FPS.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
@@ -50,6 +51,12 @@ public:
 		meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<AActor>> EnemyBlueprints;
 
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Enemy Spawner",
+		meta = (AllowPrivateAccess = "true"))
+	EDefaultSpawnBehaviour EnemyStartBehaviour;
+	
 	int SpawnedCount;
 
 	UArrowComponent* ArrowComponent;
@@ -67,7 +74,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SpawnEnemy();
-	
+	void DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour Behaviour);
 
 public:
 };

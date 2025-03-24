@@ -3,7 +3,10 @@
 
 #include "AISpawner/AISpawner.h"
 
+#include "AsyncTreeDifferences.h"
 #include "NavigationSystem.h"
+#include "AIBase/BaseAI.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 void AAISpawner::StartSpawnTimer()
@@ -46,11 +49,9 @@ void AAISpawner::SpawnEnemy()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Spawned!"));
 
-	
 	if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
 	if (SpawnedCount >= MaxEnemyCount)
 	{
-		// Only stop the timer if respawning is set to OnTimer
 		if (RespawnMode == ERespawnMode::OnTimer)
 		{
 			GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
@@ -82,26 +83,39 @@ void AAISpawner::SpawnEnemy()
 	}
 
 	UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
-
 	if (!NavSystem) return;
 
 	FVector SpawnLocation = GetActorLocation();
 	FNavLocation ClosestNavPoint;
 
-	bool FoundLocation = NavSystem->ProjectPointToNavigation(
-		SpawnLocation,
-		ClosestNavPoint
-	);
+	bool FoundLocation = NavSystem->ProjectPointToNavigation(SpawnLocation, ClosestNavPoint);
 
 	if (FoundLocation)
 	{
-		AActor* SpawnedEnemy = World->SpawnActor<AActor>(EnemySpawnType,
-			ClosestNavPoint.Location, FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator());
+		AActor* SpawnedEnemy = World->SpawnActor<AActor>(
+			EnemySpawnType, ClosestNavPoint.Location,
+			FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator());
 
 		if (IsValid(SpawnedEnemy))
 		{
 			SpawnedCount++;
 			UE_LOG(LogTemp, Log, TEXT("Spawned Enemy at: %s"), *ClosestNavPoint.Location.ToString());
+
+			ABaseAI* AIC = Cast<ABaseAI>(Cast<APawn>(SpawnedEnemy)->GetController());
+
+			if (IsValid(AIC))
+			{
+				UE_LOG(LogTemp, Log, TEXT("AIC Valid"));
+
+				FTimerHandle DelayHandle;
+				FTimerDelegate TimerDelegate;
+				TimerDelegate.BindUObject(this, &AAISpawner::DelayedSetBlackboardValue, AIC, EnemyStartBehaviour);
+				GetWorldTimerManager().SetTimer(DelayHandle, TimerDelegate, .1f, false);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Log, TEXT("AIC Not Valid"));
+			}
 		}
 		else
 			UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at: %s"), *ClosestNavPoint.Location.ToString());
@@ -109,5 +123,49 @@ void AAISpawner::SpawnEnemy()
 	else
 		UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at no valid NavLocation"));
 }
+
+
+void AAISpawner::DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour Behaviour)
+{
+	if (!AIC || !AIC->GetBlackboardComponent()) return;
+
+	UBlackboardComponent* BlackboardComp = AIC->GetBlackboardComponent();
+	if (!BlackboardComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Blackboard Component is NULL"));
+		return;
+	}
+
+	if (!BlackboardComp->IsValidKey(BlackboardComp->GetKeyID(FName(TEXT("E_AIStartStateEnumKey")))))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Blackboard Key is NOT Valid"));
+		return;
+	}
+
+	switch (Behaviour)
+	{
+	case EDefaultSpawnBehaviour::Idle:
+		UE_LOG(LogTemp, Log, TEXT("Idle"));
+		BlackboardComp->SetValueAsInt(FName(TEXT("E_AIStartStateEnumKey")), 1);
+		break;
+	case EDefaultSpawnBehaviour::Patrol:
+		UE_LOG(LogTemp, Log, TEXT("Patrol"));
+		BlackboardComp->SetValueAsInt(FName(TEXT("E_AIStartStateEnumKey")), 0);
+		break;
+	case EDefaultSpawnBehaviour::RandomWander:
+		UE_LOG(LogTemp, Log, TEXT("Random Wander"));
+		BlackboardComp->SetValueAsInt(FName(TEXT("E_AIStartStateEnumKey")), 2);
+		break;
+	case EDefaultSpawnBehaviour::AutoTargetPlayer:
+		UE_LOG(LogTemp, Log, TEXT("Auto Target Player"));
+		BlackboardComp->SetValueAsInt(FName(TEXT("E_AIStartStateEnumKey")), 3);
+		break;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Set Blackboard Value to: %d"),
+		BlackboardComp->GetValueAsInt(FName(TEXT("E_AIStartStateEnumKey"))));
+}
+
+
 
 
