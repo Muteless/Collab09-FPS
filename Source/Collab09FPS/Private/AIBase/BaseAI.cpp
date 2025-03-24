@@ -69,13 +69,8 @@ void ABaseAI::OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus)
 	{
 		if (wasSensed)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, 
-				FString::Printf(TEXT("DeepSeek used their eyes and sees %s!"), *Actor->GetName()));
-
 			if (isPlayer)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("IT WAS THE PLAYER"));
-
 				BlackboardComponent->SetValueAsObject(TEXT("O_PlayerObject"), Actor);
 			}
 		}
@@ -87,8 +82,7 @@ void ABaseAI::OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus)
 	{
 		if (wasSensed)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, 
-				FString::Printf(TEXT("DeepSeek used their ears and hears %s!"), *Actor->GetName()));
+			
 		}
 		else
 		{

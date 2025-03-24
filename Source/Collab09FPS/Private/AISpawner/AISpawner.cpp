@@ -30,7 +30,6 @@ void AAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("begin!"));
 
 
 	if (ArrowComponent == nullptr)
@@ -47,7 +46,6 @@ void AAISpawner::BeginPlay()
 
 void AAISpawner::SpawnEnemy()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Spawned!"));
 
 	if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
 	if (SpawnedCount >= MaxEnemyCount)
@@ -99,13 +97,11 @@ void AAISpawner::SpawnEnemy()
 		if (IsValid(SpawnedEnemy))
 		{
 			SpawnedCount++;
-			UE_LOG(LogTemp, Log, TEXT("Spawned Enemy at: %s"), *ClosestNavPoint.Location.ToString());
 
 			ABaseAI* AIC = Cast<ABaseAI>(Cast<APawn>(SpawnedEnemy)->GetController());
 
 			if (IsValid(AIC))
 			{
-				UE_LOG(LogTemp, Log, TEXT("AIC Valid"));
 
 				FTimerHandle DelayHandle;
 				FTimerDelegate TimerDelegate;
@@ -114,14 +110,17 @@ void AAISpawner::SpawnEnemy()
 			}
 			else
 			{
-				UE_LOG(LogTemp, Log, TEXT("AIC Not Valid"));
 			}
 		}
 		else
-			UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at: %s"), *ClosestNavPoint.Location.ToString());
+		{
+			
+		}
 	}
 	else
-		UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at no valid NavLocation"));
+	{
+		
+	}
 }
 
 
@@ -132,13 +131,11 @@ void AAISpawner::DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour 
 	UBlackboardComponent* BlackboardComp = AIC->GetBlackboardComponent();
 	if (!BlackboardComp)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Blackboard Component is NULL"));
 		return;
 	}
 
 	if (!BlackboardComp->IsValidKey(BlackboardComp->GetKeyID(FName(TEXT("E_AIStartStateEnumKey")))))
 	{
-		UE_LOG(LogTemp, Log, TEXT("Blackboard Key is NOT Valid"));
 		return;
 	}
 
