@@ -90,9 +90,15 @@ void AAISpawner::SpawnEnemy()
 
 	if (FoundLocation)
 	{
+		FVector AdjustedSpawnLocation = ClosestNavPoint.Location + FVector(0, 0, 50); // Raise by 50 units
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
 		AActor* SpawnedEnemy = World->SpawnActor<AActor>(
-			EnemySpawnType, ClosestNavPoint.Location,
-			FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator());
+			EnemySpawnType, AdjustedSpawnLocation,
+			FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator(),
+			SpawnParams);
 
 		if (IsValid(SpawnedEnemy))
 		{
@@ -110,16 +116,17 @@ void AAISpawner::SpawnEnemy()
 			}
 			else
 			{
+				UE_LOG(LogTemp, Log, TEXT("AIC Not Valid"));
 			}
 		}
 		else
 		{
-			
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at: %s"), *ClosestNavPoint.Location.ToString());
 		}
 	}
 	else
 	{
-		
+		UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at no valid NavLocation"));
 	}
 }
 
