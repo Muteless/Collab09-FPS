@@ -33,6 +33,17 @@ enum class ERespawnMode : uint8
 	OnTimer UMETA(DisplayName = "On Timer")
 };
 
+UENUM(BlueprintType)
+enum class EDefaultSpawnBehaviour : uint8
+{
+	Patrol UMETA(DisplayName = "Patrol"),
+	Idle UMETA(DisplayName = "Idle"),
+	RandomWander UMETA(DisplayName = "RandomWander"),
+	AutoTargetPlayer UMETA(DisplayName = "Auto Target Player")
+};
+
+
+
 #pragma endregion Enemy Spawner
 
 #pragma region World State
