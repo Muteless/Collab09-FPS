@@ -79,6 +79,32 @@ void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType,
 	AddControllerPitchInput(bInvertedPitch ? Input.Y : -Input.Y);
 }
 
+void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType)
+	{
+	case EInputTypes::Triggered:
+		break;
+	case EInputTypes::Started:
+			// Switch dimensions
+			if (AbilitySystemComponent)
+			{
+				// slide payload
+				FGameplayEventData Payload;
+					
+				// start slide ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.SwitchDimensions")), &Payload);
+			}
+		break;
+	case EInputTypes::Ongoing:
+		break;
+	case EInputTypes::Cancelled:
+		break;
+	case EInputTypes::Completed:
+		break;
+	}
+}
+
 void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const
 {
 	float CurrentSpeed = GetVelocity().Size();

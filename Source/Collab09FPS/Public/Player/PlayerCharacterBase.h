@@ -38,6 +38,9 @@ public:
 	UFUNCTION(Category = "Input")
 	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
 
+	UFUNCTION(Category = "Input")
+	virtual void InputActionSwitchDimensions_Implementation(const EInputTypes InputType, const bool Input) override;
+
 	//* Stamina *//
 	// Stamina attribute set
 	UPROPERTY()
