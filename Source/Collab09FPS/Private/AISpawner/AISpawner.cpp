@@ -75,6 +75,7 @@ void AAISpawner::SpawnEnemy()
 	case EEnemyTypes::HeavyMelee:
 		break;
 	case EEnemyTypes::HeavyRanger:
+		EnemySpawnType = EnemyBlueprints[2];
 		break;
 	default:
 		break;
