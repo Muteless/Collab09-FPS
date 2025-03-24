@@ -12,8 +12,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-// Weapon
-
 // Attribute Sets
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
 

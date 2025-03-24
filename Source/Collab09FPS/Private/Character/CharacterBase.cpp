@@ -2,6 +2,7 @@
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GAS/AttributeSets/StaminaAttributeSet.h"
 
 // Constructor
 ACharacterBase::ACharacterBase() :

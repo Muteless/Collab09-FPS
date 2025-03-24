@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/GameInstanceInterface.h"
+#include "Interfaces/GameStateInterface.h"
 #include "LevelGameState.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, NewWorldState);
@@ -19,6 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, New
 UCLASS()
 class COLLAB09FPS_API ALevelGameState :
 public AGameStateBase,
+public IGameStateInterface,
 public IGameInstanceInterface
 {
 	ALevelGameState();
@@ -36,7 +38,7 @@ public:
 	void WorldLoaded();
 	
 	UFUNCTION(BlueprintCallable)
-	void TransitionWorld();
+	void TransitionWorld_Implementation() override;
 	void LoadWorld(EWorldState TargetWorldState);
 	void UnloadWorlds(EWorldState AvoidWorldState);
 	
