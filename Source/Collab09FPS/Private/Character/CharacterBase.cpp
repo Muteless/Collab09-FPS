@@ -4,6 +4,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
 
+#pragma region Initialization
+
 // Constructor
 ACharacterBase::ACharacterBase() :
 WeaponSocketName("WeaponSocket")
@@ -72,6 +74,99 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	}
 }
 
+void ACharacterBase::AddInitialCharacterAttributeSets()
+{
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
+		BindHealthAttributeSet();
+		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
+		AbilitySystemComponent->AddSet<UDashAttributeSet>();
+		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
+		AbilitySystemComponent->AddSet<UMetaEffectsAttributeSet>();
+	}
+}
+
+// Give native character abilities
+void ACharacterBase::AddNativeCharacterAbilities()
+{
+	if (NativeAbilities.Num() > 0)
+	{
+		for (TSubclassOf<UNativeGameplayAbility> Ability : NativeAbilities)
+		{
+			if (Ability)
+			{
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
+			}
+		}
+	}
+}
+
+// Add initial character abilities
+void ACharacterBase::AddInitialCharacterAbilities()
+{
+	if (AbilitySystemComponent)
+	{
+		for (TSubclassOf<UGameplayAbility> Ability : InitialAbilities)
+		{
+			// if ability is valid
+			if (Ability != nullptr)
+			{
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
+			}
+		}
+	}
+}
+
+
+void ACharacterBase::AddInitialCharacterGameplayEffects()
+{
+	if (AbilitySystemComponent)
+	{
+		for (TSubclassOf<UGameplayEffect> GameplayEffect : InitialGameplayEffects)
+		{
+			// Valid gameplay effect
+			if (GameplayEffect)
+			{
+				// Create an outgoing spec for the Gameplay Effect
+				FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
+			
+				// Apply the effect to the Ability System Component
+				AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+			}
+		}
+	}
+}
+
+void ACharacterBase::BindHealthAttributeSet()
+{
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate
+	(HealthAttributeSet->GetCurrentHealthAttribute()).AddUObject
+	(this, &ACharacterBase::OnHealthChanged);
+}
+
+void ACharacterBase::BindAirActionAttributeSet()
+{
+	
+}
+
+void ACharacterBase::BindCMCAttributeSet()
+{
+	
+}
+
+void ACharacterBase::BindDashAttributeSet()
+{
+	
+}
+
+void ACharacterBase::BindMetaEffectsAttributeSet()
+{
+	
+}
+
+#pragma endregion Initialization
+
 #pragma region CMCAttributeSetChanges
 
 void ACharacterBase::SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed)
@@ -137,20 +232,32 @@ void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
 	}
 }
 
-#pragma endregion CMCAttributeSetChanges
+#pragma region AttributeChangeDelegates
 
-
-void ACharacterBase::AddInitialCharacterAttributeSets()
+void ACharacterBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
-	if (AbilitySystemComponent)
+	UE_LOG(LogTemp, Warning, TEXT("Health Changed"));
+	if (Data.NewValue <= 0)
 	{
-		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
-		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
-		AbilitySystemComponent->AddSet<UDashAttributeSet>();
-		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
-		AbilitySystemComponent->AddSet<UMetaEffectsAttributeSet>();
+		Death();
 	}
 }
+
+void ACharacterBase::OnStaminaChanged(const FOnAttributeChangeData& Data)
+{
+	
+}
+
+void ACharacterBase::OnAirActionsChanged(const FOnAttributeChangeData& Data)
+{
+	
+}
+
+#pragma endregion AttributeChangeDelegates
+
+#pragma endregion CMCAttributeSetChanges
+
+#pragma region Input
 
 void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
 {
@@ -244,6 +351,14 @@ void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType,
 				// Air dash
 				Execute_CharacterMovementAirDash(this);
 			}
+		case EInputTypes::Triggered:
+			break;
+		case EInputTypes::Ongoing:
+			break;
+		case EInputTypes::Cancelled:
+			break;
+		case EInputTypes::Completed:
+			break;
 	}
 }
 
@@ -281,6 +396,12 @@ void ACharacterBase::InputActionSlide_Implementation(const EInputTypes InputType
 					break;
 				}
 			}
+		case EInputTypes::Triggered:
+			break;
+		case EInputTypes::Ongoing:
+			break;
+		case EInputTypes::Cancelled:
+			break;
 	}
 }
 
@@ -289,6 +410,9 @@ FVector ACharacterBase::GetMovementInput_Implementation()
 	return GetLastMovementInputVector();
 }
 
+#pragma endregion Input
+
+#pragma region Actions
 void ACharacterBase::CharacterMovementMove_Implementation(FVector MoveInput)
 {
 	AddMovementInput(GetActorRightVector(), MoveInput.X, false);
@@ -341,57 +465,6 @@ void ACharacterBase::SpawnWeapon()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("WeaponClass is not set in %s"),
 			*GetName());
-	}
-}
-
-// Give native character abilities
-void ACharacterBase::AddNativeCharacterAbilities()
-{
-	if (NativeAbilities.Num() > 0)
-	{
-		for (TSubclassOf<UNativeGameplayAbility> Ability : NativeAbilities)
-		{
-			if (Ability)
-			{
-				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
-			}
-		}
-	}
-}
-
-// Add initial character abilities
-void ACharacterBase::AddInitialCharacterAbilities()
-{
-	if (AbilitySystemComponent)
-	{
-		for (TSubclassOf<UGameplayAbility> Ability : InitialAbilities)
-		{
-			// if ability is valid
-			if (Ability != nullptr)
-			{
-				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
-			}
-		}
-	}
-}
-
-
-void ACharacterBase::AddInitialCharacterGameplayEffects()
-{
-	if (AbilitySystemComponent)
-	{
-		for (TSubclassOf<UGameplayEffect> GameplayEffect : InitialGameplayEffects)
-		{
-			// Valid gameplay effect
-			if (GameplayEffect)
-			{
-				// Create an outgoing spec for the Gameplay Effect
-				FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect,1.f, AbilitySystemComponent->MakeEffectContext());
-			
-				// Apply the effect to the Ability System Component
-				AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
-			}
-		}
 	}
 }
 
@@ -550,6 +623,15 @@ void ACharacterBase::CharacterMovementStopSliding_Implementation()
 	MovementComponent->StopSliding();
 }
 
+void ACharacterBase::Death()
+{
+	
+}
+
+#pragma endregion Actions
+
+#pragma region GAS
+
 //* Blueprint Helper functions *//
 // Get current health attribute
 float ACharacterBase::GetCurrentHealth() const
@@ -596,3 +678,5 @@ float ACharacterBase::GetMaxAirActions() const
 	}
 	return -1.0f;
 }
+
+#pragma endregion GAS

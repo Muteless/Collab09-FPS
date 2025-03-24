@@ -64,6 +64,8 @@ public:
 	// Sets default values for this character's properties
 	ACharacterBase();
 
+#pragma region Input
+	
 	// Input
 	UFUNCTION(Category = "Input")
 	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
@@ -76,6 +78,13 @@ public:
 
 	UFUNCTION(Category = "Input")
 	virtual void InputActionSlide_Implementation(const EInputTypes InputType, const bool Input) override;
+
+	UFUNCTION(Category = "Input")
+	virtual FVector GetMovementInput_Implementation() override;
+
+#pragma endregion Input
+
+#pragma region Components
 	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
@@ -85,6 +94,11 @@ public:
 	
 	// Override from IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+	// Get Character Movement Component
+	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
+
+#pragma endregion Components
 	
 	// Wall capsule detection
 	UPROPERTY(VisibleAnywhere,
@@ -112,9 +126,6 @@ public:
 		BlueprintReadOnly,
 		Category = "Collision")
 	float WallCapsuleDetectionOffsetRadius = 10.0f;
-
-	// Get Character Movement Component
-	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
 	
 #pragma region CMCAttributeSetChanges
 	
@@ -130,11 +141,13 @@ public:
 	
 #pragma endregion CMCAttributeSetChanges
 
+#pragma region AttributeChangeDelegates
 
-
-	UFUNCTION(Category = "Input")
-	virtual FVector GetMovementInput_Implementation() override;
-
+	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void OnStaminaChanged(const FOnAttributeChangeData& Data);
+	virtual void OnAirActionsChanged(const FOnAttributeChangeData& Data);
+	
+#pragma endregion AttributeChangeDelegates
 	
 #pragma region Actions
 	
@@ -167,6 +180,9 @@ public:
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
 
+	UFUNCTION()
+	virtual void Death();
+
 #pragma endregion Actions
 	
 protected:
@@ -195,6 +211,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SpawnWeapon();
 
+#pragma region Initialization
+	
 	// Grants native abilities
 	void AddNativeCharacterAbilities();
 	// Abilities granted when the ability system is initialized
@@ -217,6 +235,14 @@ protected:
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
 
+	virtual void BindHealthAttributeSet();
+	virtual void BindAirActionAttributeSet();
+	virtual void BindCMCAttributeSet();
+	virtual void BindDashAttributeSet();
+	virtual void BindMetaEffectsAttributeSet();
+	
+#pragma endregion Initialization
+	
 	//* Health *//
 	// Health attribute set
 	UPROPERTY()

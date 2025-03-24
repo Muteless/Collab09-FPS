@@ -16,6 +16,7 @@ void UHealthAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attri
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0, GetMaxHealth());
 	}
+	
 	Super::PreAttributeBaseChange(Attribute, NewValue);
 }
 
