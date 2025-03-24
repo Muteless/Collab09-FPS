@@ -15,21 +15,6 @@ WeaponSocketName("WeaponSocket")
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System Component"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-	
-	// Wall capsule component
-	WallCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Wall Capsule Collision"));
-	WallCapsuleCollision->SetupAttachment(GetCapsuleComponent());
-	WallCapsuleCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	WallCapsuleCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
-	WallCapsuleCollision->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
-	WallCapsuleCollision->SetGenerateOverlapEvents(true);
-	
-	WallCapsuleCollision->ShapeColor = FColor::Blue;
-	WallCapsuleCollision->SetLineThickness(1);
-	WallCapsuleCollision->SetCapsuleSize(GetCapsuleComponent()->GetScaledCapsuleRadius() + WallCapsuleDetectionOffsetRadius, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
-
-	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
-	WeaponLocation->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // AbilitySystemComponent interface, return ability system component
@@ -48,14 +33,6 @@ UCharacterMovementComponent* ACharacterBase::GetActorCharacterMovementComponent_
 void ACharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
-	// Initialize wall capsule collision
-	if (WallCapsuleCollision)
-	{
-		// Begin & end overlap events
-		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleBeginOverlap);
-		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &ACharacterBase::OnWallCapsuleEndOverlap);
-	}
 	
 	// Initialize AbilitySystemComponent
 	if (AbilitySystemComponent)
@@ -184,33 +161,6 @@ void ACharacterBase::SetCMCGravityScale_Implementation(float GravityScale)
 	GetCharacterMovement()->GravityScale = GravityScale;
 }
 
-void ACharacterBase::SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed)
-{
-	GetCharacterMovement()->MaxCustomMovementSpeed = MaxWallRunSpeed;
-}
-
-void ACharacterBase::SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed)
-{
-	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-
-	if (MovementComponentBase)
-	{
-		MovementComponentBase->EndWallRunOutImpulseStrength = PushOffWallHorizontalSpeed;
-	}
-}
-
-void ACharacterBase::SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed)
-{
-	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-
-	if (MovementComponentBase)
-	{
-		MovementComponentBase->EndWallRunUpImpulseStrength = PushOffWallVerticalSpeed;
-	}
-}
-
 void ACharacterBase::SetCMCGroundFriction_Implementation(float GroundFriction)
 {
 	GetCharacterMovement()->GroundFriction = GroundFriction;
@@ -236,7 +186,8 @@ void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
 
 void ACharacterBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Health Changed"));
+	UE_LOG(LogTemp, Warning, TEXT("Health changed to %f"), Data.NewValue);
+	// if health is less or equal than zero, die
 	if (Data.NewValue <= 0)
 	{
 		Death();
@@ -485,81 +436,6 @@ void ACharacterBase::CharacterMovementAirJump_Implementation()
 	
 }
 
-#pragma region WallRun
-
-// TODO: refactor this into an ability? it is disgusting to look at //dan
-void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep,
-	const FHitResult& SweepResult)
-{
-	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-	
-	// Movement component pointer is valid
-	if (MovementComponent)
-	{
-		if (OtherActor && OtherActor != this)
-		{
-			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
-			{
-				FHitResult HitResult;
-				if (MovementComponent->IsWallDetected(HitResult))
-				{
-					MovementComponent->CurrentWallRunDirection = MovementComponent->GetWallRunDirection(HitResult);
-					if (MovementComponent->InputDirectionWithinBounds())
-					{
-						// Create a gameplay event payload
-						FGameplayEventData EventData;
-						EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
-				
-						AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
-					}
-				}
-			}
-		}
-	}
-}
-
-void ACharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
-{
-	if (OtherActor && OtherActor != this)
-	{
-		
-	}
-}
-
-void ACharacterBase::CharacterMovementWallRun_Implementation()
-{
-	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-}
-
-void ACharacterBase::CharacterMovementWallJump_Implementation(FVector Direction, float Strength)
-{
-	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-	
-	MovementComponent->bExitWallRun = true;
-}
-
-void ACharacterBase::CharacterMovementEndWallRun_Implementation()
-{
-	if (AbilitySystemComponent)
-	{
-		// Create a gameplay event payload
-		FGameplayEventData EventData;
-		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRunEnd"));
-		
-		AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
-	}
-}
-
-#pragma endregion WallRun
-
 // On landed
 void ACharacterBase::Landed(const FHitResult& Hit)
 {
@@ -623,9 +499,9 @@ void ACharacterBase::CharacterMovementStopSliding_Implementation()
 	MovementComponent->StopSliding();
 }
 
-void ACharacterBase::Death()
+void ACharacterBase::Death_Implementation()
 {
-	
+	Destroy();
 }
 
 #pragma endregion Actions

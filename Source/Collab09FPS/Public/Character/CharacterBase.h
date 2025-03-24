@@ -100,41 +100,11 @@ public:
 
 #pragma endregion Components
 	
-	// Wall capsule detection
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Collision")
-	UCapsuleComponent* WallCapsuleCollision;
-	
-	// Event handlers for overlap
-	UFUNCTION()
-	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex);
-
-	// Wall capsule offset radius
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "Collision")
-	float WallCapsuleDetectionOffsetRadius = 10.0f;
-	
 #pragma region CMCAttributeSetChanges
 	
 	virtual void SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed) override;
 	virtual void SetCMCMaxAcceleration_Implementation(float MaxAcceleration) override;
 	virtual void SetCMCGravityScale_Implementation(float GravityScale) override;
-	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
-	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
-	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
 	virtual void SetCMCGroundFriction_Implementation(float GroundFriction) override;
 	virtual void SetCMCBrakingFriction_Implementation(float BrakingFriction) override;
 	virtual void SetCMCSlidingSpeed_Implementation(float SlidingSpeed) override;
@@ -160,28 +130,26 @@ public:
 	// Air Jump
 	virtual void CharacterMovementAirJump_Implementation() override;
 
-	// Wall running
-	virtual void CharacterMovementWallRun_Implementation() override;
-	virtual void CharacterMovementWallJump_Implementation(FVector Direction, float Strength) override;
-	virtual void CharacterMovementEndWallRun_Implementation() override;
-	
-	// Landed
-	virtual void CharacterMovementLanded_Implementation() override;
-
 	// Ground dash
 	virtual void CharacterMovementGroundDash_Implementation() override;
 
 	// Air dash
 	virtual void CharacterMovementAirDash_Implementation() override;
 
+	// Sliding
 	virtual void CharacterMovementStartSliding_Implementation() override;
 	virtual void CharacterMovementStopSliding_Implementation() override;
+
+	// Landed
+	virtual void CharacterMovementLanded_Implementation() override;
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
 
-	UFUNCTION()
-	virtual void Death();
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void Death();
+	void Death_Implementation();
 
 #pragma endregion Actions
 	
@@ -211,37 +179,37 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SpawnWeapon();
 
-#pragma region Initialization
-	
-	// Grants native abilities
-	void AddNativeCharacterAbilities();
-	// Abilities granted when the ability system is initialized
-	UPROPERTY(EditDefaultsOnly, meta = (AdvancedDisplay = "NativeAbilities"))
-	TArray<TSubclassOf<UNativeGameplayAbility>> NativeAbilities;
-	
-	// Grants initial abilities
-	void AddInitialCharacterAbilities();
-	// Abilities granted when the ability system is initialized
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS")
-	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
-	
-	// Grant initial gameplay effects
-	void AddInitialCharacterGameplayEffects();
-	// Initial gameplay effects
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS")
-	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
+	#pragma region Initialization
+		
+		// Grants native abilities
+		void AddNativeCharacterAbilities();
+		// Abilities granted when the ability system is initialized
+		UPROPERTY(EditDefaultsOnly, meta = (AdvancedDisplay = "NativeAbilities"))
+		TArray<TSubclassOf<UNativeGameplayAbility>> NativeAbilities;
+		
+		// Grants initial abilities
+		void AddInitialCharacterAbilities();
+		// Abilities granted when the ability system is initialized
+		UPROPERTY(EditDefaultsOnly,
+			BlueprintReadOnly,
+			Category = "GAS")
+		TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
+		
+		// Grant initial gameplay effects
+		void AddInitialCharacterGameplayEffects();
+		// Initial gameplay effects
+		UPROPERTY(EditDefaultsOnly,
+			BlueprintReadOnly,
+			Category = "GAS")
+		TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
 
-	virtual void BindHealthAttributeSet();
-	virtual void BindAirActionAttributeSet();
-	virtual void BindCMCAttributeSet();
-	virtual void BindDashAttributeSet();
-	virtual void BindMetaEffectsAttributeSet();
-	
-#pragma endregion Initialization
+		virtual void BindHealthAttributeSet();
+		virtual void BindAirActionAttributeSet();
+		virtual void BindCMCAttributeSet();
+		virtual void BindDashAttributeSet();
+		virtual void BindMetaEffectsAttributeSet();
+		
+	#pragma endregion Initialization
 	
 	//* Health *//
 	// Health attribute set
