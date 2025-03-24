@@ -126,7 +126,8 @@ void AWeaponBase::WeaponFire_Implementation()
 		return;
 	}
 
-#pragma region SpawnProjectile
+	#pragma region SpawnProjectile
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
 	SpawnParams.Instigator = GetInstigator();
@@ -141,11 +142,10 @@ void AWeaponBase::WeaponFire_Implementation()
 
 	BulletSpawned->SetOwner(this);
 	
-	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();
 	
-#pragma endregion SpawnProjectile
+	#pragma endregion SpawnProjectile
 
 	// Start Timer
 	GetWorld()->GetTimerManager().SetTimer(
@@ -154,6 +154,8 @@ void AWeaponBase::WeaponFire_Implementation()
 		&AWeaponBase::RateOfFireTimerEnded,
 		RateOfFire,
 		false);
+
+	OnWeaponFire.Broadcast();
 }
 
 void AWeaponBase::RateOfFireTimerEnded()
@@ -200,6 +202,14 @@ bool AWeaponBase::WeaponFireOnCooldown() const
 void AWeaponBase::ConsumeAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - AmmoPerShot, 0, MagazineSize);
+
+	// reload if we are out of ammo
+	if (CurrentAmmo == 0)
+	{
+		Execute_WeaponReload(this);
+	}
+	
+	OnWeaponAmmoConsumed.Broadcast();
 }
 
 void AWeaponBase::WeaponReload_Implementation()
@@ -208,9 +218,21 @@ void AWeaponBase::WeaponReload_Implementation()
 	GetWorld()->GetTimerManager().SetTimer(
 		ReloadTimerHandle,
 		this,
-		&AWeaponBase::RateOfFireTimerEnded,
-		RateOfFire,
+		&AWeaponBase::ReloadFinished,
+		ReloadTime,
 		false);
+}
+
+bool AWeaponBase::CanReload()
+{
+	return !GetWorldTimerManager().IsTimerActive(ReloadTimerHandle);
+}
+
+void AWeaponBase::ReloadFinished()
+{
+	CurrentAmmo = MagazineSize;
+	GetWorld()->GetTimerManager().ClearTimer(ReloadTimerHandle);
+	OnWeaponReloaded.Broadcast();
 }
 
 void AWeaponBase::WeaponMelee_Implementation()

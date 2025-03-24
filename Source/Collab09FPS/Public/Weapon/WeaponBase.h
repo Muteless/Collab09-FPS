@@ -20,6 +20,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFire);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireNotEnoughAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireInBetweenROF);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponAmmoConsumed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponMelee);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToMelee);
 
@@ -42,6 +44,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFailedToFireInBetweenROF OnWeaponFailedToFireInBetweenROF;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponAmmoConsumed OnWeaponAmmoConsumed;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponReloaded OnWeaponReloaded;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponMelee OnWeaponMelee;
@@ -77,10 +85,10 @@ public:
 	FTimerHandle RateOfFireTimerHandle;
 
 	virtual void WeaponReload_Implementation() override;
-	// bool CanReload();
-	// void ReloadFinished();
+	bool CanReload();
+	void ReloadFinished();
 	FTimerHandle ReloadTimerHandle;
-	
+
 #pragma endregion GunMode
 
 #pragma region MeleeMode
@@ -88,7 +96,6 @@ public:
 	bool CanMelee();
 
 #pragma endregion MeleeMode
-	
 	
 	virtual void WeaponReloadInterrupt_Implementation() override;
 	virtual void WeaponSwitch_Implementation() override;

@@ -16,8 +16,7 @@ class COLLAB09FPS_API AProjectileBase : public ABulletBase
 {
 public:
 	AProjectileBase();
-	
-protected:
+
 	// Sphere collision component
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
@@ -59,6 +58,7 @@ protected:
 		Category = "Bullet | Rotation")
 	bool RotationFollowsVelocity;
 	
+protected:
 private:
 	GENERATED_BODY()
 };
