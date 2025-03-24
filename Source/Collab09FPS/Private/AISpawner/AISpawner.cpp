@@ -27,6 +27,9 @@ void AAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Warning, TEXT("begin!"));
+
+
 	if (ArrowComponent == nullptr)
 		ArrowComponent = GetComponentByClass<UArrowComponent>();
 
@@ -41,6 +44,9 @@ void AAISpawner::BeginPlay()
 
 void AAISpawner::SpawnEnemy()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Spawned!"));
+
+	
 	if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
 	if (SpawnedCount >= MaxEnemyCount)
 	{
@@ -62,6 +68,7 @@ void AAISpawner::SpawnEnemy()
 	case EEnemyTypes::Melee:
 		break;
 	case EEnemyTypes::Ranger:
+		EnemySpawnType = EnemyBlueprints[1];
 		break;
 	case EEnemyTypes::DeepSeek:
 		EnemySpawnType = EnemyBlueprints[0];
