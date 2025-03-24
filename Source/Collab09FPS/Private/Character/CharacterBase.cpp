@@ -2,6 +2,7 @@
 
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GAS/AttributeSets/StaminaAttributeSet.h"
 
 // Constructor
 ACharacterBase::ACharacterBase() :
@@ -115,6 +116,27 @@ void ACharacterBase::SetCMCPushOffWallVerticalSpeed_Implementation(float PushOff
 	}
 }
 
+void ACharacterBase::SetCMCGroundFriction_Implementation(float GroundFriction)
+{
+	GetCharacterMovement()->GroundFriction = GroundFriction;
+}
+
+void ACharacterBase::SetCMCBrakingFriction_Implementation(float BrakingFriction)
+{
+	GetCharacterMovement()->BrakingFriction = BrakingFriction;
+}
+
+void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
+{
+	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+
+	if (MovementComponentBase)
+	{
+		MovementComponentBase->SlideSpeed = SlidingSpeed;
+	}
+}
+
 #pragma endregion CMCAttributeSetChanges
 
 
@@ -225,34 +247,37 @@ void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType,
 	}
 }
 
-void ACharacterBase::InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input)
+void ACharacterBase::InputActionSlide_Implementation(const EInputTypes InputType, const bool Input)
 {
 	switch (InputType)
 	{
 		case EInputTypes::Started:
 			{
-				// Start crouching
-				if (AbilitySystemComponent)
+				if (!GetCharacterMovement()->IsFalling())
 				{
-					// Crouch payload
-					FGameplayEventData Payload;
+					// Start sliding
+					if (AbilitySystemComponent)
+					{
+						// slide payload
+						FGameplayEventData Payload;
 					
-					// Use crouch ability event
-					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Crouch")), &Payload);
-					break;
+						// start slide ability event
+						AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StartSlide")), &Payload);
+						break;
+					}
 				}
 			}
 		
 		case EInputTypes::Completed:
 			{
-				// Stop crouching
+				// Stop sliding
 				if (AbilitySystemComponent)
 				{
-					// Crouch payload
+					// slide payload
 					FGameplayEventData Payload;
-					
-					// Use crouch ability event
-					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.UnCrouch")), &Payload);
+
+					// stop sliding ability event
+					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StopSlide")), &Payload);
 					break;
 				}
 			}
@@ -387,6 +412,8 @@ void ACharacterBase::CharacterMovementAirJump_Implementation()
 	
 }
 
+#pragma region WallRun
+
 // TODO: refactor this into an ability? it is disgusting to look at //dan
 void ACharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
@@ -442,6 +469,7 @@ void ACharacterBase::CharacterMovementWallJump_Implementation(FVector Direction,
 {
 	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
 		(GetCharacterMovement());
+	
 	MovementComponent->bExitWallRun = true;
 }
 
@@ -456,6 +484,8 @@ void ACharacterBase::CharacterMovementEndWallRun_Implementation()
 		AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
 	}
 }
+
+#pragma endregion WallRun
 
 // On landed
 void ACharacterBase::Landed(const FHitResult& Hit)
@@ -504,6 +534,22 @@ void ACharacterBase::CharacterMovementAirDash_Implementation()
 	}
 }
 
+void ACharacterBase::CharacterMovementStartSliding_Implementation()
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	MovementComponent->StartSliding();
+}
+
+void ACharacterBase::CharacterMovementStopSliding_Implementation()
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	MovementComponent->StopSliding();
+}
+
 //* Blueprint Helper functions *//
 // Get current health attribute
 float ACharacterBase::GetCurrentHealth() const
@@ -529,18 +575,6 @@ float ACharacterBase::GetMaxHealth() const
 bool ACharacterBase::IsAirborne_Implementation()
 {
 	return GetCharacterMovement()->IsFalling();
-}
-
-void ACharacterBase::CharacterMovementCrouch_Implementation()
-{
-	GetCharacterMovement()->bWantsToCrouch = true;
-	Crouch();
-}
-
-void ACharacterBase::CharacterMovementUncrouch_Implementation()
-{
-	GetCharacterMovement()->bWantsToCrouch = false;
-	UnCrouch();
 }
 
 // Get current air actions

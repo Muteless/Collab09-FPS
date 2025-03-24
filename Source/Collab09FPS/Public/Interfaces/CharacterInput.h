@@ -61,12 +61,17 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Input")
-	void InputActionCrouch(const EInputTypes InputType, const bool Input);
+	void InputActionSlide(const EInputTypes InputType, const bool Input);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Input")
 	void InputActionReload(const EInputTypes InputType, const bool Input);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Input")
+	void InputActionSwitchDimensions(const EInputTypes InputType, const bool Input);
 	
 private:
 	GENERATED_BODY()

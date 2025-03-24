@@ -31,6 +31,16 @@ void UCMCAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 		Execute_SetCMCGravityScale(GetOwningActor(), NewValue);
 	}
 
+	if (Attribute == GetBrakingFrictionAttribute())
+	{
+		Execute_SetCMCBrakingFriction(GetOwningActor(), NewValue);
+	}
+
+	if (Attribute == GetGroundFrictionAttribute())
+	{
+		Execute_SetCMCGroundFriction(GetOwningActor(), NewValue);
+	}
+	
 	if (Attribute == GetPushOffWallHorizontalImpulseStrengthAttribute())
 	{
 		Execute_SetCMCPushOffWallHorizontalSpeed(GetOwningActor(), NewValue);
@@ -39,6 +49,11 @@ void UCMCAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 	if (Attribute == GetPushOffWallVerticalImpulseStrengthAttribute())
 	{
 		Execute_SetCMCPushOffWallVerticalSpeed(GetOwningActor(), NewValue);
+	}
+
+	if (Attribute == GetSlidingSpeedAttribute())
+	{
+		Execute_SetCMCSlidingSpeed(GetOwningActor(), NewValue);
 	}
 	
 	Super::PreAttributeChange(Attribute, NewValue);

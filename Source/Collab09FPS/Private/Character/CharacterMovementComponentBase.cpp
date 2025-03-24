@@ -5,6 +5,7 @@
 
 #include "GameFramework/Character.h"
 #include "Interfaces/CharacterMovementAbilities.h"
+#include "AbilitySystemComponent.h"
 
 
 // Constructor
@@ -27,13 +28,12 @@ void UCharacterMovementComponentBase::BeginPlay()
 void UCharacterMovementComponentBase::TickComponent(float DeltaTime, ELevelTick TickType,
 													FActorComponentTickFunction* ThisTickFunction)
 {
+	if (bWantsToSlide)
+	{
+		Sliding();
+	}
+	
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
-
-void UCharacterMovementComponentBase::PhysFlying(float deltaTime, int32 Iterations)
-{
-	PerformWallRun(deltaTime);
-	Super::PhysFlying(deltaTime, Iterations);
 }
 
 void UCharacterMovementComponentBase::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
@@ -44,6 +44,30 @@ void UCharacterMovementComponentBase::OnMovementModeChanged(EMovementMode PrevMo
 	}
 	
 	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
+}
+
+void UCharacterMovementComponentBase::EnteredCustomMovementMode()
+{
+	if (GetPawnOwner()->GetLastMovementInputVector() == FVector::ZeroVector)
+	{
+		CurrentSlideDirection = FVector(GetPawnOwner()->GetActorForwardVector().X,
+			GetPawnOwner()->GetActorForwardVector().Y,
+			0);
+	}
+	else
+	{
+		CurrentSlideDirection = FVector(GetPawnOwner()->GetLastMovementInputVector().X,
+			GetPawnOwner()->GetLastMovementInputVector().Y,
+			0);
+	}
+}
+
+#pragma region WallRun
+
+void UCharacterMovementComponentBase::PhysFlying(float deltaTime, int32 Iterations)
+{
+	PerformWallRun(deltaTime);
+	Super::PhysFlying(deltaTime, Iterations);
 }
 
 void UCharacterMovementComponentBase::EnteredFlyingMovementMode()
@@ -91,7 +115,7 @@ void UCharacterMovementComponentBase::PerformWallRun(float DeltaTime)
 	// override velocity to follow the wall
 	Velocity = WallRunDirection * MaxCustomMovementSpeed;
 	Velocity += WallRunGravity;
-
+	
 	if (!InputDirectionWithinBounds())
 	{
 		EndWallRun(true);
@@ -257,3 +281,72 @@ void UCharacterMovementComponentBase::EndWallRun(const bool bPushOffWall)
 	}
 	bExitWallRun = false;
 }
+
+#pragma endregion WallRun
+
+#pragma region Sliding
+
+// todo: make it so a player can not keep sliding when their velocity is zero
+// todo: and yes, this function doesnt do anything rn //dan @_@
+bool UCharacterMovementComponentBase::CanSlide()
+{
+	return true;
+}
+
+
+void UCharacterMovementComponentBase::StartSliding()
+{
+	if (!CanSlide())
+	{
+		CallToStopSliding();
+	}
+	
+	if (GetLastInputVector() == FVector::Zero())
+	{
+		CurrentSlideDirection = FVector(GetPawnOwner()->GetActorForwardVector().X,
+			GetPawnOwner()->GetActorForwardVector().Y,
+			0).GetSafeNormal2D();
+	}
+	else
+	{
+		CurrentSlideDirection = FVector(GetLastInputVector().X,
+			GetLastInputVector().Y,
+			0).GetSafeNormal2D();
+	}
+
+	bWantsToSlide = true;
+	bWantsToCrouch = true;
+	Crouch();
+}
+
+void UCharacterMovementComponentBase::Sliding()
+{
+	FVector CurrentVelocity = CurrentSlideDirection * SlideSpeed;
+	CurrentVelocity *= GetWorld()->GetDeltaSeconds();
+	
+	FRotator CurrentRotation = FRotator(0, GetPawnOwner()->GetControlRotation().Yaw, 0);
+	
+	FHitResult HitResult;
+	SafeMoveUpdatedComponent(CurrentVelocity, CurrentRotation, true, HitResult, ETeleportType::None);
+}
+
+void UCharacterMovementComponentBase::CallToStopSliding()
+{
+	if (CharacterOwner)
+	{
+		if (UAbilitySystemComponent* AbilitySystem = CharacterOwner->FindComponentByClass<UAbilitySystemComponent>())
+		{
+			FGameplayEventData Payload;
+			AbilitySystem->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(TEXT("Event.Ability.StopSlide")), &Payload);
+		}
+	}
+}
+
+void UCharacterMovementComponentBase::StopSliding()
+{
+	bWantsToSlide = false;
+	bWantsToCrouch = false;
+	UnCrouch();
+}
+
+#pragma endregion Sliding

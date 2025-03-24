@@ -24,7 +24,7 @@ EBTNodeResult::Type UTestTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 
 	if(IsValid(NavSystem) && NavSystem->GetRandomPointInNavigableRadius(Origin, 50000.0f, Location))
 	{
-		Controller->GetBlackboardComponent()->SetValueAsVector(FName(TEXT("TestPoint")), Location);
+		Controller->GetBlackboardComponent()->SetValueAsVector(FName(TEXT("V_TargetPosition")), Location);
 	}
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

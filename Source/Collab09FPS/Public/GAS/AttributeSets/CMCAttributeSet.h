@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Interfaces/MovementComponentAttributeUpdate.h"
 
+
 #include "CMCAttributeSet.generated.h"
 
 // Attribute accessors
@@ -62,6 +63,16 @@ public:
 	FGameplayAttributeData GravityScale;
 	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, GravityScale);
 
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | CMC | ")
+	FGameplayAttributeData GroundFriction;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, GroundFriction);
+
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | CMC | ")
+	FGameplayAttributeData BrakingFriction;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, BrakingFriction);
+
 	//*// Wall Running
 	// Wall Run Speed
 	UPROPERTY(BlueprintReadOnly,
@@ -84,9 +95,9 @@ public:
 	// Crouching & Sliding
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | CMC | ")
-	FGameplayAttributeData SlidingMinSpeed;
-	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingMinSpeed);
-	
+	FGameplayAttributeData SlidingSpeed;
+	ATTRIBUTE_ACCESSORS(UCMCAttributeSet, SlidingSpeed);
+
 protected:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute,
 		float& NewValue) override;

@@ -8,9 +8,6 @@
 
 #include "HealthAttributeSet.generated.h"
 
-// Attribute accessors
-
-
 /**
  * @class UHealthAttributeSet
  * @brief Attribute Set class that manages health attributes (Current and Max Health).

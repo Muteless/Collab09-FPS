@@ -29,13 +29,13 @@ public:
 		BlueprintReadWrite,
 		Category = "Bullet |")
 	float AmmoConsumedOnShot;
-	
-protected:
+
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Bullet |")
 	TMap<TSubclassOf<class UGameplayEffect>, float> OnHitGameplayEffect;
 	
+protected:
 private:
 	GENERATED_BODY()
 };

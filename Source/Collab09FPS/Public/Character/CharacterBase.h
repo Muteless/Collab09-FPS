@@ -75,7 +75,7 @@ public:
 	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
 
 	UFUNCTION(Category = "Input")
-	virtual void InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input) override;
+	virtual void InputActionSlide_Implementation(const EInputTypes InputType, const bool Input) override;
 	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
@@ -94,7 +94,7 @@ public:
 	
 	// Event handlers for overlap
 	UFUNCTION()
-	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
+	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex,
@@ -102,7 +102,7 @@ public:
 		const FHitResult& SweepResult);
 	
 	UFUNCTION()
-	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, 
+	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
@@ -124,6 +124,9 @@ public:
 	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
 	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
 	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
+	virtual void SetCMCGroundFriction_Implementation(float GroundFriction) override;
+	virtual void SetCMCBrakingFriction_Implementation(float BrakingFriction) override;
+	virtual void SetCMCSlidingSpeed_Implementation(float SlidingSpeed) override;
 	
 #pragma endregion CMCAttributeSetChanges
 
@@ -155,15 +158,12 @@ public:
 
 	// Air dash
 	virtual void CharacterMovementAirDash_Implementation() override;
+
+	virtual void CharacterMovementStartSliding_Implementation() override;
+	virtual void CharacterMovementStopSliding_Implementation() override;
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
-
-	// Crouch
-	virtual void CharacterMovementCrouch_Implementation() override;
-
-	// Uncrouch
-	virtual void CharacterMovementUncrouch_Implementation() override;
 
 #pragma endregion Actions
 	
