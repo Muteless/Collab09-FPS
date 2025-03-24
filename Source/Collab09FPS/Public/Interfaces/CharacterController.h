@@ -24,6 +24,11 @@ public:
 		BlueprintCallable,
 		Category = "HUD")
 	void CharacterPossessed(ACharacterBase* Character);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Pawn")
+	void PawnDeath();
 	
 protected:
 private:
