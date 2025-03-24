@@ -49,6 +49,8 @@ void ABaseAI::OnPossess(APawn* InPawn)
 		Blackboard->InitializeBlackboard(*BehaviorTree.Get()->BlackboardAsset.Get());		
 	}
 
+	Blackboard->SetValueAsObject(FName(TEXT("O_SelfActor")), InPawn);
+
 	Super::OnPossess(InPawn);
 }
 
