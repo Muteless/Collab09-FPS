@@ -20,42 +20,42 @@ public:
 	// Sphere collision component
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	USphereComponent* Collision;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	UStaticMeshComponent* ProjectileMesh;
 	
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	UNiagaraComponent* NiagaraSystemComponent;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Movement")
+		Category = "Default")
 	float InitialMovementSpeed;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Movement")
+		Category = "Default")
 	float MaxMovementSpeed;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Movement")
+		Category = "Default")
 	float GravityScale;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Rotation")
+		Category = "Default")
 	bool RotationFollowsVelocity;
 	
 protected:

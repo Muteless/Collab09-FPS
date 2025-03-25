@@ -62,7 +62,17 @@ void AWeaponBase::SetupGunVariables()
 		}
 		
 		GunDamage = GunAssetData->Damage;
-		AmmoPerShot = GunAssetData->AmmoPerShot;
+
+		// Get ammo per shot from projectile
+		if (Projectiles[CurrentProjectileIndex]->IsValidLowLevel())
+		{
+			AmmoPerShot = Projectiles[CurrentProjectileIndex].GetDefaultObject()->AmmoConsumedOnShot;
+		}
+		else
+		{
+			AmmoPerShot = 1;
+		}
+		
 		RateOfFire = GunAssetData->RateOfFire;
 		MagazineSize = GunAssetData->MagazineSize;
 		CurrentAmmo = GunAssetData->MagazineSize;

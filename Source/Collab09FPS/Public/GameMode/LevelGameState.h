@@ -4,11 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Collab09FPS/Collab09FPS.h"
+
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
+
 #include "Interfaces/GameInstanceInterface.h"
 #include "Interfaces/GameStateInterface.h"
+
+#include "WorldObjects/Checkpoint.h"
+
 #include "LevelGameState.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, NewWorldState);
@@ -51,6 +56,21 @@ public:
 	TMap<EWorldState, TSoftObjectPtr<UWorld>> WorldCollection;
 
 #pragma endregion World State
+
+#pragma region CheckpointSystem
+
+	UFUNCTION(BlueprintCallable)
+	void GetAllCheckpoints();
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AActor*> Checkpoints;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	int CheckpointIndex = 0;
+
+#pragma endregion CheckpointSystem
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerSpawned(APawn* pawn);

@@ -112,19 +112,23 @@ protected:
 	FName Name;
 
 	UPROPERTY(VisibleAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	USkeletalMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	UGunAssetData* GunAssetData;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	UMeleeAssetData* MeleeAssetData;
 	
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	bool bGunMode;
 
 #pragma region Internal Attributes
