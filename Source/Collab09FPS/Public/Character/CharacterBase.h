@@ -218,12 +218,12 @@ protected:
 	
 	// Get current health
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Health|")
+		Category = "Default|Health|")
 	float GetCurrentHealth() const;
 
 	// Get current health
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Health|")
+		Category = "Default|Health|")
 	float GetMaxHealth() const;
 
 	//* Air Actions *//
@@ -233,12 +233,12 @@ protected:
 	
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Actions|")
+		Category = "Default|Actions|")
 	float GetCurrentAirActions() const;
 
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Actions|")
+		Category = "Default|Actions|")
 	float GetMaxAirActions() const;
 
 	//* CMC *//
