@@ -18,23 +18,28 @@ class COLLAB09FPS_API UMeleeAssetData : public UDataAsset
 {
 public:
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	FName Name;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	USkeletalMesh* Mesh;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	TArray<TSubclassOf<UGameplayEffect>> OnHitGameplayEffects;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	TArray<UAnimMontage*> MeleeAnimations;
 	
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float Damage;
 	
 protected:

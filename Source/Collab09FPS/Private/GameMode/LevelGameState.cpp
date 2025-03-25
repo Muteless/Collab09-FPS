@@ -103,6 +103,15 @@ void ALevelGameState::AddPlayerState(APlayerState* PlayerState)
 	}
 }
 
+#pragma region CheckpointSystem
+
+void ALevelGameState::GetAllCheckpoints()
+{
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint::StaticClass(), Checkpoints);
+}
+
+#pragma endregion CheckpointSystem
+
 void ALevelGameState::PlayerSpawned(APawn* pawn)
 {
 	PlayerPawn = pawn;

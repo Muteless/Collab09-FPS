@@ -27,12 +27,12 @@ public:
 	// Amount of ammo consumed on shot
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet |")
+		Category = "Default")
 	float AmmoConsumedOnShot;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet |")
+		Category = "Default")
 	TMap<TSubclassOf<class UGameplayEffect>, float> OnHitGameplayEffect;
 	
 protected:
