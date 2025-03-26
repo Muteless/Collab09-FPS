@@ -57,7 +57,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	USaveGameData* SaveGameData();
+	USaveGameData* GetSaveGameData();
 
 #pragma endregion Save&Load
 	
