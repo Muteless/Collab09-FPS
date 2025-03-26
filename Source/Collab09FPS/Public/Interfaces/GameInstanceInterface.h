@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameMode/LevelData/LevelDataAsset.h"
+#include "PersistentData/SaveGameData.h"
 #include "UObject/Interface.h"
 #include "GameInstanceInterface.generated.h"
 
@@ -20,6 +21,8 @@ class UGameInstanceInterface : public UInterface
 class COLLAB09FPS_API IGameInstanceInterface
 {
 public:
+#pragma region WorldState
+	
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
 	ULevelDataAsset* GetLevelData();
@@ -31,8 +34,33 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
 	void SetWorldIndex(int NewIndex);
+
+#pragma endregion WorldState
+
+#pragma region Save&Load
+	
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	FString GetSaveSlot();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void SetSaveSlot(FName SlotName);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void LoadGame();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	USaveGameData* SaveGameData();
+
+#pragma endregion Save&Load
 	
 private:
 	GENERATED_BODY()
-
 };

@@ -105,6 +105,11 @@ void ALevelGameState::AddPlayerState(APlayerState* PlayerState)
 
 #pragma region CheckpointSystem
 
+void ALevelGameState::SetCheckpointIndex_Implementation(int NewCheckPointIndex)
+{
+	CheckpointIndex = NewCheckPointIndex;
+}
+
 void ALevelGameState::GetAllCheckpoints()
 {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint::StaticClass(), Checkpoints);

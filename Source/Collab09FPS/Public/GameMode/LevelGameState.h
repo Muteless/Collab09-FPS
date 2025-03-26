@@ -60,6 +60,9 @@ public:
 #pragma region CheckpointSystem
 
 	UFUNCTION(BlueprintCallable)
+	void SetCheckpointIndex_Implementation(int NewCheckPointIndex) override;
+	
+	UFUNCTION(BlueprintCallable)
 	void GetAllCheckpoints();
 
 	UPROPERTY(BlueprintReadOnly)
@@ -71,6 +74,12 @@ public:
 	int CheckpointIndex = 0;
 
 #pragma endregion CheckpointSystem
+
+#pragma region Save&Load
+
+	
+	
+#pragma endregion Save&Load
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerSpawned(APawn* pawn);

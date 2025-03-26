@@ -6,7 +6,7 @@
 #include "GameFramework/SaveGame.h"
 
 #include "GameMode/LevelData/LevelDataAsset.h"
-#include "Player/PlayerCharacterBase.h"
+#include "Player/PlayerSaveData.h"
 
 #include "SaveGameData.generated.h"
 
@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
-	APlayerCharacterBase* PlayerCharacter = nullptr;
+	UPlayerSaveData* PlayerSaveData;
 	
 private:
 	GENERATED_BODY()

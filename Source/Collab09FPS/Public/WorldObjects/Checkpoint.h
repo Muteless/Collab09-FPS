@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 #include "Components/BoxComponent.h"
+#include "Components/BillboardComponent.h"
 
 #include "Checkpoint.generated.h"
 
@@ -13,8 +14,10 @@ UCLASS()
 class COLLAB09FPS_API ACheckpoint : public AActor
 {
 public:
-	// Sets default values for this actor's properties
 	ACheckpoint();
+
+	UPROPERTY()
+	int Id;
 
 protected:
 
@@ -47,12 +50,7 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Components")
-	USceneComponent* SpawnLocation;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	bool bRettrigrable = false;
+	UBillboardComponent* PlayerSpawnLocation;
 
 #pragma endregion Components
 	
