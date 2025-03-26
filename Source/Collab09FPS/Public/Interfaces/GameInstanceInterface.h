@@ -31,6 +31,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
 	void SetWorldIndex(int NewIndex);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	FString GetSaveSlot();
 	
 private:
 	GENERATED_BODY()

@@ -60,6 +60,9 @@ public:
 #pragma region CheckpointSystem
 
 	UFUNCTION(BlueprintCallable)
+	void SetCheckpointIndex_Implementation(int NewCheckPointIndex) override;
+	
+	UFUNCTION(BlueprintCallable)
 	void GetAllCheckpoints();
 
 	UPROPERTY(BlueprintReadOnly)
