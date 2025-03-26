@@ -19,7 +19,15 @@ ACheckpoint::ACheckpoint()
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACheckpoint::OnBoxEndOverlap);
 	RootComponent = BoxComponent;
 	
-	SpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnLocation"));
+	PlayerSpawnLocation = CreateDefaultSubobject<UBillboardComponent>(TEXT("PlayerSpawnLocation"));
+	
+	FAttachmentTransformRules TransformRules
+		(EAttachmentRule::KeepRelative,
+		EAttachmentRule::KeepRelative,
+		EAttachmentRule::KeepRelative,
+		false);
+	
+	PlayerSpawnLocation->AttachToComponent(BoxComponent, TransformRules, NAME_None);
 }
 
 #pragma region BoxComponent

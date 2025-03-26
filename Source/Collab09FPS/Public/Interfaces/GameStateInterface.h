@@ -22,6 +22,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
 	void TransitionWorld();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void SetCheckpointIndex(int NewCheckPointIndex);
 	
 private:
 	GENERATED_BODY()
