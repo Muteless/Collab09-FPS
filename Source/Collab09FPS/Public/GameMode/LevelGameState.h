@@ -11,6 +11,8 @@
 
 #include "Interfaces/GameInstanceInterface.h"
 #include "Interfaces/GameStateInterface.h"
+#include "Interfaces/LoadInterface.h"
+#include "Interfaces/SaveGameInterface.h"
 
 #include "WorldObjects/Checkpoint.h"
 
@@ -25,6 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, New
 UCLASS()
 class COLLAB09FPS_API ALevelGameState :
 public AGameStateBase,
+public ILoadInterface,
 public IGameStateInterface,
 public IGameInstanceInterface
 {
@@ -33,6 +36,8 @@ public IGameInstanceInterface
 public:
 	virtual void BeginPlay() override;
 	virtual void AddPlayerState(APlayerState* PlayerState) override;
+
+	virtual void LoadData_Implementation(USaveGame* SaveGame) override;
 
 #pragma region World State
 

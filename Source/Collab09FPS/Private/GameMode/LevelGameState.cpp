@@ -103,6 +103,14 @@ void ALevelGameState::AddPlayerState(APlayerState* PlayerState)
 	}
 }
 
+void ALevelGameState::LoadData_Implementation(USaveGame* SaveGame)
+{
+	WorldState = ISaveGameInterface::Execute_GetWorldState(SaveGame);
+	LoadWorld(WorldState);
+
+	CheckpointIndex = ISaveGameInterface::Execute_GetCheckpointIndex(SaveGame);
+}
+
 #pragma region CheckpointSystem
 
 void ALevelGameState::SetCheckpointIndex_Implementation(int NewCheckPointIndex)

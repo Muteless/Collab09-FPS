@@ -96,40 +96,38 @@ public:
 	bool CanMelee();
 
 #pragma endregion MeleeMode
+
+	UPROPERTY(BlueprintReadOnly)
+	FName Name;
 	
 	virtual void WeaponReloadInterrupt_Implementation() override;
 	virtual void WeaponSwitch_Implementation() override;
 	virtual bool GetWeaponMode_Implementation() override;
 
-	void SetupGunVariables();
-	void SetWeaponModeToGun();
-
-	void SetupMeleeVariables();
-	void SetWeaponModeToMelee();
-	
-protected:
-	UPROPERTY()
-	FName Name;
-
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	USkeletalMeshComponent* Mesh;
-
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
 	UGunAssetData* GunAssetData;
+	void SetupGunVariables();
+	void SetWeaponModeToGun();
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
 	UMeleeAssetData* MeleeAssetData;
-	
+	void SetupMeleeVariables();
+	void SetWeaponModeToMelee();
+
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
 	bool bGunMode;
+
+protected:
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	USkeletalMeshComponent* Mesh;
 
 #pragma region Internal Attributes
 
