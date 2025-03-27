@@ -64,6 +64,32 @@ APlayerCharacterBase::APlayerCharacterBase()
 	WeaponLocation->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
+void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
+{
+	UPlayerSaveData* PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
+	
+	if (!WeaponInstance)
+	{
+		SpawnWeapon();
+	}
+
+	if (WeaponInstance)
+	{
+		if (PlayerSaveData->GunAssetData)
+		{
+			WeaponInstance->GunAssetData = PlayerSaveData->GunAssetData;
+		}
+
+		if (PlayerSaveData->MeleeAssetData)
+		{
+			WeaponInstance->MeleeAssetData = PlayerSaveData->MeleeAssetData;
+		}
+	}
+
+	WeaponInstance->bGunMode = PlayerSaveData->bGunMode;
+	WeaponInstance->Initialize();
+}
+
 void APlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

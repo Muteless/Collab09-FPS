@@ -2,14 +2,16 @@
 
 #pragma once
 
+#include <Player/PlayerSaveData.h>
+
 #include "CoreMinimal.h"
 #include "GameMode/LevelData/LevelDataAsset.h"
 #include "UObject/Interface.h"
-#include "GameInstanceInterface.generated.h"
+#include "SaveGameInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE()
-class UGameInstanceInterface : public UInterface
+class USaveGameInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,48 +19,37 @@ class UGameInstanceInterface : public UInterface
 /**
  * 
  */
-class COLLAB09FPS_API IGameInstanceInterface
+class COLLAB09FPS_API ISaveGameInterface
 {
 public:
-#pragma region WorldState
-	
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	ULevelDataAsset* GetLevelData();
-
+	ULevelDataAsset* GetLevelDataAsset();
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	int GetWorldIndex();
+	void SetLevelDataAsset(ULevelDataAsset* NewLevelDataAsset);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	void SetWorldIndex(int NewIndex);
-
-#pragma endregion WorldState
-
-#pragma region Save&Load
-	
+	int GetCheckpointIndex();
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	FString GetSaveSlot();
+	void SetCheckpointIndex(int NewCheckpointIndex);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	void SetSaveSlot(FName SlotName);
+	UPlayerSaveData* GetPlayerSaveData();
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void SetPlayerSaveData(UPlayerSaveData* NewPlayerSaveData);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	void LoadGame();
+	EWorldState GetWorldState();
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	void SaveGame();
-
-	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
-	USaveGame* GetSaveGameData();
-
-#pragma endregion Save&Load
+	void SetWorldState(EWorldState NewWorldState);
 	
 private:
 	GENERATED_BODY()
