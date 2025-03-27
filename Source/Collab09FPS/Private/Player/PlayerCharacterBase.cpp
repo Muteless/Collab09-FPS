@@ -67,27 +67,30 @@ APlayerCharacterBase::APlayerCharacterBase()
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 {
 	UPlayerSaveData* PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
-	
-	if (!WeaponInstance)
-	{
-		SpawnWeapon();
-	}
 
-	if (WeaponInstance)
+	if (PlayerSaveData)
 	{
-		if (PlayerSaveData->GunAssetData)
+		if (!WeaponInstance)
 		{
-			WeaponInstance->GunAssetData = PlayerSaveData->GunAssetData;
+			SpawnWeapon();
 		}
 
-		if (PlayerSaveData->MeleeAssetData)
+		if (WeaponInstance)
 		{
-			WeaponInstance->MeleeAssetData = PlayerSaveData->MeleeAssetData;
-		}
-	}
+			if (PlayerSaveData->GunAssetData)
+			{
+				WeaponInstance->GunAssetData = PlayerSaveData->GunAssetData;
+			}
 
-	WeaponInstance->bGunMode = PlayerSaveData->bGunMode;
-	WeaponInstance->Initialize();
+			if (PlayerSaveData->MeleeAssetData)
+			{
+				WeaponInstance->MeleeAssetData = PlayerSaveData->MeleeAssetData;
+			}
+		}
+
+		WeaponInstance->bGunMode = PlayerSaveData->bGunMode;
+		WeaponInstance->Initialize();
+	}
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -101,6 +104,21 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleBeginOverlap);
 		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleEndOverlap);
 	}
+}
+
+UPlayerSaveData* APlayerCharacterBase::MakePlayerSaveData()
+{
+	UPlayerSaveData* PlayerSaveData = NewObject<UPlayerSaveData>();
+
+	if (WeaponInstance)
+	{
+		PlayerSaveData->bGunMode = WeaponInstance->bGunMode;
+		PlayerSaveData->GunAssetData = WeaponInstance->GunAssetData;
+		PlayerSaveData->MeleeAssetData = WeaponInstance->MeleeAssetData;
+		return PlayerSaveData;
+	}
+	
+	return nullptr;
 }
 
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()

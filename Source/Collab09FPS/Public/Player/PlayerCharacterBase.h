@@ -103,6 +103,8 @@ public:
 	// Runs every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPlayerSaveData* MakePlayerSaveData();
+
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 

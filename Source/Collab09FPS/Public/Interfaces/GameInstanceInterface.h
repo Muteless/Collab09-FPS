@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "GameFramework/SaveGame.h"
 #include "GameMode/LevelData/LevelDataAsset.h"
+
 #include "UObject/Interface.h"
 #include "GameInstanceInterface.generated.h"
 
@@ -48,7 +51,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	void LoadGame();
+	USaveGame* LoadGame();
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
