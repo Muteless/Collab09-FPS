@@ -61,7 +61,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 
 	// Weapon location
 	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
-	WeaponLocation->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+	WeaponLocation->AttachToComponent(CameraComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
@@ -172,6 +172,11 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 	case EInputTypes::Completed:
 		break;
 	}
+}
+
+void APlayerCharacterBase::InputActionInteract_Implementation(const EInputTypes InputType, const bool Input)
+{
+	
 }
 
 void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const

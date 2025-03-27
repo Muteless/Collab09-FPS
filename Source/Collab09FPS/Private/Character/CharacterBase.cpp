@@ -3,6 +3,7 @@
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
+#include "Interfaces/CharacterController.h"
 
 #pragma region Initialization
 
@@ -405,6 +406,9 @@ void ACharacterBase::SpawnWeapon()
 				WeaponInstance->AttachToComponent(CharacterMesh,
 					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 			}
+
+			// Notify controller that we have spawned the weapon
+			ICharacterController::Execute_WeaponSpawned(GetController(), WeaponInstance);
 		}
 		else
 		{

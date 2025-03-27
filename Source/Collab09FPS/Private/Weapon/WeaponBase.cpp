@@ -288,6 +288,16 @@ void AWeaponBase::SetWeaponModeToGun()
 	}
 }
 
+TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
+{
+	return Projectiles[CurrentProjectileIndex];
+}
+
+int AWeaponBase::GetCurrentAmmo() const
+{
+	return CurrentAmmo;
+}
+
 void AWeaponBase::SetWeaponModeToMelee()
 {
 	// Melee mesh

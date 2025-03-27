@@ -40,6 +40,7 @@ public:
 
 	virtual void LoadData_Implementation(USaveGame* SaveGame);
 
+
 	#pragma region Input
 	
 	UFUNCTION(Category = "Input")
@@ -47,6 +48,9 @@ public:
 
 	UFUNCTION(Category = "Input")
 	virtual void InputActionSwitchDimensions_Implementation(const EInputTypes InputType, const bool Input) override;
+
+	UFUNCTION(Category = "Input")
+	virtual void InputActionInteract_Implementation(const EInputTypes InputType, const bool Input) override;
 	
 	// Wall capsule detection
 	UPROPERTY(VisibleAnywhere,
