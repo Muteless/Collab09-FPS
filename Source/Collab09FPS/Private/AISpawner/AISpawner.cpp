@@ -5,6 +5,7 @@
 #include "NavigationSystem.h"
 #include "AIBase/BaseAI.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void AAISpawner::StartSpawnTimer()
@@ -28,19 +29,46 @@ void AAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Get all spawners in the scene
+	TArray<AActor*> AllSpawners;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAISpawner::StaticClass(), AllSpawners);
 
+	// Assign a unique ID based on position in array
+	SpawnerID = AllSpawners.IndexOfByKey(this);
+	UE_LOG(LogTemp, Log, TEXT("Spawner ID assigned: %d"), SpawnerID);
 
-	if (ArrowComponent == nullptr)
-		ArrowComponent = GetComponentByClass<UArrowComponent>();
-
-	if (SpawnMode == ESpawnMode::OnStart)
-		SpawnEnemy();
-
-	if (RespawnMode == ERespawnMode::OnTimer)
+	// Ensure ArrowComponent is valid
+	ArrowComponent = FindComponentByClass<UArrowComponent>();
+	if (!ArrowComponent)
 	{
-		StartSpawnTimer();
+		UE_LOG(LogTemp, Warning, TEXT("ArrowComponent is missing from AISpawner %d!"), SpawnerID);
+	}
+
+	// Apply initial active state safely
+	if (bStartActive)
+	{
+		EnableSpawner();
+	}
+	else
+	{
+		DisableSpawner();
+	}
+
+	// Only spawn if active and valid
+	if (IsActive)
+	{
+		if (SpawnMode == ESpawnMode::OnStart)
+			SpawnEnemy();
+
+		if (RespawnMode == ERespawnMode::OnTimer)
+		{
+			StartSpawnTimer();
+		}
 	}
 }
+
+
+
 
 void AAISpawner::SpawnEnemy()
 {
@@ -168,6 +196,35 @@ void AAISpawner::DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour 
 	UE_LOG(LogTemp, Log, TEXT("Set Blackboard Value to: %d"),
 		BlackboardComp->GetValueAsInt(FName(TEXT("E_AIStartStateEnumKey"))));
 }
+
+void AAISpawner::EnableSpawner()
+{
+	this->IsActive = true;
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	UE_LOG(LogTemp, Log, TEXT("Spawner %d enabled"), SpawnerID);
+}
+
+void AAISpawner::DisableSpawner()
+{
+	this->IsActive = false;
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	UE_LOG(LogTemp, Log, TEXT("Spawner %d disabled"), SpawnerID);
+}
+
+void AAISpawner::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	// Clear the spawn timer if it's still active
+	if (GetWorld())
+	{
+		GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
+	}
+}
+
+
 
 
 
