@@ -19,18 +19,17 @@ UCLASS()
 class COLLAB09FPS_API UPlayerSaveData : public UDataAsset
 {
 public:
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Weapon")
+	bool bGunMode;
 	
 #pragma region GunData
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Gun")
+		Category = "Weapon|Gun")
 	UGunAssetData* GunAssetData;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Gun")
-	float CurrentAmmo;
 
 #pragma endregion GunData
 
@@ -38,24 +37,10 @@ public:
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Melee")
+		Category = "Weapon|Melee")
 	UMeleeAssetData* MeleeAssetData;
 	
 #pragma endregion MeleeData
-
-#pragma region World
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "World")
-	EWorldState WorldState;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "World")
-	TArray<int> InactiveSpawnersIds;
-	
-#pragma endregion World
 
 private:
 	GENERATED_BODY()

@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Actor.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/BillboardComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Checkpoint.generated.h"
 
@@ -16,8 +19,15 @@ class COLLAB09FPS_API ACheckpoint : public AActor
 public:
 	ACheckpoint();
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
 	int Id;
+	
+	UPROPERTY(EditAnywhere,
+    		BlueprintReadWrite,
+    		Category = "Components")
+	UBillboardComponent* PlayerSpawnLocation;
 
 protected:
 
@@ -47,10 +57,11 @@ protected:
 
 	#pragma endregion BoxComponent
 
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Components")
-	UBillboardComponent* PlayerSpawnLocation;
+	UPROPERTY()
+	UArrowComponent* ArrowComponent;
+
+	UPROPERTY()
+	UCapsuleComponent* CapsuleComponent;
 
 #pragma endregion Components
 	
