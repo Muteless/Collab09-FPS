@@ -29,14 +29,6 @@ void AAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Get all spawners in the scene
-	TArray<AActor*> AllSpawners;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAISpawner::StaticClass(), AllSpawners);
-
-	// Assign a unique ID based on position in array
-	SpawnerID = AllSpawners.IndexOfByKey(this);
-	UE_LOG(LogTemp, Log, TEXT("Spawner ID assigned: %d"), SpawnerID);
-
 	// Ensure ArrowComponent is valid
 	ArrowComponent = FindComponentByClass<UArrowComponent>();
 	if (!ArrowComponent)
@@ -53,18 +45,6 @@ void AAISpawner::BeginPlay()
 	{
 		DisableSpawner();
 	}
-
-	// Only spawn if active and valid
-	if (IsActive)
-	{
-		if (SpawnMode == ESpawnMode::OnStart)
-			SpawnEnemy();
-
-		if (RespawnMode == ERespawnMode::OnTimer)
-		{
-			StartSpawnTimer();
-		}
-	}
 }
 
 
@@ -72,7 +52,8 @@ void AAISpawner::BeginPlay()
 
 void AAISpawner::SpawnEnemy()
 {
-
+	if (!IsActive) return;
+	
 	if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
 	if (SpawnedCount >= MaxEnemyCount)
 	{
@@ -200,8 +181,23 @@ void AAISpawner::DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour 
 void AAISpawner::EnableSpawner()
 {
 	this->IsActive = true;
+	
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
+
+	// Only spawn if active and valid
+	if (IsActive)
+	{
+		if (SpawnMode == ESpawnMode::OnStart)
+			SpawnEnemy();
+
+		if (RespawnMode == ERespawnMode::OnTimer)
+		{
+			StartSpawnTimer();
+		}
+	}
+	
+	
 	UE_LOG(LogTemp, Log, TEXT("Spawner %d enabled"), SpawnerID);
 }
 
@@ -211,6 +207,14 @@ void AAISpawner::DisableSpawner()
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
 	UE_LOG(LogTemp, Log, TEXT("Spawner %d disabled"), SpawnerID);
+}
+
+void AAISpawner::ToggleSpawner()
+{
+	if (!IsActive)
+		EnableSpawner();
+	else
+		DisableSpawner();
 }
 
 void AAISpawner::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -15,8 +15,8 @@ class COLLAB09FPS_API AAISpawner : public AActor
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
 		Category = "Enemy Spawner",
 		meta = (AllowPrivateAccess = "true"))
 	bool IsActive;
@@ -25,8 +25,8 @@ public:
 	bool bStartActive = true;
 
 	
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
 		Category = "Enemy Spawner",
 		meta = (AllowPrivateAccess = "true"))
 	int SpawnerID;
@@ -97,6 +97,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void DisableSpawner();
+
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
+	void ToggleSpawner();
 	
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
