@@ -18,42 +18,48 @@ class COLLAB09FPS_API UGunAssetData : public UDataAsset
 {
 public:
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	FName Name;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	USkeletalMesh* Mesh;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	TArray<TSubclassOf<ABulletBase>> Projectiles;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	UAnimMontage* GunReloadAnimation;
 	
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float Damage;
 
-	UPROPERTY()
-	float AmmoPerShot;
-
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float RateOfFire;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float Range;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	int MagazineSize;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float ReloadTime;
 	
 protected:

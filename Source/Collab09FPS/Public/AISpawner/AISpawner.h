@@ -15,6 +15,22 @@ class COLLAB09FPS_API AAISpawner : public AActor
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category = "Enemy Spawner",
+		meta = (AllowPrivateAccess = "true"))
+	bool IsActive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Spawner")
+	bool bStartActive = true;
+
+	
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category = "Enemy Spawner",
+		meta = (AllowPrivateAccess = "true"))
+	int SpawnerID;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,
 		Category = "Enemy Spawner",
 		meta = (AllowPrivateAccess = "true"))
@@ -75,6 +91,14 @@ protected:
 
 	virtual void SpawnEnemy();
 	void DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour Behaviour);
+	
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
+	void EnableSpawner();
+
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
+	void DisableSpawner();
+	
+	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 public:
 };

@@ -45,11 +45,80 @@ APlayerCharacterBase::APlayerCharacterBase()
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
 	
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Wall capsule component
+	WallCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Wall Capsule Collision"));
+	WallCapsuleCollision->SetupAttachment(GetCapsuleComponent());
+	WallCapsuleCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	WallCapsuleCollision->SetCollisionObjectType(ECC_EngineTraceChannel2);
+	WallCapsuleCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
+	WallCapsuleCollision->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
+	WallCapsuleCollision->SetGenerateOverlapEvents(true);
+	
+	WallCapsuleCollision->ShapeColor = FColor::Blue;
+	WallCapsuleCollision->SetLineThickness(1);
+	WallCapsuleCollision->SetCapsuleSize(GetCapsuleComponent()->GetScaledCapsuleRadius() + WallCapsuleDetectionOffsetRadius, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+
+	// Weapon location
+	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
+	WeaponLocation->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+}
+
+void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
+{
+	UPlayerSaveData* PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
+
+	if (PlayerSaveData)
+	{
+		if (!WeaponInstance)
+		{
+			SpawnWeapon();
+		}
+
+		if (WeaponInstance)
+		{
+			if (PlayerSaveData->GunAssetData)
+			{
+				WeaponInstance->GunAssetData = PlayerSaveData->GunAssetData;
+			}
+
+			if (PlayerSaveData->MeleeAssetData)
+			{
+				WeaponInstance->MeleeAssetData = PlayerSaveData->MeleeAssetData;
+			}
+		}
+
+		WeaponInstance->bGunMode = PlayerSaveData->bGunMode;
+		WeaponInstance->Initialize();
+	}
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
+	// Initialize wall capsule collision
+	if (WallCapsuleCollision)
+	{
+		// Begin & end overlap events
+		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleBeginOverlap);
+		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleEndOverlap);
+	}
+}
+
+UPlayerSaveData* APlayerCharacterBase::MakePlayerSaveData()
+{
+	UPlayerSaveData* PlayerSaveData = NewObject<UPlayerSaveData>();
+
+	if (WeaponInstance)
+	{
+		PlayerSaveData->bGunMode = WeaponInstance->bGunMode;
+		PlayerSaveData->GunAssetData = WeaponInstance->GunAssetData;
+		PlayerSaveData->MeleeAssetData = WeaponInstance->MeleeAssetData;
+		return PlayerSaveData;
+	}
+	
+	return nullptr;
 }
 
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()
@@ -125,6 +194,112 @@ void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const
 		DeltaTime,
 		FOVInterpSpeed);
 }
+
+#pragma region WallRun
+
+// TODO: refactor this into an ability? it is disgusting to look at //dan
+void APlayerCharacterBase::OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult& SweepResult)
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	// Movement component pointer is valid
+	if (MovementComponent)
+	{
+		if (OtherActor && OtherActor != this)
+		{
+			if (MovementComponent->CanWallRun() && AbilitySystemComponent)
+			{
+				FHitResult HitResult;
+				if (MovementComponent->IsWallDetected(HitResult))
+				{
+					MovementComponent->CurrentWallRunDirection = MovementComponent->GetWallRunDirection(HitResult);
+					if (MovementComponent->InputDirectionWithinBounds())
+					{
+						// Create a gameplay event payload
+						FGameplayEventData EventData;
+						EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRun"));
+				
+						AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+					}
+				}
+			}
+		}
+	}
+}
+
+void APlayerCharacterBase::OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		
+	}
+}
+
+void APlayerCharacterBase::CharacterMovementWallRun_Implementation()
+{
+	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+}
+
+void APlayerCharacterBase::CharacterMovementWallJump_Implementation(FVector Direction, float Strength)
+{
+	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+	
+	MovementComponent->bExitWallRun = true;
+}
+
+void APlayerCharacterBase::CharacterMovementEndWallRun_Implementation()
+{
+	if (AbilitySystemComponent)
+	{
+		// Create a gameplay event payload
+		FGameplayEventData EventData;
+		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallRunEnd"));
+		
+		AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
+	}
+}
+
+#pragma endregion WallRun
+
+#pragma region CMCAttributeSetChanges
+
+void APlayerCharacterBase::SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed)
+{
+	GetCharacterMovement()->MaxCustomMovementSpeed = MaxWallRunSpeed;
+}
+
+void APlayerCharacterBase::SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed)
+{
+	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+
+	if (MovementComponentBase)
+	{
+		MovementComponentBase->EndWallRunOutImpulseStrength = PushOffWallHorizontalSpeed;
+	}
+}
+
+void APlayerCharacterBase::SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed)
+{
+	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
+		(GetCharacterMovement());
+
+	if (MovementComponentBase)
+	{
+		MovementComponentBase->EndWallRunUpImpulseStrength = PushOffWallVerticalSpeed;
+	}
+}
+
+#pragma endregion CMCAttributeSetChanges
 
 //* Blueprint Helper functions *//
 // Get current stamina attribute

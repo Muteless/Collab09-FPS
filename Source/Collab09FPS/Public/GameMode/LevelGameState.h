@@ -4,11 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Collab09FPS/Collab09FPS.h"
+
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
+
 #include "Interfaces/GameInstanceInterface.h"
 #include "Interfaces/GameStateInterface.h"
+#include "Interfaces/LoadInterface.h"
+#include "Interfaces/SaveGameInterface.h"
+
+#include "WorldObjects/Checkpoint.h"
+
 #include "LevelGameState.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, NewWorldState);
@@ -20,6 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldTransition, EWorldState, New
 UCLASS()
 class COLLAB09FPS_API ALevelGameState :
 public AGameStateBase,
+public ILoadInterface,
 public IGameStateInterface,
 public IGameInstanceInterface
 {
@@ -28,6 +36,8 @@ public IGameInstanceInterface
 public:
 	virtual void BeginPlay() override;
 	virtual void AddPlayerState(APlayerState* PlayerState) override;
+
+	virtual void LoadData_Implementation(USaveGame* SaveGame) override;
 
 #pragma region World State
 
@@ -51,6 +61,30 @@ public:
 	TMap<EWorldState, TSoftObjectPtr<UWorld>> WorldCollection;
 
 #pragma endregion World State
+
+#pragma region CheckpointSystem
+
+	UFUNCTION(BlueprintCallable)
+	void SetCheckpointIndex_Implementation(int NewCheckPointIndex) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void GetAllCheckpoints();
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AActor*> Checkpoints;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	int CheckpointIndex = 0;
+
+#pragma endregion CheckpointSystem
+
+#pragma region Save&Load
+
+	
+	
+#pragma endregion Save&Load
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerSpawned(APawn* pawn);

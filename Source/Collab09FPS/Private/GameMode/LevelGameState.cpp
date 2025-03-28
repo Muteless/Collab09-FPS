@@ -103,6 +103,28 @@ void ALevelGameState::AddPlayerState(APlayerState* PlayerState)
 	}
 }
 
+void ALevelGameState::LoadData_Implementation(USaveGame* SaveGame)
+{
+	WorldState = ISaveGameInterface::Execute_GetWorldState(SaveGame);
+	LoadWorld(WorldState);
+
+	CheckpointIndex = ISaveGameInterface::Execute_GetCheckpointIndex(SaveGame);
+}
+
+#pragma region CheckpointSystem
+
+void ALevelGameState::SetCheckpointIndex_Implementation(int NewCheckPointIndex)
+{
+	CheckpointIndex = NewCheckPointIndex;
+}
+
+void ALevelGameState::GetAllCheckpoints()
+{
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint::StaticClass(), Checkpoints);
+}
+
+#pragma endregion CheckpointSystem
+
 void ALevelGameState::PlayerSpawned(APawn* pawn)
 {
 	PlayerPawn = pawn;
