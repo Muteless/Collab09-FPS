@@ -186,7 +186,6 @@ void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
 
 void ACharacterBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Health changed to %f"), Data.NewValue);
 	// if health is less or equal than zero, die
 	if (Data.NewValue <= 0)
 	{

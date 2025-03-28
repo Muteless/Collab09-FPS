@@ -150,7 +150,7 @@ void AWeaponBase::WeaponFire_Implementation()
 		SpawnRotation,
 		SpawnParams);
 
-	BulletSpawned->SetOwner(this);
+	BulletSpawned->SetOwner(GetOwner());
 	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();
