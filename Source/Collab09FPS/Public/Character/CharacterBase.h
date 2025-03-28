@@ -163,22 +163,6 @@ protected:
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> OnLandedEffects;
 
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadWrite)
-	USceneComponent* WeaponLocation;
-	
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite)
-	TSubclassOf<AWeaponBase> WeaponClass;
-	UPROPERTY(BlueprintReadOnly)
-	AWeaponBase* WeaponInstance;
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite)
-	FName WeaponSocketName;
-	
-	UFUNCTION(BlueprintCallable)
-	void SpawnWeapon();
-
 	#pragma region Initialization
 		
 		// Grants native abilities

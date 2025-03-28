@@ -114,6 +114,22 @@ protected:
 
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets() override;
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnWeapon();
+	
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite)
+	USceneComponent* WeaponLocation;
+	
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	TSubclassOf<AWeaponBase> WeaponClass;
+	UPROPERTY(BlueprintReadOnly)
+	AWeaponBase* WeaponInstance;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	FName WeaponSocketName;
 	
 	//* Camera *//
 	UPROPERTY(VisibleAnywhere,

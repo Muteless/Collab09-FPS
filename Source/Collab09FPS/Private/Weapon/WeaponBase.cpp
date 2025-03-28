@@ -201,6 +201,7 @@ bool AWeaponBase::EnoughAmmoToShoot() const
 	{
 		
 	}
+	
 	return CurrentAmmo >= AmmoPerShot;
 }
 

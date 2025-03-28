@@ -3,13 +3,14 @@
 
 #include "Player/PlayerCharacterBase.h"
 
-#include "MeshPassProcessor.h"
 #include "Collab09FPS/Collab09FPS.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interfaces/CharacterController.h"
 
 // Constructor
-APlayerCharacterBase::APlayerCharacterBase()
+APlayerCharacterBase::APlayerCharacterBase() :
+WeaponSocketName("WeaponSocket")
 {
 	// CMC
 	GetCharacterMovement()->SetActive(true);
@@ -177,6 +178,58 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 void APlayerCharacterBase::InputActionInteract_Implementation(const EInputTypes InputType, const bool Input)
 {
 	
+}
+
+void APlayerCharacterBase::SpawnWeapon()
+{
+	// Check to see if weapon class is valid
+	if (WeaponClass)
+	{
+		FTransform SpawnTransform;
+		
+		// Use weapon location as spawn location
+		if (WeaponLocation)
+		{
+			SpawnTransform = WeaponLocation->GetComponentTransform();
+		}
+		else
+		{
+			SpawnTransform = FTransform(FRotator::ZeroRotator, GetActorLocation());
+		}
+
+		// Spawn weapon
+		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
+		
+		if (WeaponInstance)
+		{
+			// Set owner
+			WeaponInstance->SetOwner(this);
+			
+			// Attach the weapon to the weapon location OR socket if available
+			if (WeaponLocation)
+			{
+				WeaponInstance->AttachToComponent(WeaponLocation, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			}
+			else if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+			{
+				WeaponInstance->AttachToComponent(CharacterMesh,
+					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
+			}
+
+			// Notify controller that we have spawned the weapon
+			ICharacterController::Execute_WeaponSpawned(GetController(), WeaponInstance);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn weapon of class %s"),
+				*WeaponClass->GetName());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponClass is not set in %s"),
+			*GetName());
+	}
 }
 
 void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const
