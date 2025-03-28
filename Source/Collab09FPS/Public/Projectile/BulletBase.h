@@ -34,6 +34,11 @@ public:
 		BlueprintReadWrite,
 		Category = "Default")
 	TMap<TSubclassOf<class UGameplayEffect>, float> OnHitGameplayEffect;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	FColor BulletColor;
 	
 protected:
 private:

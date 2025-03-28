@@ -74,28 +74,28 @@ public:
 		BlueprintReadWrite)
 	UArrowComponent* ProjectileSpawnLocation;
 	
-#pragma region GunMode
-	
-	virtual void WeaponFire_Implementation() override;
-	void RateOfFireTimerEnded();
-	bool CanFire();
-	bool EnoughAmmoToShoot() const;
-	bool WeaponFireOnCooldown() const;
-	void ConsumeAmmo();
-	FTimerHandle RateOfFireTimerHandle;
+	#pragma region GunMode
+		
+		virtual void WeaponFire_Implementation() override;
+		void RateOfFireTimerEnded();
+		bool CanFire();
+		bool EnoughAmmoToShoot() const;
+		bool WeaponFireOnCooldown() const;
+		void ConsumeAmmo();
+		FTimerHandle RateOfFireTimerHandle;
 
-	virtual void WeaponReload_Implementation() override;
-	bool CanReload();
-	void ReloadFinished();
-	FTimerHandle ReloadTimerHandle;
+		virtual void WeaponReload_Implementation() override;
+		bool CanReload();
+		void ReloadFinished();
+		FTimerHandle ReloadTimerHandle;
 
-#pragma endregion GunMode
+	#pragma endregion GunMode
 
-#pragma region MeleeMode
-	virtual void WeaponMelee_Implementation();
-	bool CanMelee();
+	#pragma region MeleeMode
+		virtual void WeaponMelee_Implementation();
+		bool CanMelee();
 
-#pragma endregion MeleeMode
+	#pragma endregion MeleeMode
 
 	UPROPERTY(BlueprintReadOnly)
 	FName Name;
@@ -110,6 +110,11 @@ public:
 	UGunAssetData* GunAssetData;
 	void SetupGunVariables();
 	void SetWeaponModeToGun();
+
+	UFUNCTION(BlueprintPure)
+	TSubclassOf<ABulletBase> GetProjectile() const;
+	UFUNCTION(BlueprintPure)
+	int GetCurrentAmmo() const;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
