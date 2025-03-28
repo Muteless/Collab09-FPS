@@ -7,13 +7,16 @@
 
 // Interfaces
 #include "Interfaces/CharacterInput.h"
+#include "Interfaces/SaveGameInterface.h"
 
 // Components
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 // Attribute Sets
+#include "GameFramework/SaveGame.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
+#include "Interfaces/SaveGameInterface.h"
 
 #include "PlayerCharacterBase.generated.h"
 
@@ -27,11 +30,16 @@ class USpringArmComponent;
  */
 
 UCLASS()
-class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase
+class COLLAB09FPS_API APlayerCharacterBase :
+public ACharacterBase,
+public ISaveGameInterface
 {
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
+
+	virtual void LoadData_Implementation(USaveGame* SaveGame);
+
 
 	#pragma region Input
 	
@@ -40,6 +48,9 @@ public:
 
 	UFUNCTION(Category = "Input")
 	virtual void InputActionSwitchDimensions_Implementation(const EInputTypes InputType, const bool Input) override;
+
+	UFUNCTION(Category = "Input")
+	virtual void InputActionInteract_Implementation(const EInputTypes InputType, const bool Input) override;
 	
 	// Wall capsule detection
 	UPROPERTY(VisibleAnywhere,
@@ -96,11 +107,29 @@ public:
 	// Runs every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPlayerSaveData* MakePlayerSaveData();
+
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets() override;
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnWeapon();
+	
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite)
+	USceneComponent* WeaponLocation;
+	
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	TSubclassOf<AWeaponBase> WeaponClass;
+	UPROPERTY(BlueprintReadOnly)
+	AWeaponBase* WeaponInstance;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	FName WeaponSocketName;
 	
 	//* Camera *//
 	UPROPERTY(VisibleAnywhere,

@@ -3,12 +3,12 @@
 #include "Collab09FPS/Public/Character/CharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
+#include "Interfaces/CharacterController.h"
 
 #pragma region Initialization
 
 // Constructor
-ACharacterBase::ACharacterBase() :
-WeaponSocketName("WeaponSocket")
+ACharacterBase::ACharacterBase()
 {
 	//* Ability System Component *//
 	// Create AbilitySystemComponent
@@ -245,7 +245,7 @@ void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType,
 / * Now, we as a team do not appear to want to change the types of jumps the player can do
 	(or this list would expand quite rapidly) so I have come to this solution
 	Grounded? Ground Jump
-	IsNotWallRunnning && IsNotGrounded? Air Jump
+	IsNotWallRunning && IsNotGrounded? Air Jump
 	IsWallRunning? WallRun Jump*/
 void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
 {
@@ -368,55 +368,6 @@ void ACharacterBase::CharacterMovementMove_Implementation(FVector MoveInput)
 {
 	AddMovementInput(GetActorRightVector(), MoveInput.X, false);
 	AddMovementInput(GetActorForwardVector(), MoveInput.Y, false);
-}
-
-void ACharacterBase::SpawnWeapon()
-{
-	// Check to see if weapon class is valid
-	if (WeaponClass)
-	{
-		FTransform SpawnTransform;
-		
-		// Use weapon location as spawn location
-		if (WeaponLocation)
-		{
-			SpawnTransform = WeaponLocation->GetComponentTransform();
-		}
-		else
-		{
-			SpawnTransform = FTransform(FRotator::ZeroRotator, GetActorLocation());
-		}
-
-		// Spawn weapon
-		WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnTransform);
-		
-		if (WeaponInstance)
-		{
-			// Set owner
-			WeaponInstance->SetOwner(this);
-			
-			// Attach the weapon to the weapon location OR socket if available
-			if (WeaponLocation)
-			{
-				WeaponInstance->AttachToComponent(WeaponLocation, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-			}
-			else if (USkeletalMeshComponent* CharacterMesh = GetMesh())
-			{
-				WeaponInstance->AttachToComponent(CharacterMesh,
-					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
-			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Failed to spawn weapon of class %s"),
-				*WeaponClass->GetName());
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponClass is not set in %s"),
-			*GetName());
-	}
 }
 
 // Make the character ground jump

@@ -72,6 +72,11 @@ public:
 		BlueprintCallable,
 		Category = "Input")
 	void InputActionSwitchDimensions(const EInputTypes InputType, const bool Input);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Input")
+	void InputActionInteract(const EInputTypes InputType, const bool Input);
 	
 private:
 	GENERATED_BODY()
