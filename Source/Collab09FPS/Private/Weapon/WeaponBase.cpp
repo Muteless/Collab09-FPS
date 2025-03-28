@@ -201,6 +201,7 @@ bool AWeaponBase::EnoughAmmoToShoot() const
 	{
 		
 	}
+	
 	return CurrentAmmo >= AmmoPerShot;
 }
 
@@ -286,6 +287,16 @@ void AWeaponBase::SetWeaponModeToGun()
 	{
 		Mesh->SetSkeletalMesh(GunAssetData->Mesh);
 	}
+}
+
+TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
+{
+	return Projectiles[CurrentProjectileIndex];
+}
+
+int AWeaponBase::GetCurrentAmmo() const
+{
+	return CurrentAmmo;
 }
 
 void AWeaponBase::SetWeaponModeToMelee()
