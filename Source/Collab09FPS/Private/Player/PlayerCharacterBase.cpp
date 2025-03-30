@@ -62,7 +62,7 @@ WeaponSocketName("WeaponSocket")
 
 	// Weapon location
 	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
-	WeaponLocation->AttachToComponent(CameraComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	WeaponLocation->SetupAttachment(CameraComponent, NAME_None);
 }
 
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)

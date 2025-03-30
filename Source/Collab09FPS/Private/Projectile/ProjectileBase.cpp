@@ -20,6 +20,13 @@ AProjectileBase::AProjectileBase()
 	// Create the Sphere Collision Component
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->InitSphereRadius(10.0f);
+
+	// Ignore owner
+	if (GetOwner())
+	{
+		Collision->MoveIgnoreActors.Add(GetOwner());
+	}
+	
 	Collision->SetCollisionProfileName(TEXT("Projectile"));
 	Collision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 	Collision->SetNotifyRigidBodyCollision(true);
