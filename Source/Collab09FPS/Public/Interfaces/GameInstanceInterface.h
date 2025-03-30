@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable,
 		Category = "Level")
-	void TransitionWorld(const TSoftObjectPtr<UWorld>& World);
+	void TransitionLevel(const int WorldIndex);
 
 #pragma endregion Level
 
