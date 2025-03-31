@@ -16,7 +16,6 @@ AProjectileBase::AProjectileBase()
 	MaxMovementSpeed = 3500.0;
 	RotationFollowsVelocity = true;
 	
-	
 	// Create the Sphere Collision Component
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->InitSphereRadius(10.0f);
