@@ -47,9 +47,6 @@ void AAISpawner::BeginPlay()
 	}
 }
 
-
-
-
 void AAISpawner::SpawnEnemy()
 {
 	if (!IsActive) return;

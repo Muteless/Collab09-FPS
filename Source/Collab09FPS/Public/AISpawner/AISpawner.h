@@ -15,13 +15,10 @@ class COLLAB09FPS_API AAISpawner : public AActor
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Enemy Spawner",
-		meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 	bool IsActive;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Spawner")
+	UPROPERTY()
 	bool bStartActive = true;
 
 	
