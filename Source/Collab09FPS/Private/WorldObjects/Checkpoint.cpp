@@ -15,6 +15,7 @@ ACheckpoint::ACheckpoint()
 	RootComponent = PlayerSpawnLocation;
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CapsuleComponent->SetCapsuleSize(34, 88);
 	CapsuleComponent->SetupAttachment(PlayerSpawnLocation);
 	

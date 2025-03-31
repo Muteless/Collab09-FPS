@@ -13,7 +13,7 @@ void APlayerControllerBase::OnPossess(APawn* InPawn)
 	if (InPawn->Implements<ULoadInterface>())
 	{
 		// Get save game
-		USaveGame* SaveGame = IGameInstanceInterface::Execute_LoadGame(GetGameInstance());
+		USaveGame* SaveGame = IGameInstanceInterface::Execute_GetSaveGameData(GetGameInstance());
 		ILoadInterface::Execute_LoadData(InPawn, SaveGame);
 	}
 }
