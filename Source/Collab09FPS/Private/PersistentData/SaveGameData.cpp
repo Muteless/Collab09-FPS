@@ -33,12 +33,12 @@ void USaveGameData::SetCheckpointIndex_Implementation(int NewCheckpointIndex)
 	CheckpointIndex = NewCheckpointIndex;
 }
 
-UPlayerSaveData* USaveGameData::GetPlayerSaveData_Implementation()
+FPlayerData USaveGameData::GetPlayerSaveData_Implementation()
 {
 	return PlayerSaveData;
 }
 
-void USaveGameData::SetPlayerSaveData_Implementation(UPlayerSaveData* NewPlayerSaveData)
+void USaveGameData::SetPlayerSaveData_Implementation(const FPlayerData& NewPlayerData)
 {
-	PlayerSaveData = NewPlayerSaveData;
+	PlayerSaveData = NewPlayerData;
 }

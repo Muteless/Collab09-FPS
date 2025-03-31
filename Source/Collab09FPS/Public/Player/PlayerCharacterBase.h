@@ -6,17 +6,20 @@
 #include "Character/CharacterBase.h"
 
 // Interfaces
-#include "Interfaces/CharacterInput.h"
 #include "Interfaces/SaveGameInterface.h"
+#include "Interfaces/LoadInterface.h"
 
 // Components
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Weapon/WeaponBase.h"
+
+// Persistent data
+#include "PersistentData/PlayerSaveDataStruct.h"
 
 // Attribute Sets
 #include "GameFramework/SaveGame.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
-#include "Interfaces/SaveGameInterface.h"
 
 #include "PlayerCharacterBase.generated.h"
 
@@ -31,14 +34,14 @@ class USpringArmComponent;
 
 UCLASS()
 class COLLAB09FPS_API APlayerCharacterBase :
-public ACharacterBase
+public ACharacterBase,
+public ILoadInterface
 {
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
 
-	virtual void LoadData_Implementation(USaveGame* SaveGame);
-
+	virtual void LoadData_Implementation(USaveGame* SaveGame) override;
 
 	#pragma region Input
 	
@@ -106,7 +109,7 @@ public:
 	// Runs every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPlayerSaveData* MakePlayerSaveData();
+	FPlayerData MakePlayerSaveData();
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;

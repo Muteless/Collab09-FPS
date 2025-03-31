@@ -7,6 +7,7 @@
 #include "GameFramework/SaveGame.h"
 
 #include "Interfaces/GameInstanceInterface.h"
+#include "Interfaces/LoadInterface.h"
 #include "Interfaces/SaveGameInterface.h"
 
 #include "Kismet/GameplayStatics.h"

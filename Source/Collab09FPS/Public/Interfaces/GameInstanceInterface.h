@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 
-#include "GameFramework/SaveGame.h"
 #include "GameMode/LevelData/LevelDataAsset.h"
+#include "PersistentData/SaveGameData.h"
 
 #include "UObject/Interface.h"
 #include "GameInstanceInterface.generated.h"

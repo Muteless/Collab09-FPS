@@ -3,6 +3,7 @@
 
 #include "WorldObjects/Checkpoint.h"
 
+#include "GameFramework/SaveGame.h"
 #include "Interfaces/GameInstanceInterface.h"
 #include "Player/PlayerCharacterBase.h"
 
@@ -50,7 +51,7 @@ void ACheckpoint::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		ULevelDataAsset* LevelDataAsset = IGameInstanceInterface::Execute_GetLevelData(GetGameInstance());
 
 		// if save game is valid then set data
-		if (SaveGame)
+		if (SaveGame->IsValidLowLevel())
 		{
 			// ignore checkpoint if id is less then save game id
 			if (ISaveGameInterface::Execute_GetCheckpointIndex(SaveGame) > Id)
@@ -67,6 +68,7 @@ void ACheckpoint::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Save game is invalid"));
 			// this will externally create a save game
 			IGameInstanceInterface::Execute_LoadGame(GetGameInstance());
 

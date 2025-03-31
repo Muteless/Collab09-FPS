@@ -4,8 +4,10 @@
 #include "Player/PlayerCharacterBase.h"
 
 #include "Collab09FPS/Collab09FPS.h"
+
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
 #include "Interfaces/CharacterController.h"
 
 // Constructor
@@ -67,10 +69,8 @@ WeaponSocketName("WeaponSocket")
 
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 {
-	UPlayerSaveData* PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
-
-	if (PlayerSaveData)
-	{
+	FPlayerData PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
+	
 		if (!WeaponInstance)
 		{
 			SpawnWeapon();
@@ -78,20 +78,11 @@ void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 
 		if (WeaponInstance)
 		{
-			if (PlayerSaveData->GunAssetData)
-			{
-				WeaponInstance->GunAssetData = PlayerSaveData->GunAssetData;
-			}
-
-			if (PlayerSaveData->MeleeAssetData)
-			{
-				WeaponInstance->MeleeAssetData = PlayerSaveData->MeleeAssetData;
-			}
+			WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
+			WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
+			WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
 		}
-
-		WeaponInstance->bGunMode = PlayerSaveData->bGunMode;
 		WeaponInstance->Initialize();
-	}
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -107,19 +98,18 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 	}
 }
 
-UPlayerSaveData* APlayerCharacterBase::MakePlayerSaveData()
+FPlayerData APlayerCharacterBase::MakePlayerSaveData()
 {
-	UPlayerSaveData* PlayerSaveData = NewObject<UPlayerSaveData>();
+	FPlayerData PlayerSaveData;
 
 	if (WeaponInstance)
 	{
-		PlayerSaveData->bGunMode = WeaponInstance->bGunMode;
-		PlayerSaveData->GunAssetData = WeaponInstance->GunAssetData;
-		PlayerSaveData->MeleeAssetData = WeaponInstance->MeleeAssetData;
-		return PlayerSaveData;
+		PlayerSaveData.bGunMode = WeaponInstance->bGunMode;
+		PlayerSaveData.GunAssetData = WeaponInstance->GunAssetData;
+		PlayerSaveData.MeleeAssetData = WeaponInstance->MeleeAssetData;
 	}
 	
-	return nullptr;
+	return PlayerSaveData;
 }
 
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()
