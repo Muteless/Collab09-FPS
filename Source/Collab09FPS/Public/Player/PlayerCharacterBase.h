@@ -31,8 +31,7 @@ class USpringArmComponent;
 
 UCLASS()
 class COLLAB09FPS_API APlayerCharacterBase :
-public ACharacterBase,
-public ISaveGameInterface
+public ACharacterBase
 {
 public:
 	// Sets default values for this character's properties

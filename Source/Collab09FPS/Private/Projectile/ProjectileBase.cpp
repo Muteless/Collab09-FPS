@@ -20,12 +20,6 @@ AProjectileBase::AProjectileBase()
 	// Create the Sphere Collision Component
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->InitSphereRadius(10.0f);
-
-	// Ignore owner
-	if (GetOwner())
-	{
-		Collision->MoveIgnoreActors.Add(GetOwner());
-	}
 	
 	Collision->SetCollisionProfileName(TEXT("Projectile"));
 	Collision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
@@ -47,4 +41,17 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovementComponent->MaxSpeed = MaxMovementSpeed;
 	ProjectileMovementComponent->bRotationFollowsVelocity = RotationFollowsVelocity;
 	ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
+}
+
+void AProjectileBase::Initialize()
+{
+	if (GetOwner()->GetOwner())
+	{
+		Collision->IgnoreActorWhenMoving(GetOwner()->GetOwner(), true);
+		UE_LOG(LogTemp, Warning, TEXT("ProjectileBase::Initialize() owner: %s"), *GetOwner()->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ProjectileBase::Initialize() no owner's owner"));
+	}
 }
