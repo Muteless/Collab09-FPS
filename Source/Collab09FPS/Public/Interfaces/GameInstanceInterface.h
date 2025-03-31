@@ -26,39 +26,56 @@ public:
 #pragma region WorldState
 	
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "WorldState")
 	ULevelDataAsset* GetLevelData();
 
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "WorldState")
 	int GetWorldIndex();
 
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "WorldState")
 	void SetWorldIndex(int NewIndex);
 
 #pragma endregion WorldState
 
+#pragma region Level
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Level")
+	void TransitionLevel(const int WorldIndex);
+
+#pragma endregion Level
+
 #pragma region Save&Load
 	
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "Save&Load")
 	FString GetSaveSlot();
 
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "Save&Load")
 	void SetSaveSlot(FName SlotName);
 
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "Save&Load")
 	USaveGame* LoadGame();
 
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "Save&Load")
 	void SaveGame();
 
 	UFUNCTION(BlueprintNativeEvent,
-		BlueprintCallable)
+		BlueprintCallable,
+		Category = "Save&Load")
 	USaveGame* GetSaveGameData();
 
 #pragma endregion Save&Load

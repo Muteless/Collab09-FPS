@@ -31,14 +31,6 @@ ACheckpoint::ACheckpoint()
 	BoxComponent->SetLineThickness(5);
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnBoxBeginOverlap);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACheckpoint::OnBoxEndOverlap);
-
-	FAttachmentTransformRules TransformRules
-		(EAttachmentRule::KeepWorld,
-		EAttachmentRule::KeepWorld,
-		EAttachmentRule::KeepRelative,
-		false);
-	
-	BoxComponent->AttachToComponent(PlayerSpawnLocation, TransformRules, NAME_None);
 	BoxComponent->SetWorldLocation(PlayerSpawnLocation->GetComponentLocation());
 }
 

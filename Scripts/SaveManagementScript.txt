@@ -1,0 +1,108 @@
+import unreal
+import os
+
+# Define the owner name for the tool menu
+menu_owner = "SaveManager"
+
+# Get the Unreal Editor ToolMenus object
+tool_menus = unreal.ToolMenus.get()
+
+# Define the name of the menu that will contain the tool
+owning_menu_name = "LevelEditor.LevelEditorToolBar.PlayToolBar"
+
+# Define the path to the project directory (base directory)
+project_directory = unreal.SystemLibrary.get_project_directory()
+
+# Define the path to the PythonCode directory
+python_code_directory = os.path.join(project_directory, 'PythonCode')
+
+# Define the Example_SubMenuEntry class
+@unreal.uclass()
+class Example_SubMenuEntry(unreal.ToolMenuEntryScript):
+    def init_as_toolbar_button(self):
+        # Set up the toolbar button properties
+        self.data.menu = owning_menu_name
+        self.data.advanced.entry_type = unreal.MultiBlockType.TOOL_BAR_COMBO_BUTTON
+        # Set an icon for the toolbar button
+        self.data.icon = unreal.ScriptSlateIcon("EditorStyle", "MaterialEditor.CameraHome")
+        # Override the style of the toolbar button
+        self.data.advanced.style_name_override = "CalloutToolbar"
+
+# Define the Run function that creates the menu
+def Run():
+    # Create an instance of the toolbar button entry
+    entry = Example_SubMenuEntry()
+    entry.init_as_toolbar_button()
+    # Initialize the toolbar entry with menu details
+    entry.init_entry(
+        menu_owner,                  # Owner name
+        owning_menu_name,            # Parent menu name
+        "",                          # Section name (empty means default)
+        "exampleToolbarEntry",       # Entry name
+        "Example Menu",              # Label displayed on the toolbar
+        "Example Quick Links"        # Tool tip description
+    )
+    
+    # Register a new submenu under the toolbar button
+    sub_menu = tool_menus.register_menu(
+        owning_menu_name + ".exampleToolbarEntry",  # Unique menu name
+        "",                                         # Parent menu (empty for root)
+        unreal.MultiBoxType.MENU,                   # Type of menu
+        False                                       # Should close on parent menu activation
+    )
+    
+    # Define the menu entries as a list of tuples
+    menu_entries = [
+        # Each tuple contains:
+        # (EntryName, DisplayName, Description, Command)
+        
+        # 1. Open URL - Opens http://example.com
+        (
+            "OpenURL",                            # Entry name
+            "Open URL",                           # Display name in the menu
+            "Open a webpage http://example.com",  # Description (tooltip)
+            "unreal.SystemLibrary.launch_url(\"http://example.com\")"  # Python command to execute
+        ),
+        # 2. Run EUW - Runs the Editor Utility Widget called 'example'
+        (
+            "RunEUW",
+            "Run EUW",
+            "Run the Editor Utility Widget called 'example' in the content directory",
+            "import unreal; "
+            "asset = unreal.EditorAssetLibrary.load_asset(\"/Game/example\"); "
+            "ss = unreal.get_editor_subsystem(unreal.EditorUtilitySubsystem); "
+            "ss.spawn_and_register_tab(asset)"
+        ),
+        # 3. Run Python Script - Executes 'example python script.py' from the project base directory
+        (
+            "RunPythonScript",
+            "Run Python Script",
+            "Run the Python script called 'example python script' in the project base directory",
+            f"exec(open(r\"{os.path.join(project_directory, 'example python script.py')}\").read())"
+        ),
+    ]
+    
+    # Add each menu entry to the submenu
+    for entry_name, display_name, description, command in menu_entries:
+        # Initialize a menu entry with the given parameters
+        sub_entry = unreal.ToolMenuEntryExtensions.init_menu_entry(
+            menu_owner,                                  # Owner name
+            entry_name,                                  # Entry name
+            display_name,                                # Display name
+            description,                                 # Description
+            unreal.ToolMenuStringCommandType.PYTHON,     # Command type
+            "",                                          # Command string (not used here)
+            command                                      # Python command to execute
+        )
+        # Add the entry to the submenu
+        sub_menu.add_menu_entry("", sub_entry)
+    
+    # Extend the toolbar menu and add the toolbar button
+    toolbar = tool_menus.extend_menu(owning_menu_name)
+    toolbar.add_menu_entry_object(entry)
+    # Refresh the UI to show the new menu
+    tool_menus.refresh_all_widgets()
+
+# Call the Run function to create the tool menu
+Run()
+

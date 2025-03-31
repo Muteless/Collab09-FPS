@@ -31,14 +31,14 @@ class USpringArmComponent;
 
 UCLASS()
 class COLLAB09FPS_API APlayerCharacterBase :
-public ACharacterBase,
-public ISaveGameInterface
+public ACharacterBase
 {
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
 
 	virtual void LoadData_Implementation(USaveGame* SaveGame);
+
 
 	#pragma region Input
 	
@@ -47,6 +47,9 @@ public:
 
 	UFUNCTION(Category = "Input")
 	virtual void InputActionSwitchDimensions_Implementation(const EInputTypes InputType, const bool Input) override;
+
+	UFUNCTION(Category = "Input")
+	virtual void InputActionInteract_Implementation(const EInputTypes InputType, const bool Input) override;
 	
 	// Wall capsule detection
 	UPROPERTY(VisibleAnywhere,
@@ -110,6 +113,22 @@ protected:
 
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets() override;
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnWeapon();
+	
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite)
+	USceneComponent* WeaponLocation;
+	
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	TSubclassOf<AWeaponBase> WeaponClass;
+	UPROPERTY(BlueprintReadOnly)
+	AWeaponBase* WeaponInstance;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	FName WeaponSocketName;
 	
 	//* Camera *//
 	UPROPERTY(VisibleAnywhere,

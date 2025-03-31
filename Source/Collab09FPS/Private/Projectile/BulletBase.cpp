@@ -11,6 +11,11 @@ ABulletBase::ABulletBase():
 	
 }
 
+void ABulletBase::Initialize()
+{
+	
+}
+
 void ABulletBase::ApplyEffectToAbilitySystemComponent
 	(UAbilitySystemComponent* AbilitySystemComponent,
 	TSubclassOf<UGameplayEffect> GameplayEffect,

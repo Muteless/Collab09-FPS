@@ -150,7 +150,8 @@ void AWeaponBase::WeaponFire_Implementation()
 		SpawnRotation,
 		SpawnParams);
 
-	BulletSpawned->SetOwner(this);
+	BulletSpawned->SetOwner(GetOwner());
+	BulletSpawned->Initialize();
 	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();
@@ -201,6 +202,7 @@ bool AWeaponBase::EnoughAmmoToShoot() const
 	{
 		
 	}
+	
 	return CurrentAmmo >= AmmoPerShot;
 }
 
@@ -286,6 +288,16 @@ void AWeaponBase::SetWeaponModeToGun()
 	{
 		Mesh->SetSkeletalMesh(GunAssetData->Mesh);
 	}
+}
+
+TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
+{
+	return Projectiles[CurrentProjectileIndex];
+}
+
+int AWeaponBase::GetCurrentAmmo() const
+{
+	return CurrentAmmo;
 }
 
 void AWeaponBase::SetWeaponModeToMelee()
