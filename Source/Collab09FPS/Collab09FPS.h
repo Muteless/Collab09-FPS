@@ -42,8 +42,6 @@ enum class EDefaultSpawnBehaviour : uint8
 	AutoTargetPlayer UMETA(DisplayName = "Auto Target Player")
 };
 
-
-
 #pragma endregion Enemy Spawner
 
 #pragma region World State

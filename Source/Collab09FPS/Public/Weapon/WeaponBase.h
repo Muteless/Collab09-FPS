@@ -31,7 +31,7 @@ public IWeaponInput
 {
 public:
 	
-#pragma region Delegates
+	#pragma region Delegates
 	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFire OnWeaponFire;
@@ -57,7 +57,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFailedToMelee OnWeaponFailedToMelee;
 	
-#pragma endregion Delegates
+	#pragma endregion Delegates
 	
 	// Sets default values for this actor's properties
 	AWeaponBase();

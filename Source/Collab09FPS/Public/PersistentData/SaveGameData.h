@@ -6,7 +6,10 @@
 #include "GameFramework/SaveGame.h"
 
 #include "GameMode/LevelData/LevelDataAsset.h"
+#include "PersistentData/PlayerSaveDataStruct.h"
+
 #include "Interfaces/SaveGameInterface.h"
+
 #include "Player/PlayerSaveData.h"
 
 #include "SaveGameData.generated.h"
@@ -56,15 +59,16 @@ public:
 	virtual void SetCheckpointIndex_Implementation(int NewCheckpointIndex) override;
 	
 	#pragma endregion World
+
+	UFUNCTION()
+	virtual FPlayerData GetPlayerSaveData_Implementation() override;
+	UFUNCTION()
+	virtual void SetPlayerSaveData_Implementation(const FPlayerData& NewPlayerData) override;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Player")
-	UPlayerSaveData* PlayerSaveData;
-	UFUNCTION()
-	virtual UPlayerSaveData* GetPlayerSaveData_Implementation() override;
-	UFUNCTION()
-	virtual void SetPlayerSaveData_Implementation(UPlayerSaveData* NewPlayerSaveData) override;
+	FPlayerData PlayerSaveData = FPlayerData();
 	
 private:
 	GENERATED_BODY()
