@@ -1,6 +1,9 @@
 ﻿#include "SaveManagement.h"
-
 #include "LevelEditor.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "Misc/Paths.h"
+#include "HAL/PlatformFileManager.h"
 
 #define LOCTEXT_NAMESPACE "FSaveManagementModule"
 
@@ -33,7 +36,43 @@ void FSaveManagementModule::AddMenu(FMenuBarBuilder& MenuBarBuilder)
 void FSaveManagementModule::FillMenu(FMenuBuilder& MenuBuilder)
 {
 	// Fill pull down menu
-	// MenuBuilder.AddMenuEntry(ToolBarResetSaveEntry, ToolBarResetSaveEntryTooltip)
+	MenuBuilder.AddMenuEntry(
+		PullDownEntryResetSave,
+		PullDownTooltipResetSave,
+		FSlateIcon(),
+		FUIAction(
+			FExecuteAction::CreateRaw(
+				this,
+				&FSaveManagementModule::DeleteSave),
+				FCanExecuteAction()
+				)
+		);
+}
+
+void FSaveManagementModule::DeleteSave()
+{
+	// Get the full path of the save file
+	FString SaveFilePath = FPaths::ProjectSavedDir() / TEXT("SaveGames") / SaveFileName;
+
+	// Platform file manager to delete a file
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+
+	// check to see if save file exists
+	if (PlatformFile.FileExists(*SaveFilePath))
+	{
+		if (PlatformFile.DeleteFile(*SaveFilePath))
+		{
+			UE_LOG(LogTemp, Log, TEXT("Save file deleted!"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to delete save file!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Save file does not exist!"));
+	}
 }
 
 void FSaveManagementModule::ShutdownModule()
