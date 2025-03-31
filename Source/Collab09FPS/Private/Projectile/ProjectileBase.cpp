@@ -42,3 +42,16 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovementComponent->bRotationFollowsVelocity = RotationFollowsVelocity;
 	ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
 }
+
+void AProjectileBase::Initialize()
+{
+	if (GetOwner()->GetOwner())
+	{
+		Collision->IgnoreActorWhenMoving(GetOwner()->GetOwner(), true);
+		UE_LOG(LogTemp, Warning, TEXT("ProjectileBase::Initialize() owner: %s"), *GetOwner()->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ProjectileBase::Initialize() no owner's owner"));
+	}
+}

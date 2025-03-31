@@ -18,6 +18,9 @@ public:
 	// Sets default values for this actor's properties
 	ABulletBase();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void Initialize();
+
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "Target"))
 	void ApplyEffectToAbilitySystemComponent
 		(UAbilitySystemComponent* AbilitySystemComponent,

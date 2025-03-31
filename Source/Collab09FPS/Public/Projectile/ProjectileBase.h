@@ -16,6 +16,7 @@ class COLLAB09FPS_API AProjectileBase : public ABulletBase
 {
 public:
 	AProjectileBase();
+	virtual void Initialize() override;
 
 	// Sphere collision component
 	UPROPERTY(VisibleAnywhere,

@@ -151,6 +151,7 @@ void AWeaponBase::WeaponFire_Implementation()
 		SpawnParams);
 
 	BulletSpawned->SetOwner(GetOwner());
+	BulletSpawned->Initialize();
 	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();
