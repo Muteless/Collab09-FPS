@@ -11,6 +11,11 @@
 			"AdditionalDependencies": [
 				"GameplayAbilities"
 			]
+		},
+		{
+			"Name": "SaveManagement",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
