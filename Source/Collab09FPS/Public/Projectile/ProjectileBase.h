@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BulletBase.h"
 
-#include "NiagaraSystem.h"
+#include "AbilitySystemComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
