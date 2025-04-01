@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "AbilitySystemComponent.h"
+#include "NiagaraSystem.h"
 #include "GameplayEffect.h"
 
 #include "BulletBase.generated.h"
@@ -38,6 +38,11 @@ public:
 		Category = "Default")
 	TMap<TSubclassOf<class UGameplayEffect>, float> OnHitGameplayEffect;
 
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	UNiagaraSystem* OnHitSystem;
+	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
