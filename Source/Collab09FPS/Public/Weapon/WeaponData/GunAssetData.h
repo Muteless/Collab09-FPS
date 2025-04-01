@@ -36,11 +36,6 @@ public:
 		BlueprintReadWrite,
 		Category = "Default")
 	UAnimMontage* GunReloadAnimation;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	float Damage;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,

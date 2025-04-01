@@ -33,16 +33,17 @@ void AWeaponBase::Initialize()
 				TEXT("No Ability System Component found on weapon owner."));
 		}
 	}
+
+	SetupGunVariables();
+	SetupMeleeVariables();
 	
 	// Setup weapon mode
 	if (bGunMode)
 	{
-		SetupGunVariables();
 		SetWeaponModeToGun();
 	}
 	else
 	{
-		SetupMeleeVariables();
 		SetWeaponModeToMelee();
 	}
 }
@@ -60,8 +61,6 @@ void AWeaponBase::SetupGunVariables()
 		{
 			GunReloadAnimation = GunAssetData->GunReloadAnimation;
 		}
-		
-		GunDamage = GunAssetData->Damage;
 
 		// Get ammo per shot from projectile
 		if (Projectiles[CurrentProjectileIndex]->IsValidLowLevel())
@@ -198,11 +197,6 @@ bool AWeaponBase::CanFire()
 
 bool AWeaponBase::EnoughAmmoToShoot() const
 {
-	if (CurrentAmmo < AmmoPerShot)
-	{
-		
-	}
-	
 	return CurrentAmmo >= AmmoPerShot;
 }
 
@@ -214,6 +208,7 @@ bool AWeaponBase::WeaponFireOnCooldown() const
 void AWeaponBase::ConsumeAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - AmmoPerShot, 0, MagazineSize);
+	UE_LOG(LogTemp, Warning, TEXT("CurrentAmmo: %i"), CurrentAmmo);
 
 	// reload if we are out of ammo
 	if (CurrentAmmo == 0)
@@ -237,7 +232,7 @@ void AWeaponBase::WeaponReload_Implementation()
 
 bool AWeaponBase::CanReload()
 {
-	return !GetWorldTimerManager().IsTimerActive(ReloadTimerHandle);
+	return !GetWorldTimerManager().IsTimerActive(ReloadTimerHandle) && CurrentAmmo != MagazineSize;
 }
 
 void AWeaponBase::ReloadFinished()
@@ -268,11 +263,11 @@ void AWeaponBase::WeaponSwitch_Implementation()
 
 	if (bGunMode)
 	{
-		// SetWeaponModeToGun();
+		SetWeaponModeToGun();
 	}
 	else
 	{
-		// SetWeaponModeToMelee();
+		SetWeaponModeToMelee();
 	}
 }
 

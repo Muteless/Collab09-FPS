@@ -176,9 +176,6 @@ protected:
 		BlueprintReadWrite,
 		Category = "Gun Mode")
 	UAnimMontage* GunReloadAnimation;
-	
-	UPROPERTY()
-	float GunDamage;
 
 	UPROPERTY()
 	float RateOfFire;
