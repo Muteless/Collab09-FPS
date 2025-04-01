@@ -206,6 +206,8 @@ void APlayerCharacterBase::SpawnWeapon()
 					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 			}
 
+			WeaponInstance->Initialize();
+			
 			// Notify controller that we have spawned the weapon
 			ICharacterController::Execute_WeaponSpawned(GetController(), WeaponInstance);
 		}

@@ -6,8 +6,7 @@
 #include "Projectile/ProjectileBase.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase():
-	bGunMode(false)
+AWeaponBase::AWeaponBase()
 {
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
@@ -54,22 +53,23 @@ void AWeaponBase::SetupGunVariables()
 	{
 		if (!GunAssetData->Projectiles.IsEmpty())
 		{
+			// Get projectiles
 			Projectiles = GunAssetData->Projectiles;
+			
+			// Get ammo per shot from projectile
+			if (Projectiles[CurrentProjectileIndex]->IsValidLowLevel())
+			{
+				AmmoPerShot = Projectiles[CurrentProjectileIndex].GetDefaultObject()->AmmoConsumedOnShot;
+			}
+			else
+			{
+				AmmoPerShot = 1;
+			}
 		}
 
 		if (GunAssetData->GunReloadAnimation)
 		{
 			GunReloadAnimation = GunAssetData->GunReloadAnimation;
-		}
-
-		// Get ammo per shot from projectile
-		if (Projectiles[CurrentProjectileIndex]->IsValidLowLevel())
-		{
-			AmmoPerShot = Projectiles[CurrentProjectileIndex].GetDefaultObject()->AmmoConsumedOnShot;
-		}
-		else
-		{
-			AmmoPerShot = 1;
 		}
 		
 		RateOfFire = GunAssetData->RateOfFire;
@@ -208,7 +208,6 @@ bool AWeaponBase::WeaponFireOnCooldown() const
 void AWeaponBase::ConsumeAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - AmmoPerShot, 0, MagazineSize);
-	UE_LOG(LogTemp, Warning, TEXT("CurrentAmmo: %i"), CurrentAmmo);
 
 	// reload if we are out of ammo
 	if (CurrentAmmo == 0)
@@ -281,7 +280,18 @@ void AWeaponBase::SetWeaponModeToGun()
 	// Gun mesh
 	if (GunAssetData != nullptr && GunAssetData->Mesh)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Gun Mode!"))
 		Mesh->SetSkeletalMesh(GunAssetData->Mesh);
+	}
+}
+
+void AWeaponBase::SetWeaponModeToMelee()
+{
+	// Melee mesh
+	if (MeleeAssetData != nullptr && MeleeAssetData->Mesh)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Melee Mode!"))
+		Mesh->SetSkeletalMesh(MeleeAssetData->Mesh);
 	}
 }
 
@@ -295,11 +305,3 @@ int AWeaponBase::GetCurrentAmmo() const
 	return CurrentAmmo;
 }
 
-void AWeaponBase::SetWeaponModeToMelee()
-{
-	// Melee mesh
-	if (MeleeAssetData != nullptr && MeleeAssetData->Mesh)
-	{
-		Mesh->SetSkeletalMesh(MeleeAssetData->Mesh);
-	}
-}
