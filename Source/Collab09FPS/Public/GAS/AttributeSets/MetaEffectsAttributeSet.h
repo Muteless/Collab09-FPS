@@ -25,6 +25,10 @@ public:
 	UPROPERTY(BlueprintReadOnly,
 		Category="Attributes | Meta Effects | ")
 	FGameplayAttributeData MetaKnockBack;
+
+	UPROPERTY(BlueprintReadOnly,
+		Category="Attributes | Meta Effects | ")
+	FGameplayAttributeData MetaRootMotionImpulse;
 	
 private:
 	GENERATED_BODY()
