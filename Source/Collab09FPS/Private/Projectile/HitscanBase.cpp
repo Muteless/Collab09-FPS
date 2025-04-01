@@ -40,20 +40,20 @@ void AHitscanBase::Initialize()
 		}
 
 		// draw debug line
-		if(GetWorld())
-		{
-		    // Draw a debug line 
-		    DrawDebugLine(
-		        GetWorld(), 
-		        Start, 
-		        End, 
-		        FColor::Red, // Make the line red
-		        false,  // Don't persist the line
-		        1, // Duration (negative means "never auto-delete")
-		        ECC_GameTraceChannel1, // This must match the ECC_GameTraceChannel1 from previous lines
-		        10.f // Thickness of the line
-		    );
-		}
+		// if(GetWorld())
+		// {
+		//     // Draw a debug line 
+		//     DrawDebugLine(
+		//         GetWorld(), 
+		//         Start, 
+		//         End, 
+		//         FColor::Red, // Make the line red
+		//         false,  // Don't persist the line
+		//         1, // Duration (negative means "never auto-delete")
+		//         ECC_GameTraceChannel1, // This must match the ECC_GameTraceChannel1 from previous lines
+		//         10.f // Thickness of the line
+		//     );
+		// }
 	}
 	else
 	{
@@ -72,20 +72,20 @@ void AHitscanBase::Initialize()
 		}
 
 		// draw debug line
-		if(GetWorld())
-		{
-			// Draw a debug line 
-			DrawDebugLine(
-				GetWorld(), 
-				Start, 
-				End, 
-				FColor::Red, // Make the line red
-				false,  // Don't persist the line
-				1, // Duration (negative means "never auto-delete")
-				ECC_GameTraceChannel1, // This must match the ECC_GameTraceChannel1 from previous lines
-				10.f // Thickness of the line
-			);
-		}
+		// if(GetWorld())
+		// {
+		// 	// Draw a debug line 
+		// 	DrawDebugLine(
+		// 		GetWorld(), 
+		// 		Start, 
+		// 		End, 
+		// 		FColor::Red, // Make the line red
+		// 		false,  // Don't persist the line
+		// 		1, // Duration (negative means "never auto-delete")
+		// 		ECC_GameTraceChannel1, // This must match the ECC_GameTraceChannel1 from previous lines
+		// 		10.f // Thickness of the line
+		// 	);
+		// }
 	}
 	
 	Destroy();
