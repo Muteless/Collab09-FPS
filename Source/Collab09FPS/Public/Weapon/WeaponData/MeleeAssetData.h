@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 
 #include "Animation/AnimMontage.h"
+#include "Animation/AnimSequence.h"
 #include "GameplayEffect.h"
 
 #include "MeleeAssetData.generated.h"
@@ -17,20 +18,11 @@ UCLASS()
 class COLLAB09FPS_API UMeleeAssetData : public UDataAsset
 {
 public:
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	FName Name;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
-	USkeletalMesh* Mesh;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	TArray<TSubclassOf<UGameplayEffect>> OnHitGameplayEffects;
+	TMap<TSubclassOf<UGameplayEffect>, float> OnHitGameplayEffects;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,

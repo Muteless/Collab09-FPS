@@ -11,6 +11,8 @@ AWeaponBase::AWeaponBase()
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
 
+	MeleeHitbox = CreateDefaultSubobject<UHitbox>(TEXT("MeleeHitbox"));
+
 	ProjectileSpawnLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnLocation"));
 	ProjectileSpawnLocation->SetupAttachment(Mesh);
 	ProjectileSpawnLocation->ArrowSize = 0.5;
@@ -90,6 +92,7 @@ void AWeaponBase::SetupMeleeVariables()
 	if (MeleeAssetData != nullptr)
 	{
 		MeleeDamage = MeleeAssetData->Damage;
+		MeleeHitbox->OnHitGameplayEffects = MeleeAssetData->OnHitGameplayEffects;
 
 		if (!MeleeAssetData->MeleeAnimations.IsEmpty())
 		{
@@ -277,22 +280,12 @@ bool AWeaponBase::GetWeaponMode_Implementation()
 
 void AWeaponBase::SetWeaponModeToGun()
 {
-	// Gun mesh
-	if (GunAssetData != nullptr && GunAssetData->Mesh)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Gun Mode!"))
-		Mesh->SetSkeletalMesh(GunAssetData->Mesh);
-	}
+	
 }
 
 void AWeaponBase::SetWeaponModeToMelee()
 {
-	// Melee mesh
-	if (MeleeAssetData != nullptr && MeleeAssetData->Mesh)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Melee Mode!"))
-		Mesh->SetSkeletalMesh(MeleeAssetData->Mesh);
-	}
+	
 }
 
 TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const

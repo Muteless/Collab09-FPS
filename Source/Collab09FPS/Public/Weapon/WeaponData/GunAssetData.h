@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 
 #include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimSequence.h"
 #include "Projectile/BulletBase.h"
 
 #include "GunAssetData.generated.h"
@@ -17,15 +18,6 @@ UCLASS()
 class COLLAB09FPS_API UGunAssetData : public UDataAsset
 {
 public:
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	FName Name;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Default")
-	USkeletalMesh* Mesh;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
