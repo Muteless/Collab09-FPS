@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "AbilitySystemComponent.h"
+#include "NiagaraSystem.h"
 #include "GameplayEffect.h"
 
 #include "BulletBase.generated.h"
@@ -17,6 +17,9 @@ class COLLAB09FPS_API ABulletBase : public AActor
 public:
 	// Sets default values for this actor's properties
 	ABulletBase();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Initialize();
 
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "Target"))
 	void ApplyEffectToAbilitySystemComponent
@@ -38,7 +41,12 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
-	FColor BulletColor;
+	UNiagaraSystem* OnHitSystem;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	FColor BulletColor = FColor::White;
 	
 protected:
 private:

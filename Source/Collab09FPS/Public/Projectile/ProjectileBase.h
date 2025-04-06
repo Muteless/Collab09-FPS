@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BulletBase.h"
 
-#include "NiagaraSystem.h"
+#include "AbilitySystemComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -16,6 +16,7 @@ class COLLAB09FPS_API AProjectileBase : public ABulletBase
 {
 public:
 	AProjectileBase();
+	virtual void Initialize() override;
 
 	// Sphere collision component
 	UPROPERTY(VisibleAnywhere,

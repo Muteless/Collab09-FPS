@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include <Player/PlayerSaveData.h>
-
 #include "CoreMinimal.h"
-#include "GameMode/LevelData/LevelDataAsset.h"
+
 #include "UObject/Interface.h"
+#include "GameMode/LevelData/LevelDataAsset.h"
+#include "PersistentData/PlayerSaveDataStruct.h"
+
 #include "SaveGameInterface.generated.h"
 
 // This class does not need to be modified.
@@ -38,10 +39,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	UPlayerSaveData* GetPlayerSaveData();
+	FPlayerData GetPlayerSaveData();
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
-	void SetPlayerSaveData(UPlayerSaveData* NewPlayerSaveData);
+	void SetPlayerSaveData(const FPlayerData& NewPlayerData);
 
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)

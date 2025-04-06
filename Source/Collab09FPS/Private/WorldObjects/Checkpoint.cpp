@@ -3,6 +3,7 @@
 
 #include "WorldObjects/Checkpoint.h"
 
+#include "GameFramework/SaveGame.h"
 #include "Interfaces/GameInstanceInterface.h"
 #include "Player/PlayerCharacterBase.h"
 
@@ -14,6 +15,7 @@ ACheckpoint::ACheckpoint()
 	RootComponent = PlayerSpawnLocation;
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CapsuleComponent->SetCapsuleSize(34, 88);
 	CapsuleComponent->SetupAttachment(PlayerSpawnLocation);
 	
@@ -31,14 +33,6 @@ ACheckpoint::ACheckpoint()
 	BoxComponent->SetLineThickness(5);
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnBoxBeginOverlap);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACheckpoint::OnBoxEndOverlap);
-
-	FAttachmentTransformRules TransformRules
-		(EAttachmentRule::KeepWorld,
-		EAttachmentRule::KeepWorld,
-		EAttachmentRule::KeepRelative,
-		false);
-	
-	BoxComponent->AttachToComponent(PlayerSpawnLocation, TransformRules, NAME_None);
 	BoxComponent->SetWorldLocation(PlayerSpawnLocation->GetComponentLocation());
 }
 
@@ -58,7 +52,7 @@ void ACheckpoint::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		ULevelDataAsset* LevelDataAsset = IGameInstanceInterface::Execute_GetLevelData(GetGameInstance());
 
 		// if save game is valid then set data
-		if (SaveGame)
+		if (SaveGame->IsValidLowLevel())
 		{
 			// ignore checkpoint if id is less then save game id
 			if (ISaveGameInterface::Execute_GetCheckpointIndex(SaveGame) > Id)
@@ -75,6 +69,7 @@ void ACheckpoint::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Save game is invalid"));
 			// this will externally create a save game
 			IGameInstanceInterface::Execute_LoadGame(GetGameInstance());
 

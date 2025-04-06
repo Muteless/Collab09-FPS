@@ -33,6 +33,9 @@ public APlayerController,
 public ICharacterController
 {
 public:
+	// On possession
+	virtual void OnPossess(APawn* InPawn) override;
+	
 	// Input Mapping Context
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,

@@ -20,13 +20,8 @@
 #include "GAS/AttributeSets/CMCAttributeSet.h"
 #include "GAS/AttributeSets/MetaEffectsAttributeSet.h"
 
-// Gameplay tags
-#include "GameplayTagContainer.h"
-
 // Components
 #include "Engine/DataTable.h"
-#include "Components/CapsuleComponent.h"
-#include "Weapon/WeaponBase.h"
 
 // Interfaces
 #include "Interfaces/MovementComponentAttributeUpdate.h"
@@ -35,7 +30,6 @@
 
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
-#include "Interfaces/MovementComponentAttributeUpdate.h"
 
 #include "CharacterBase.generated.h"
 
@@ -145,7 +139,8 @@ public:
 	
 	// IsAirborne
 	virtual bool IsAirborne_Implementation() override;
-
+	
+	// Death
 	UFUNCTION(BlueprintNativeEvent,
 		BlueprintCallable)
 	void Death();

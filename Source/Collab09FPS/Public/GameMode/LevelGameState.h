@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../AISpawner/AISpawner.h"
 #include "Collab09FPS/Collab09FPS.h"
 
 #include "GameFramework/GameStateBase.h"
@@ -85,6 +86,15 @@ public:
 	
 	
 #pragma endregion Save&Load
+
+#pragma region Enemy Spawners
+	
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadOnly,
+		Category = "Default")
+	TArray<AAISpawner*> Spawners;
+	
+#pragma endregion 
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerSpawned(APawn* pawn);

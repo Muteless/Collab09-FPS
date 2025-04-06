@@ -9,8 +9,9 @@
 #include "AbilitySystemInterface.h"
 
 #include "Components/SkeletalMeshComponent.h"
-#include "AbilitySystemComponent.h"
 #include "Components/ArrowComponent.h"
+
+#include "Hitbox/Hitbox.h"
 #include "WeaponData/MeleeAssetData.h"
 #include "WeaponData/GunAssetData.h"
 
@@ -31,7 +32,7 @@ public IWeaponInput
 {
 public:
 	
-#pragma region Delegates
+	#pragma region Delegates
 	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFire OnWeaponFire;
@@ -57,7 +58,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFailedToMelee OnWeaponFailedToMelee;
 	
-#pragma endregion Delegates
+	#pragma endregion Delegates
 	
 	// Sets default values for this actor's properties
 	AWeaponBase();
@@ -69,10 +70,6 @@ public:
 
 	UPROPERTY()
 	UAbilitySystemComponent* OwnerActorASC;
-
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadWrite)
-	UArrowComponent* ProjectileSpawnLocation;
 	
 	#pragma region GunMode
 		
@@ -92,12 +89,14 @@ public:
 	#pragma endregion GunMode
 
 	#pragma region MeleeMode
+	
 		virtual void WeaponMelee_Implementation();
 		bool CanMelee();
 
 	#pragma endregion MeleeMode
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,
+		Category = "Default")
 	FName Name;
 	
 	virtual void WeaponReloadInterrupt_Implementation() override;
@@ -114,6 +113,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	TSubclassOf<ABulletBase> GetProjectile() const;
 	UFUNCTION(BlueprintPure)
+	int GetMagazineSize() const;
+	UFUNCTION(BlueprintPure)
 	int GetCurrentAmmo() const;
 
 	UPROPERTY(EditAnywhere,
@@ -129,21 +130,34 @@ public:
 	bool bGunMode;
 
 protected:
+	
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
 	USkeletalMeshComponent* Mesh;
 
+#pragma region Protected Components
+	
+	UPROPERTY(VisibleAnywhere,
+		BlueprintReadWrite,
+		Category = "Components")
+	UArrowComponent* ProjectileSpawnLocation;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	UHitbox* MeleeHitbox;
+
+#pragma endregion Protected Components
+
 #pragma region Internal Attributes
 
 #pragma region Melee
+	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Melee Mode")
 	UAnimMontage* MeleeToGunSwitchAnimation;
-
-	UPROPERTY()
-	TArray<TSubclassOf<UGameplayEffect>> OnHitGameplayEffects;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
@@ -159,6 +173,7 @@ protected:
 #pragma endregion Melee
 
 #pragma region Gun
+	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Gun Mode")
@@ -176,9 +191,6 @@ protected:
 		BlueprintReadWrite,
 		Category = "Gun Mode")
 	UAnimMontage* GunReloadAnimation;
-	
-	UPROPERTY()
-	float GunDamage;
 
 	UPROPERTY()
 	float RateOfFire;
