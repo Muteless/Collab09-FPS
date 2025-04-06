@@ -293,6 +293,11 @@ TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
 	return Projectiles[CurrentProjectileIndex];
 }
 
+int AWeaponBase::GetMagazineSize() const
+{
+	return MagazineSize;
+}
+
 int AWeaponBase::GetCurrentAmmo() const
 {
 	return CurrentAmmo;

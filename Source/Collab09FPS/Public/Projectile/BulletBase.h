@@ -46,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
-	FColor BulletColor;
+	FColor BulletColor = FColor::White;
 	
 protected:
 private:

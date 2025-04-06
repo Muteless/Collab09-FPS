@@ -19,9 +19,15 @@ class COLLAB09FPS_API UDamageMMC : public UGameplayModMagnitudeCalculation
 {
 public:
 	UDamageMMC();
-
+	
 	FGameplayEffectAttributeCaptureDefinition DamageDef;
+	
+	FGameplayEffectAttributeCaptureDefinition FireShieldDef;
+	FGameplayEffectAttributeCaptureDefinition CurseShieldDef;
+	FGameplayEffectAttributeCaptureDefinition BloodShieldDef;
+	
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+
 protected:
 private:
 	GENERATED_BODY()

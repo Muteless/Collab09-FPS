@@ -14,12 +14,14 @@ public class Collab09FPS : ModuleRules
 			"Engine",
 			"InputCore",
 			"EnhancedInput",
-			"Niagara", "AIModule", 
+			"Niagara", 
+			"AIModule", 
 			"NavigationSystem",
 			"Kismet" 
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities",
+		PrivateDependencyModuleNames.AddRange(new string[] { 
+			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks"
 		});

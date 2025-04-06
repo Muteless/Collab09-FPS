@@ -113,6 +113,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	TSubclassOf<ABulletBase> GetProjectile() const;
 	UFUNCTION(BlueprintPure)
+	int GetMagazineSize() const;
+	UFUNCTION(BlueprintPure)
 	int GetCurrentAmmo() const;
 
 	UPROPERTY(EditAnywhere,
