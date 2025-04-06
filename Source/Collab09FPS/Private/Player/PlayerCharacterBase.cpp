@@ -64,7 +64,13 @@ WeaponSocketName("WeaponSocket")
 
 	// Weapon location
 	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
+
+	const FVector TargetPosition = CameraComponent->GetComponentLocation() + CameraComponent->GetForwardVector() * 500.0f;
+	const FVector DirectionToTarget = (TargetPosition - WeaponLocation->GetComponentLocation()).GetSafeNormal();
+	UE_LOG(LogTemp, Warning, TEXT("Target position: %s"), *TargetPosition.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Direction to target: %s"), *DirectionToTarget.ToString());
 	WeaponLocation->SetupAttachment(CameraComponent, NAME_None);
+	WeaponLocation->SetWorldRotation(DirectionToTarget.Rotation());
 }
 
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)

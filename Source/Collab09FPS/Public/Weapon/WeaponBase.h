@@ -22,6 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireNotEnoughAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireInBetweenROF);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponAmmoConsumed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartReload);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponMelee);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToMelee);
@@ -49,6 +50,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponAmmoConsumed OnWeaponAmmoConsumed;
 
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponStartReload OnWeaponStartReload;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponReloaded OnWeaponReloaded;
 
@@ -116,6 +120,8 @@ public:
 	int GetMagazineSize() const;
 	UFUNCTION(BlueprintPure)
 	int GetCurrentAmmo() const;
+	UFUNCTION(BlueprintPure)
+	float GetReloadTime() const;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,

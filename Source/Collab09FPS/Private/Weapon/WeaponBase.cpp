@@ -230,6 +230,9 @@ void AWeaponBase::WeaponReload_Implementation()
 		&AWeaponBase::ReloadFinished,
 		ReloadTime,
 		false);
+
+	// Broadcast that we have started reloading
+	OnWeaponStartReload.Broadcast();
 }
 
 bool AWeaponBase::CanReload()
@@ -301,5 +304,10 @@ int AWeaponBase::GetMagazineSize() const
 int AWeaponBase::GetCurrentAmmo() const
 {
 	return CurrentAmmo;
+}
+
+float AWeaponBase::GetReloadTime() const
+{
+	return ReloadTime;
 }
 
