@@ -6,6 +6,7 @@
 #include "Collab09FPS/Collab09FPS.h"
 
 #include "Components/CapsuleComponent.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Interfaces/CharacterController.h"
@@ -67,8 +68,6 @@ WeaponSocketName("WeaponSocket")
 
 	const FVector TargetPosition = CameraComponent->GetComponentLocation() + CameraComponent->GetForwardVector() * 500.0f;
 	const FVector DirectionToTarget = (TargetPosition - WeaponLocation->GetComponentLocation()).GetSafeNormal();
-	UE_LOG(LogTemp, Warning, TEXT("Target position: %s"), *TargetPosition.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Direction to target: %s"), *DirectionToTarget.ToString());
 	WeaponLocation->SetupAttachment(CameraComponent, NAME_None);
 	WeaponLocation->SetWorldRotation(DirectionToTarget.Rotation());
 }
@@ -77,18 +76,40 @@ void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 {
 	FPlayerData PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
 	
-		if (!WeaponInstance)
+		if (PlayerSaveData.HasWeapon)
 		{
 			SpawnWeapon();
 		}
 
-		if (WeaponInstance)
+		if (WeaponInstance->IsValidLowLevel())
 		{
 			WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
 			WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
 			WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
+			WeaponInstance->Initialize();
 		}
-		WeaponInstance->Initialize();
+}
+
+FPlayerData APlayerCharacterBase::MakePlayerSaveData()
+{
+	FPlayerData PlayerSaveData;
+
+	if (WeaponInstance)
+	{
+		PlayerSaveData.HasWeapon = true;
+		PlayerSaveData.bGunMode = WeaponInstance->bGunMode;
+		PlayerSaveData.GunAssetData = WeaponInstance->GunAssetData;
+		PlayerSaveData.MeleeAssetData = WeaponInstance->MeleeAssetData;
+	}
+	else
+	{
+		PlayerSaveData.HasWeapon = false;
+		PlayerSaveData.bGunMode = true;
+		PlayerSaveData.GunAssetData = nullptr;
+		PlayerSaveData.MeleeAssetData = nullptr;
+	}
+	
+	return PlayerSaveData;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -102,20 +123,6 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleBeginOverlap);
 		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleEndOverlap);
 	}
-}
-
-FPlayerData APlayerCharacterBase::MakePlayerSaveData()
-{
-	FPlayerData PlayerSaveData;
-
-	if (WeaponInstance)
-	{
-		PlayerSaveData.bGunMode = WeaponInstance->bGunMode;
-		PlayerSaveData.GunAssetData = WeaponInstance->GunAssetData;
-		PlayerSaveData.MeleeAssetData = WeaponInstance->MeleeAssetData;
-	}
-	
-	return PlayerSaveData;
 }
 
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()

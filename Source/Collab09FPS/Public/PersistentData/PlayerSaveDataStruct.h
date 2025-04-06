@@ -21,6 +21,10 @@ struct FPlayerData
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
+	bool HasWeapon;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
 	bool bGunMode;
 	
 	UPROPERTY(EditAnywhere,
@@ -32,9 +36,10 @@ struct FPlayerData
 	UMeleeAssetData* MeleeAssetData;
 	
 	FPlayerData()
-		: bGunMode(false)
-		, GunAssetData(nullptr)
-		, MeleeAssetData(nullptr)
+	: HasWeapon(false)
+	, bGunMode(false)
+	, GunAssetData(nullptr)
+	, MeleeAssetData(nullptr)
 	{}
 };
 
