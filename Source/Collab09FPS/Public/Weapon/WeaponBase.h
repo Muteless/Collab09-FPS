@@ -7,6 +7,7 @@
 
 #include "Interfaces/WeaponInput.h"
 #include "AbilitySystemInterface.h"
+#include "GameMode/LevelGameState.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
@@ -22,6 +23,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireNotEnoughAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireInBetweenROF);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponProjectileChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponModeStartSwitch);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponModeSwitched);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponAmmoConsumed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartReload);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
@@ -61,6 +64,12 @@ public:
 	FOnWeaponReloaded OnWeaponReloaded;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponModeStartSwitch OnWeaponModeStartSwitch;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponModeSwitched OnWeaponModeSwitched;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponMelee OnWeaponMelee;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -70,6 +79,9 @@ public:
 	
 	// Sets default values for this actor's properties
 	AWeaponBase();
+
+	UPROPERTY()
+	ALevelGameState* LevelGameState;
 	
 	UFUNCTION(BlueprintCallable)
 	void Initialize();
@@ -108,7 +120,6 @@ public:
 	FName Name;
 	
 	virtual void WeaponReloadInterrupt_Implementation() override;
-	virtual void WeaponSwitch_Implementation() override;
 	virtual bool GetWeaponMode_Implementation() override;
 
 	UPROPERTY(EditAnywhere,
@@ -143,8 +154,18 @@ public:
 		Category = "Default")
 	bool bGunMode;
 
-protected:
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	float SwitchTime = 1.6f;
+
+	UPROPERTY()
+	FTimerHandle SwitchTimerHandle;
 	
+	UFUNCTION()
+	void SwitchMode();
+
+protected:
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")

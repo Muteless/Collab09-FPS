@@ -61,6 +61,7 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 
 			// Set world state to new target world state
 			WorldState = TargetWorldState;
+			WorldLoaded();
 		}
 	}
 
@@ -70,6 +71,7 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 
 void ALevelGameState::WorldLoaded()
 {
+	UE_LOG(LogTemp, Log, TEXT("World Loaded"));
 	OnWorldTransition.Broadcast(WorldState);
 }
 

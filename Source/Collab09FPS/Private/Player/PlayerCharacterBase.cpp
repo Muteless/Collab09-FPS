@@ -256,7 +256,7 @@ void APlayerCharacterBase::SpawnWeapon()
 				WeaponInstance->AttachToComponent(CharacterMesh,
 					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 			}
-
+			
 			WeaponInstance->Initialize();
 			
 			// Notify controller that we have spawned the weapon

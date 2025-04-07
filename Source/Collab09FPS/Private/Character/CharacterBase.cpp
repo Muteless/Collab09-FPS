@@ -49,6 +49,17 @@ void ACharacterBase::PossessedBy(AController* NewController)
 		// Add initial effects to ability system
 		AddInitialCharacterGameplayEffects();
 	}
+
+	LevelGameState = Cast<ALevelGameState>(GetWorld()->GetGameState());
+	if (LevelGameState)
+	{
+		LevelGameState->OnWorldTransition.AddDynamic(this, &ACharacterBase::HandleWorldTransition);
+	}
+}
+
+void ACharacterBase::HandleWorldTransition(EWorldState WorldState)
+{
+	
 }
 
 void ACharacterBase::AddInitialCharacterAttributeSets()

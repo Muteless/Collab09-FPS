@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GAS/AttributeSets/HealthAttributeSet.h"
+#include "GameplayEffectTypes.h"
 
 UHealthAttributeSet::UHealthAttributeSet()
 {
@@ -56,6 +57,11 @@ void UHealthAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attri
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxBloodShield());
 		return;
+	}
+
+	if (Attribute == GetMetaDamageAttribute())
+	{
+		
 	}
 	
 	Super::PreAttributeBaseChange(Attribute, NewValue);
