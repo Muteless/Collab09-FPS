@@ -51,6 +51,8 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 			FLatentActionInfo LatentInfo;
 			LatentInfo.CallbackTarget = this;
 			LatentInfo.ExecutionFunction = FName("WorldLoaded");
+			LatentInfo.Linkage = 0;
+			LatentInfo.UUID = __LINE__;
 			
 			// Stream level
 			UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),
@@ -61,7 +63,6 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 
 			// Set world state to new target world state
 			WorldState = TargetWorldState;
-			WorldLoaded();
 		}
 	}
 
@@ -71,7 +72,6 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 
 void ALevelGameState::WorldLoaded()
 {
-	UE_LOG(LogTemp, Log, TEXT("World Loaded"));
 	OnWorldTransition.Broadcast(WorldState);
 }
 

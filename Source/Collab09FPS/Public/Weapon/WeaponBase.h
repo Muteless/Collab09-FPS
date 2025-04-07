@@ -157,13 +157,13 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
-	float SwitchTime = 1.6f;
+	float SwitchTime = 0.8f;
 
 	UPROPERTY()
 	FTimerHandle SwitchTimerHandle;
 	
 	UFUNCTION()
-	void SwitchMode();
+	void SwitchMode(EWorldState WorldState);
 
 protected:
 	UPROPERTY(VisibleAnywhere,
