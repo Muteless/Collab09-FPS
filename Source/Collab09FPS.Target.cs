@@ -16,6 +16,6 @@ public class Collab09FPSTarget : TargetRules
 
 	private void RegisterModulesCreatedByRider()
 	{
-		ExtraModuleNames.AddRange(new string[] { "SaveManagement" });
+		// ExtraModuleNames.AddRange(new string[] { "SaveManagement" });
 	}
 }
