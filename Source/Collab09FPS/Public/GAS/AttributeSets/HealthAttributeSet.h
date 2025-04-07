@@ -126,17 +126,12 @@ public:
 
 	// Meta Heal Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaHeal)
-
 	
-
 protected:
-	void virtual PreAttributeBaseChange(
+	virtual void PreAttributeBaseChange(
 		const FGameplayAttribute& Attribute,
 		float& NewValue) const override;
-	
-	void virtual PostAttributeBaseChange(
-		const FGameplayAttribute& Attribute,
-		float OldValue, float NewValue) const override;
+
 private:
 	GENERATED_BODY()
 };

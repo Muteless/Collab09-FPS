@@ -2,35 +2,39 @@
 
 
 #include "AISpawner/AISpawner.h"
-#include "NavigationSystem.h"
-#include "AIBase/BaseAI.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/GameplayStatics.h"
 
+#include "AbilitySystemComponent.h"
+#include "NavigationSystem.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
+// Sets default values
+AAISpawner::AAISpawner()
+{
+	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CapsuleComponent->SetCapsuleSize(25, 88);
+	RootComponent = CapsuleComponent;
+	
+	ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
+	ArrowComponent->SetupAttachment(CapsuleComponent);
+}
 
 void AAISpawner::StartSpawnTimer()
 {
 	if (SpawnTime > 0)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &AAISpawner::SpawnEnemy, SpawnTime, true);
+		GetWorldTimerManager().SetTimer(SpawnTimerHandle,
+		this,
+			&AAISpawner::SpawnEnemy,
+			SpawnTime,
+			true);
 	}
-}
-
-
-// Sets default values
-AAISpawner::AAISpawner()
-{
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	ArrowComponent = GetComponentByClass<UArrowComponent>();
 }
 
 void AAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Ensure ArrowComponent is valid
-	ArrowComponent = FindComponentByClass<UArrowComponent>();
+	
 	if (!ArrowComponent)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ArrowComponent is missing from AISpawner %d!"), SpawnerID);
@@ -50,89 +54,125 @@ void AAISpawner::BeginPlay()
 void AAISpawner::SpawnEnemy()
 {
 	if (!IsActive) return;
+
 	
-	if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
-	if (SpawnedCount >= MaxEnemyCount)
-	{
-		if (RespawnMode == ERespawnMode::OnTimer)
+		// If spawner is never meant to spawn and spawned count is greater than zero
+		if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
+
+		// if we have spawned everything there is to spawn
+		if (SpawnedCount >= MaxEnemyCount)
 		{
-			GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
-		}
-		return;
-	}
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	TSubclassOf<AActor> EnemySpawnType;
-
-	switch (EnemyType)
-	{
-	case EEnemyTypes::Melee:
-		break;
-	case EEnemyTypes::Ranger:
-		EnemySpawnType = EnemyBlueprints[1];
-		break;
-	case EEnemyTypes::DeepSeek:
-		EnemySpawnType = EnemyBlueprints[0];
-		break;
-	case EEnemyTypes::HeavyMelee:
-		break;
-	case EEnemyTypes::HeavyRanger:
-		EnemySpawnType = EnemyBlueprints[2];
-		break;
-	default:
-		break;
-	}
-
-	UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
-	if (!NavSystem) return;
-
-	FVector SpawnLocation = GetActorLocation();
-	FNavLocation ClosestNavPoint;
-
-	bool FoundLocation = NavSystem->ProjectPointToNavigation(SpawnLocation, ClosestNavPoint);
-
-	if (FoundLocation)
-	{
-		FVector AdjustedSpawnLocation = ClosestNavPoint.Location + FVector(0, 0, 50); // Raise by 50 units
-
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-		AActor* SpawnedEnemy = World->SpawnActor<AActor>(
-			EnemySpawnType, AdjustedSpawnLocation,
-			FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator(),
-			SpawnParams);
-
-		if (IsValid(SpawnedEnemy))
-		{
-			SpawnedCount++;
-
-			ABaseAI* AIC = Cast<ABaseAI>(Cast<APawn>(SpawnedEnemy)->GetController());
-
-			if (IsValid(AIC))
+			if (RespawnMode == ERespawnMode::OnTimer)
 			{
+				// Clear the timer if respawn mode is set to timer mode
+				GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
+			}
+			return;
+		}
 
-				FTimerHandle DelayHandle;
-				FTimerDelegate TimerDelegate;
-				TimerDelegate.BindUObject(this, &AAISpawner::DelayedSetBlackboardValue, AIC, EnemyStartBehaviour);
-				GetWorldTimerManager().SetTimer(DelayHandle, TimerDelegate, .1f, false);
+		UWorld* World = GetWorld();
+		if (!World) return;
+
+		TSubclassOf<AActor> EnemySpawnType;
+
+		// Set the right type of enemy to spawn based on EnemyBlueprints array
+		switch (Enemy)
+		{
+		case EEnemyTypes::Melee:
+			break;
+		case EEnemyTypes::Ranger:
+			EnemySpawnType = EnemyBlueprints[1];
+			break;
+		case EEnemyTypes::DeepSeek:
+			EnemySpawnType = EnemyBlueprints[0];
+			break;
+		case EEnemyTypes::HeavyMelee:
+			break;
+		case EEnemyTypes::HeavyRanger:
+			EnemySpawnType = EnemyBlueprints[2];
+			break;
+		default:
+			break;
+		}
+
+		// Find navigation system
+		UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
+		if (!NavSystem) return;
+
+		FVector SpawnLocation = GetActorLocation();
+		FNavLocation ClosestNavPoint;
+
+		bool FoundLocation = NavSystem->ProjectPointToNavigation(SpawnLocation, ClosestNavPoint);
+
+		if (FoundLocation)
+		{
+			FVector AdjustedSpawnLocation = ClosestNavPoint.Location + FVector(0, 0, 50); // Raise by 50 units
+
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+			AActor* SpawnedEnemy = World->SpawnActor<AActor>(
+				EnemySpawnType, AdjustedSpawnLocation,
+				FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator(),
+				SpawnParams);
+			
+			if (IsValid(SpawnedEnemy))
+			{
+				SpawnedCount++;
+				
+				ABaseAI* AIC = Cast<ABaseAI>(Cast<APawn>(SpawnedEnemy)->GetController());
+
+				if (IsValid(AIC))
+				{
+					FTimerHandle DelayHandle;
+					FTimerDelegate TimerDelegate;
+					TimerDelegate.BindUObject(this, &AAISpawner::DelayedSetBlackboardValue, AIC, EnemyStartBehaviour);
+					GetWorldTimerManager().SetTimer(DelayHandle, TimerDelegate, .1f, false);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Log, TEXT("AIC Not Valid"));
+				}
+
+				for (TMap<TSubclassOf<UGameplayEffect>, float>::TIterator Effect(InitialGameplayEffects); Effect; ++Effect)
+				{
+					// If the provided effect is invalid -> return early
+					if (!Effect.Key())
+					{
+						UE_LOG(LogTemp, Error, TEXT("Invalid effect class."))
+						return;
+					}
+
+					UAbilitySystemComponent* AbilitySystemComponent = SpawnedEnemy->FindComponentByClass<UAbilitySystemComponent>();
+					
+					if (AbilitySystemComponent)
+					{
+						// Apply initial gameplay effects
+						// Make effect context
+						FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+						EffectContext.AddSourceObject(this);
+	
+						// Create an Outgoing Effect Spec
+						FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Effect.Key(),
+							1.f,
+							EffectContext);
+						EffectSpecHandle.Data.Get()->SetSetByCallerMagnitude(
+							FGameplayTag::RequestGameplayTag(FName("Data.Magnitude")),
+							Effect.Value());
+						
+						AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+					}
+				}
 			}
 			else
 			{
-				UE_LOG(LogTemp, Log, TEXT("AIC Not Valid"));
+				UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at: %s"), *ClosestNavPoint.Location.ToString());
 			}
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at: %s"), *ClosestNavPoint.Location.ToString());
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at no valid NavLocation"));
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to spawn enemy at no valid NavLocation"));
-	}
 }
 
 
@@ -186,14 +226,15 @@ void AAISpawner::EnableSpawner()
 	if (IsActive)
 	{
 		if (SpawnMode == ESpawnMode::OnStart)
+		{
 			SpawnEnemy();
-
+		}
+		
 		if (RespawnMode == ERespawnMode::OnTimer)
 		{
 			StartSpawnTimer();
 		}
 	}
-	
 	
 	UE_LOG(LogTemp, Log, TEXT("Spawner %d enabled"), SpawnerID);
 }
