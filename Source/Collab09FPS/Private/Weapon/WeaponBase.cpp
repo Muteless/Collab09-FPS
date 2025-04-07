@@ -282,6 +282,7 @@ void AWeaponBase::WeaponReloadInterrupt_Implementation()
 
 void AWeaponBase::SwitchMode(EWorldState WorldState)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Switching mode to %d"), WorldState);
 	switch (WorldState)
 	{
 		case EWorldState::WorldOne:

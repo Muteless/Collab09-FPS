@@ -72,7 +72,6 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 
 void ALevelGameState::WorldLoaded()
 {
-	UE_LOG(LogTemp, Warning, TEXT("World Loaded"));
 	OnWorldTransition.Broadcast(WorldState);
 }
 
