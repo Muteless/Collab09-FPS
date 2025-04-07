@@ -37,15 +37,17 @@ void AWeaponBase::Initialize()
 	LevelGameState = GetWorld()->GetGameState<ALevelGameState>();
 	if (LevelGameState)
 	{
-		switch (LevelGameState->WorldState) {
-		case EWorldState::WorldOne:
-			bGunMode = true;
-			break;
-		case EWorldState::WorldTwo:
-			bGunMode = false;
-			break;
+		switch (LevelGameState->WorldState)
+		{
+			case EWorldState::WorldOne:
+				bGunMode = true;
+				break;
+			case EWorldState::WorldTwo:
+				bGunMode = false;
+				break;
 		}
-	
+		
+        LevelGameState->OnWorldTransition.AddDynamic(this, &AWeaponBase::SwitchMode);
 	}
 
 	SetupGunVariables();
@@ -278,18 +280,16 @@ void AWeaponBase::WeaponReloadInterrupt_Implementation()
 	
 }
 
-void AWeaponBase::SwitchMode()
+void AWeaponBase::SwitchMode(EWorldState WorldState)
 {
-	if (LevelGameState)
+	switch (WorldState)
 	{
-		switch (LevelGameState->WorldState) {
 		case EWorldState::WorldOne:
 			bGunMode = true;
 			break;
 		case EWorldState::WorldTwo:
 			bGunMode = false;
 			break;
-		}
 	}
 	
 	if (bGunMode)

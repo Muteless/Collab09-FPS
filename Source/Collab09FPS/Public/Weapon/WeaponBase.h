@@ -163,7 +163,7 @@ public:
 	FTimerHandle SwitchTimerHandle;
 	
 	UFUNCTION()
-	void SwitchMode();
+	void SwitchMode(EWorldState WorldState);
 
 protected:
 	UPROPERTY(VisibleAnywhere,
