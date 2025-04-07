@@ -34,33 +34,29 @@ void UHealthAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attri
 	if (Attribute == GetCurrentHealthAttribute())
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0, GetMaxHealth());
+		return;
 	}
 	
 	// Fire
 	if (Attribute == GetCurrentFireShieldAttribute())
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxFireShield());
+		return;
 	}
 
 	// Curse
 	if (Attribute == GetCurrentCurseShieldAttribute())
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxCurseShield());
+		return;
 	}
 
 	// Blood
 	if (Attribute == GetCurrentBloodShieldAttribute())
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxBloodShield());
+		return;
 	}
 	
 	Super::PreAttributeBaseChange(Attribute, NewValue);
-}
-
-void UHealthAttributeSet::PostAttributeBaseChange(
-	const FGameplayAttribute& Attribute,
-	float OldValue,
-	float NewValue) const
-{
-	Super::PostAttributeBaseChange(Attribute, OldValue, NewValue);
 }

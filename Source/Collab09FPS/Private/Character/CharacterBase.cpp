@@ -117,9 +117,23 @@ void ACharacterBase::AddInitialCharacterGameplayEffects()
 
 void ACharacterBase::BindHealthAttributeSet()
 {
+	// Health
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate
 	(HealthAttributeSet->GetCurrentHealthAttribute()).AddUObject
 	(this, &ACharacterBase::OnHealthChanged);
+
+	// Shields
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate
+	(HealthAttributeSet->GetCurrentFireShieldAttribute()).AddUObject
+	(this, &ACharacterBase::OnFireShieldChanged);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate
+	(HealthAttributeSet->GetCurrentCurseShieldAttribute()).AddUObject
+	(this, &ACharacterBase::OnCurseShieldChanged);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate
+	(HealthAttributeSet->GetCurrentBloodShieldAttribute()).AddUObject
+	(this, &ACharacterBase::OnBloodShieldChanged);
 }
 
 void ACharacterBase::BindAirActionAttributeSet()
@@ -190,6 +204,41 @@ void ACharacterBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 	if (Data.NewValue <= 0)
 	{
 		Death();
+	}
+}
+
+void ACharacterBase::OnFireShieldChanged(const FOnAttributeChangeData& Data)
+{
+	if (Data.NewValue <= 0)
+	{
+		if (AbilitySystemComponent)
+		{
+			AbilitySystemComponent->RemoveGameplayCue(FGameplayTag::RequestGameplayTag(FName("GameplayCue.Effect.ElementalShield.Fire")));
+		}
+	}
+}
+
+void ACharacterBase::OnCurseShieldChanged(const FOnAttributeChangeData& Data)
+{
+	if (Data.NewValue <= 0)
+	{
+		if (AbilitySystemComponent)
+		{
+			AbilitySystemComponent->RemoveGameplayCue(FGameplayTag::RequestGameplayTag(FName("GameplayCue.Effect.ElementalShield.Curse")));
+		}
+	}
+}
+
+void ACharacterBase::OnBloodShieldChanged(const FOnAttributeChangeData& Data)
+{
+	if (Data.NewValue <= 0)
+	{
+		if (AbilitySystemComponent)
+		{
+			FGameplayTagContainer EffectTags;
+			EffectTags.AddTag(FGameplayTag::RequestGameplayTag(FName("GameplayCue.Effect.ElementalShield.Blood")));
+			AbilitySystemComponent->RemoveActiveEffectsWithTags(EffectTags);
+		}
 	}
 }
 

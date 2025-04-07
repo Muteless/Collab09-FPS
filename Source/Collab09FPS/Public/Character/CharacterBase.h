@@ -108,6 +108,11 @@ public:
 #pragma region AttributeChangeDelegates
 
 	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+	
+	virtual void OnFireShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void OnCurseShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void OnBloodShieldChanged(const FOnAttributeChangeData& Data);
+	
 	virtual void OnStaminaChanged(const FOnAttributeChangeData& Data);
 	virtual void OnAirActionsChanged(const FOnAttributeChangeData& Data);
 	
