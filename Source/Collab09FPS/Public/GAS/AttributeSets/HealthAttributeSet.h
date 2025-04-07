@@ -131,7 +131,7 @@ protected:
 	virtual void PreAttributeBaseChange(
 		const FGameplayAttribute& Attribute,
 		float& NewValue) const override;
-
+	
 private:
 	GENERATED_BODY()
 };
