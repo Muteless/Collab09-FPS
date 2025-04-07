@@ -72,7 +72,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,
 	Category = "Default",
 	meta = (AllowPrivateAccess = "true"))
-	ERespawnMode RespawnMode;
+	ERespawnMode RespawnMode = ERespawnMode::Never;
 
 	UPROPERTY()
 	FTimerHandle SpawnTimerHandle;
