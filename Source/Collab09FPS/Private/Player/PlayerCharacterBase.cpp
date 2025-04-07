@@ -162,13 +162,14 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 			// Switch dimensions
 			if (AbilitySystemComponent)
 			{
-				// slide payload
+				// payload
 				FGameplayEventData Payload;
 					
-				// start slide ability event
+				// start ability event
 				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.SwitchDimensions")), &Payload);
 				break;
 			}
+		break;
 	case EInputTypes::Ongoing:
 		break;
 	case EInputTypes::Cancelled:
@@ -181,6 +182,43 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 void APlayerCharacterBase::InputActionInteract_Implementation(const EInputTypes InputType, const bool Input)
 {
 	
+}
+
+void APlayerCharacterBase::InputActionElementalWheel_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType) {
+	case EInputTypes::Triggered:
+		break;
+	case EInputTypes::Started:
+		// Open elemental wheel
+			if (AbilitySystemComponent)
+			{
+				// payload
+				FGameplayEventData Payload;
+					
+				// start ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.ElementalWheel.Open")), &Payload);
+				break;
+			}
+		break;
+	case EInputTypes::Ongoing:
+		break;
+	case EInputTypes::Cancelled:
+		break;
+	case EInputTypes::Completed:
+		// Close elemental wheel
+			if (AbilitySystemComponent)
+			{
+				// payload
+				FGameplayEventData Payload;
+					
+				// start ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.ElementalWheel.Close")), &Payload);
+				break;
+			}
+		break;
+	}
+
 }
 
 void APlayerCharacterBase::SpawnWeapon()

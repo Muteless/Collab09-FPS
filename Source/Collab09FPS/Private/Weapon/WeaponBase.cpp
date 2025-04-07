@@ -286,6 +286,11 @@ void AWeaponBase::SetWeaponModeToGun()
 	
 }
 
+TArray<TSubclassOf<ABulletBase>> AWeaponBase::GetProjectiles() const
+{
+	return Projectiles;
+}
+
 void AWeaponBase::SetWeaponModeToMelee()
 {
 	
@@ -294,6 +299,12 @@ void AWeaponBase::SetWeaponModeToMelee()
 TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
 {
 	return Projectiles[CurrentProjectileIndex];
+}
+
+void AWeaponBase::SetProjectile(const TSubclassOf<ABulletBase> Projectile)
+{
+	CurrentProjectileIndex = Projectiles.Find(Projectile);
+	OnWeaponProjectileChanged.Broadcast();
 }
 
 int AWeaponBase::GetMagazineSize() const

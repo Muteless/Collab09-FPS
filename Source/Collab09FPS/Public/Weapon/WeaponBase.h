@@ -21,6 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFire);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireNotEnoughAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireInBetweenROF);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponProjectileChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponAmmoConsumed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartReload);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
@@ -46,6 +47,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFailedToFireInBetweenROF OnWeaponFailedToFireInBetweenROF;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponProjectileChanged OnWeaponProjectileChanged;
 	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponAmmoConsumed OnWeaponAmmoConsumed;
@@ -115,7 +119,11 @@ public:
 	void SetWeaponModeToGun();
 
 	UFUNCTION(BlueprintPure)
+	TArray<TSubclassOf<ABulletBase>> GetProjectiles() const;
+	UFUNCTION(BlueprintPure)
 	TSubclassOf<ABulletBase> GetProjectile() const;
+	UFUNCTION(BlueprintCallable)
+	void SetProjectile(TSubclassOf<ABulletBase> Projectile);
 	UFUNCTION(BlueprintPure)
 	int GetMagazineSize() const;
 	UFUNCTION(BlueprintPure)

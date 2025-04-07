@@ -77,6 +77,16 @@ public:
 		BlueprintCallable,
 		Category = "Input")
 	void InputActionInteract(const EInputTypes InputType, const bool Input);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Input")
+	void InputActionElementalWheel(const EInputTypes InputType, const bool Input);
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Input")
+	void InputActionPause(const EInputTypes InputType, const bool Input);
 	
 private:
 	GENERATED_BODY()
