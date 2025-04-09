@@ -53,6 +53,9 @@ public:
 
 	UFUNCTION(Category = "Input")
 	virtual void InputActionInteract_Implementation(const EInputTypes InputType, const bool Input) override;
+
+	UFUNCTION(Category = "Input")
+	virtual void InputActionElementalWheel_Implementation(const EInputTypes InputType, const bool Input) override;
 	
 	// Wall capsule detection
 	UPROPERTY(VisibleAnywhere,

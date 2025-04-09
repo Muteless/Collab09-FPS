@@ -22,6 +22,7 @@
 
 // Components
 #include "Engine/DataTable.h"
+#include "GameMode/LevelGameState.h"
 
 // Interfaces
 #include "Interfaces/MovementComponentAttributeUpdate.h"
@@ -57,6 +58,13 @@ public IMovementComponentAttributeUpdate
 public:
 	// Sets default values for this character's properties
 	ACharacterBase();
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	ALevelGameState* LevelGameState;
+
+	UFUNCTION()
+	virtual void HandleWorldTransition(EWorldState WorldState);
 
 #pragma region Input
 	
@@ -108,6 +116,11 @@ public:
 #pragma region AttributeChangeDelegates
 
 	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+	
+	virtual void OnFireShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void OnCurseShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void OnBloodShieldChanged(const FOnAttributeChangeData& Data);
+	
 	virtual void OnStaminaChanged(const FOnAttributeChangeData& Data);
 	virtual void OnAirActionsChanged(const FOnAttributeChangeData& Data);
 	

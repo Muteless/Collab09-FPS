@@ -16,8 +16,7 @@ public class Collab09FPS : ModuleRules
 			"EnhancedInput",
 			"Niagara", 
 			"AIModule", 
-			"NavigationSystem",
-			"Kismet" 
+			"NavigationSystem"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { 

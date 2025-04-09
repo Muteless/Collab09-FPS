@@ -34,7 +34,7 @@ float UFireShieldDamageMMC::CalculateBaseMagnitude_Implementation(const FGamepla
 	// Damage
 	float FireDamage = 0;
 	GetCapturedAttributeMagnitude(FireDamageDef, Spec, EvaluationParameters, FireDamage);
-
+	
 	if (FireShield > 0)
 	{
 		// Add spec magnitude to damage

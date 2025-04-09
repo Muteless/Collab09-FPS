@@ -6,6 +6,7 @@
 
 #include "UObject/Interface.h"
 #include "Character/CharacterBase.h"
+#include "Weapon/WeaponBase.h"
 
 #include "CharacterController.generated.h"
 
@@ -46,6 +47,16 @@ public:
 		BlueprintCallable,
 		Category = "Interactivity")
 	void LeftInteractZone();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Default")
+	void OpenWeaponWheel();
+
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable,
+		Category = "Default")
+	void CloseWeaponWheel();
 	
 protected:
 private:

@@ -7,6 +7,7 @@
 
 #include "Interfaces/WeaponInput.h"
 #include "AbilitySystemInterface.h"
+#include "GameMode/LevelGameState.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
@@ -21,7 +22,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFire);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireNotEnoughAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireReloading);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToFireInBetweenROF);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponProjectileChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponModeStartSwitch);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponModeSwitched);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponAmmoConsumed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponStartReload);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponReloaded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponMelee);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponFailedToMelee);
@@ -45,12 +50,24 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponFailedToFireInBetweenROF OnWeaponFailedToFireInBetweenROF;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponProjectileChanged OnWeaponProjectileChanged;
 	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponAmmoConsumed OnWeaponAmmoConsumed;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponStartReload OnWeaponStartReload;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponReloaded OnWeaponReloaded;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponModeStartSwitch OnWeaponModeStartSwitch;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnWeaponModeSwitched OnWeaponModeSwitched;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWeaponMelee OnWeaponMelee;
@@ -62,6 +79,9 @@ public:
 	
 	// Sets default values for this actor's properties
 	AWeaponBase();
+
+	UPROPERTY()
+	ALevelGameState* LevelGameState;
 	
 	UFUNCTION(BlueprintCallable)
 	void Initialize();
@@ -100,7 +120,6 @@ public:
 	FName Name;
 	
 	virtual void WeaponReloadInterrupt_Implementation() override;
-	virtual void WeaponSwitch_Implementation() override;
 	virtual bool GetWeaponMode_Implementation() override;
 
 	UPROPERTY(EditAnywhere,
@@ -111,11 +130,17 @@ public:
 	void SetWeaponModeToGun();
 
 	UFUNCTION(BlueprintPure)
+	TArray<TSubclassOf<ABulletBase>> GetProjectiles() const;
+	UFUNCTION(BlueprintPure)
 	TSubclassOf<ABulletBase> GetProjectile() const;
+	UFUNCTION(BlueprintCallable)
+	void SetProjectile(TSubclassOf<ABulletBase> Projectile);
 	UFUNCTION(BlueprintPure)
 	int GetMagazineSize() const;
 	UFUNCTION(BlueprintPure)
 	int GetCurrentAmmo() const;
+	UFUNCTION(BlueprintPure)
+	float GetReloadTime() const;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
@@ -129,8 +154,18 @@ public:
 		Category = "Default")
 	bool bGunMode;
 
-protected:
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	float SwitchTime = 0.8f;
+
+	UPROPERTY()
+	FTimerHandle SwitchTimerHandle;
 	
+	UFUNCTION()
+	void SwitchMode(EWorldState WorldState);
+
+protected:
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")

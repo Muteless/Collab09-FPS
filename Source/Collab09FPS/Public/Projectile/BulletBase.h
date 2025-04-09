@@ -7,6 +7,7 @@
 
 #include "NiagaraSystem.h"
 #include "GameplayEffect.h"
+#include "Engine/Texture2D.h"
 
 #include "BulletBase.generated.h"
 
@@ -47,6 +48,11 @@ public:
 		BlueprintReadWrite,
 		Category = "Default")
 	FColor BulletColor = FColor::White;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	UTexture2D* BulletIcon;
 	
 protected:
 private:

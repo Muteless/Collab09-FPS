@@ -2,7 +2,6 @@
 
 
 #include "Weapon/WeaponBase.h"
-
 #include "Projectile/ProjectileBase.h"
 
 // Sets default values
@@ -33,6 +32,22 @@ void AWeaponBase::Initialize()
 			UE_LOG(LogTemp, Warning,
 				TEXT("No Ability System Component found on weapon owner."));
 		}
+	}
+
+	LevelGameState = GetWorld()->GetGameState<ALevelGameState>();
+	if (LevelGameState)
+	{
+		switch (LevelGameState->WorldState)
+		{
+			case EWorldState::WorldOne:
+				bGunMode = true;
+				break;
+			case EWorldState::WorldTwo:
+				bGunMode = false;
+				break;
+		}
+		
+        LevelGameState->OnWorldTransition.AddDynamic(this, &AWeaponBase::SwitchMode);
 	}
 
 	SetupGunVariables();
@@ -223,13 +238,19 @@ void AWeaponBase::ConsumeAmmo()
 
 void AWeaponBase::WeaponReload_Implementation()
 {
-	// Start Timer
-	GetWorld()->GetTimerManager().SetTimer(
-		ReloadTimerHandle,
-		this,
-		&AWeaponBase::ReloadFinished,
-		ReloadTime,
-		false);
+	if (CanReload())
+	{
+		// Start Timer
+		GetWorld()->GetTimerManager().SetTimer(
+			ReloadTimerHandle,
+			this,
+			&AWeaponBase::ReloadFinished,
+			ReloadTime,
+			false);
+
+		// Broadcast that we have started reloading
+		OnWeaponStartReload.Broadcast();
+	}
 }
 
 bool AWeaponBase::CanReload()
@@ -259,19 +280,32 @@ void AWeaponBase::WeaponReloadInterrupt_Implementation()
 	
 }
 
-void AWeaponBase::WeaponSwitch_Implementation()
+void AWeaponBase::SwitchMode(EWorldState WorldState)
 {
-	bGunMode = !bGunMode;
-
+	UE_LOG(LogTemp, Warning, TEXT("Switching mode to %d"), WorldState);
+	switch (WorldState)
+	{
+		case EWorldState::WorldOne:
+			bGunMode = true;
+			break;
+		case EWorldState::WorldTwo:
+			bGunMode = false;
+			break;
+	}
+	
 	if (bGunMode)
 	{
 		SetWeaponModeToGun();
+		
 	}
 	else
 	{
 		SetWeaponModeToMelee();
 	}
+	
+	OnWeaponModeSwitched.Broadcast();
 }
+
 
 bool AWeaponBase::GetWeaponMode_Implementation()
 {
@@ -281,6 +315,11 @@ bool AWeaponBase::GetWeaponMode_Implementation()
 void AWeaponBase::SetWeaponModeToGun()
 {
 	
+}
+
+TArray<TSubclassOf<ABulletBase>> AWeaponBase::GetProjectiles() const
+{
+	return Projectiles;
 }
 
 void AWeaponBase::SetWeaponModeToMelee()
@@ -293,6 +332,12 @@ TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
 	return Projectiles[CurrentProjectileIndex];
 }
 
+void AWeaponBase::SetProjectile(const TSubclassOf<ABulletBase> Projectile)
+{
+	CurrentProjectileIndex = Projectiles.Find(Projectile);
+	OnWeaponProjectileChanged.Broadcast();
+}
+
 int AWeaponBase::GetMagazineSize() const
 {
 	return MagazineSize;
@@ -301,5 +346,10 @@ int AWeaponBase::GetMagazineSize() const
 int AWeaponBase::GetCurrentAmmo() const
 {
 	return CurrentAmmo;
+}
+
+float AWeaponBase::GetReloadTime() const
+{
+	return ReloadTime;
 }
 

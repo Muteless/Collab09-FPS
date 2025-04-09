@@ -6,6 +6,7 @@
 #include "Collab09FPS/Collab09FPS.h"
 
 #include "Components/CapsuleComponent.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Interfaces/CharacterController.h"
@@ -64,25 +65,51 @@ WeaponSocketName("WeaponSocket")
 
 	// Weapon location
 	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
+
+	const FVector TargetPosition = CameraComponent->GetComponentLocation() + CameraComponent->GetForwardVector() * 500.0f;
+	const FVector DirectionToTarget = (TargetPosition - WeaponLocation->GetComponentLocation()).GetSafeNormal();
 	WeaponLocation->SetupAttachment(CameraComponent, NAME_None);
+	WeaponLocation->SetWorldRotation(DirectionToTarget.Rotation());
 }
 
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 {
 	FPlayerData PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
 	
-		if (!WeaponInstance)
+		if (PlayerSaveData.HasWeapon)
 		{
 			SpawnWeapon();
 		}
 
-		if (WeaponInstance)
+		if (WeaponInstance->IsValidLowLevel())
 		{
 			WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
 			WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
 			WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
+			WeaponInstance->Initialize();
 		}
-		WeaponInstance->Initialize();
+}
+
+FPlayerData APlayerCharacterBase::MakePlayerSaveData()
+{
+	FPlayerData PlayerSaveData;
+
+	if (WeaponInstance)
+	{
+		PlayerSaveData.HasWeapon = true;
+		PlayerSaveData.bGunMode = WeaponInstance->bGunMode;
+		PlayerSaveData.GunAssetData = WeaponInstance->GunAssetData;
+		PlayerSaveData.MeleeAssetData = WeaponInstance->MeleeAssetData;
+	}
+	else
+	{
+		PlayerSaveData.HasWeapon = false;
+		PlayerSaveData.bGunMode = true;
+		PlayerSaveData.GunAssetData = nullptr;
+		PlayerSaveData.MeleeAssetData = nullptr;
+	}
+	
+	return PlayerSaveData;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -96,20 +123,6 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 		WallCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleBeginOverlap);
 		WallCapsuleCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterBase::OnWallCapsuleEndOverlap);
 	}
-}
-
-FPlayerData APlayerCharacterBase::MakePlayerSaveData()
-{
-	FPlayerData PlayerSaveData;
-
-	if (WeaponInstance)
-	{
-		PlayerSaveData.bGunMode = WeaponInstance->bGunMode;
-		PlayerSaveData.GunAssetData = WeaponInstance->GunAssetData;
-		PlayerSaveData.MeleeAssetData = WeaponInstance->MeleeAssetData;
-	}
-	
-	return PlayerSaveData;
 }
 
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()
@@ -149,13 +162,14 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 			// Switch dimensions
 			if (AbilitySystemComponent)
 			{
-				// slide payload
+				// payload
 				FGameplayEventData Payload;
 					
-				// start slide ability event
+				// start ability event
 				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.SwitchDimensions")), &Payload);
 				break;
 			}
+		break;
 	case EInputTypes::Ongoing:
 		break;
 	case EInputTypes::Cancelled:
@@ -168,6 +182,43 @@ void APlayerCharacterBase::InputActionSwitchDimensions_Implementation(const EInp
 void APlayerCharacterBase::InputActionInteract_Implementation(const EInputTypes InputType, const bool Input)
 {
 	
+}
+
+void APlayerCharacterBase::InputActionElementalWheel_Implementation(const EInputTypes InputType, const bool Input)
+{
+	switch (InputType) {
+	case EInputTypes::Triggered:
+		break;
+	case EInputTypes::Started:
+		// Open elemental wheel
+			if (AbilitySystemComponent)
+			{
+				// payload
+				FGameplayEventData Payload;
+					
+				// start ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.ElementalWheel.Open")), &Payload);
+				break;
+			}
+		break;
+	case EInputTypes::Ongoing:
+		break;
+	case EInputTypes::Cancelled:
+		break;
+	case EInputTypes::Completed:
+		// Close elemental wheel
+			if (AbilitySystemComponent)
+			{
+				// payload
+				FGameplayEventData Payload;
+					
+				// start ability event
+				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.ElementalWheel.Close")), &Payload);
+				break;
+			}
+		break;
+	}
+
 }
 
 void APlayerCharacterBase::SpawnWeapon()
@@ -205,7 +256,7 @@ void APlayerCharacterBase::SpawnWeapon()
 				WeaponInstance->AttachToComponent(CharacterMesh,
 					FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 			}
-
+			
 			WeaponInstance->Initialize();
 			
 			// Notify controller that we have spawned the weapon

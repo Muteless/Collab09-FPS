@@ -51,6 +51,8 @@ void ALevelGameState::LoadWorld(EWorldState TargetWorldState)
 			FLatentActionInfo LatentInfo;
 			LatentInfo.CallbackTarget = this;
 			LatentInfo.ExecutionFunction = FName("WorldLoaded");
+			LatentInfo.Linkage = 0;
+			LatentInfo.UUID = __LINE__;
 			
 			// Stream level
 			UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),

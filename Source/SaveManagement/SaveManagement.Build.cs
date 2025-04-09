@@ -10,6 +10,8 @@ public class SaveManagement : ModuleRules
             new string[]
             {
                 "Core",
+                "Slate",
+                "SlateCore",
             }
         );
 
@@ -17,9 +19,7 @@ public class SaveManagement : ModuleRules
             new string[]
             {
                 "CoreUObject",
-                "Engine",
-                "Slate",
-                "SlateCore"
+                "Engine"
             }
         );
     }

@@ -1,13 +1,15 @@
 ﻿#pragma once
 
+#ifdef WITH_EDITOR
+
 #include "CoreMinimal.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Modules/ModuleManager.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogSaveManagement, All, All);
 
 class FSaveManagementModule : public IModuleInterface
 {
+
 public:
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
@@ -34,5 +36,7 @@ public:
 	#pragma endregion Actions
     
     #pragma endregion ToolBar
-    
+
+
 };
+#endif

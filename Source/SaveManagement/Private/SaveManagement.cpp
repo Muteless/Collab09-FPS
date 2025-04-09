@@ -1,7 +1,9 @@
-﻿#include "SaveManagement.h"
-#include "LevelEditor.h"
+﻿#ifdef WITH_EDITOR
 
-#include "Kismet/GameplayStatics.h"
+#include "SaveManagement.h"
+#ifdef WITH_EDITOR
+#include "Editor/LevelEditor/Public/LevelEditor.h"
+#endif
 #include "Misc/Paths.h"
 #include "HAL/PlatformFileManager.h"
 
@@ -81,5 +83,6 @@ void FSaveManagementModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-    
 IMPLEMENT_MODULE(FSaveManagementModule, SaveManagement)
+
+#endif
