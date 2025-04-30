@@ -42,62 +42,6 @@ public:
 	APlayerCharacterBase();
 
 	virtual void LoadData_Implementation(USaveGame* SaveGame) override;
-
-	#pragma region Input
-	
-	UFUNCTION(Category = "Input")
-	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionSwitchDimensions_Implementation(const EInputTypes InputType, const bool Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionInteract_Implementation(const EInputTypes InputType, const bool Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionElementalWheel_Implementation(const EInputTypes InputType, const bool Input) override;
-	
-	// Wall capsule detection
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Collision")
-	UCapsuleComponent* WallCapsuleCollision;
-
-	#pragma endregion Input
-	
-	// Event handlers for overlap
-	UFUNCTION()
-	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex);
-
-	// Wall capsule offset radius
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "Collision")
-	float WallCapsuleDetectionOffsetRadius = 10.0f;
-
-	#pragma region CMCAttributeChanges
-	
-	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
-	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
-	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
-
-	#pragma endregion CMCAttributeChanges
-	
-	// Wall running
-	virtual void CharacterMovementWallRun_Implementation() override;
-	virtual void CharacterMovementWallJump_Implementation(FVector Direction, float Strength) override;
-	virtual void CharacterMovementEndWallRun_Implementation() override;
 	
 	//* Stamina *//
 	// Stamina attribute set
@@ -108,9 +52,6 @@ public:
 	UFUNCTION(BlueprintPure,
 		Category = "Player|Stamina|")
 	float GetCurrentStamina() const;
-	
-	// Runs every frame
-	virtual void Tick(float DeltaTime) override;
 
 	FPlayerData MakePlayerSaveData();
 
@@ -135,42 +76,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite)
 	FName WeaponSocketName;
-	
-	//* Camera *//
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Camera")
-	UCameraComponent* CameraComponent;
-	void UpdateFOVBasedOnSpeed(float DeltaTime) const;
-	
-	// Minimum FOV
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float FOVMinimum;
-
-	// Maximum FOV
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float FOVMaximum;
-
-	// Speed thresholds
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float MinFOVSpeedThreshold; // Speed at which FOV starts changing (e.g., idle speed)
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float MaxFOVSpeedThreshold; // Speed at which max FOV is reached (e.g., sprint speed)
-	
-	// FOV interpolation speed
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float FOVInterpSpeed;
 
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite,
@@ -181,12 +86,6 @@ protected:
 		BlueprintReadWrite,
 		Category = "Camera")
 	bool bInvertedPitch;
-
-	// Spring Arm Component
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Camera")
-	USpringArmComponent* SpringArmComponent;
 
 private:
 	GENERATED_BODY()
