@@ -68,9 +68,6 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 	{
 		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
 		BindHealthAttributeSet();
-		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
-		AbilitySystemComponent->AddSet<UDashAttributeSet>();
-		AbilitySystemComponent->AddSet<UCMCAttributeSet>();
 		AbilitySystemComponent->AddSet<UMetaEffectsAttributeSet>();
 	}
 }
@@ -169,44 +166,6 @@ void ACharacterBase::BindMetaEffectsAttributeSet()
 
 #pragma endregion Initialization
 
-#pragma region CMCAttributeSetChanges
-
-void ACharacterBase::SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed)
-{
-	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
-}
-
-void ACharacterBase::SetCMCMaxAcceleration_Implementation(float MaxAcceleration)
-{
-	GetCharacterMovement()->MaxAcceleration = MaxAcceleration;
-}
-
-void ACharacterBase::SetCMCGravityScale_Implementation(float GravityScale)
-{
-	GetCharacterMovement()->GravityScale = GravityScale;
-}
-
-void ACharacterBase::SetCMCGroundFriction_Implementation(float GroundFriction)
-{
-	GetCharacterMovement()->GroundFriction = GroundFriction;
-}
-
-void ACharacterBase::SetCMCBrakingFriction_Implementation(float BrakingFriction)
-{
-	GetCharacterMovement()->BrakingFriction = BrakingFriction;
-}
-
-void ACharacterBase::SetCMCSlidingSpeed_Implementation(float SlidingSpeed)
-{
-	UCharacterMovementComponentBase* MovementComponentBase = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-
-	if (MovementComponentBase)
-	{
-		MovementComponentBase->SlideSpeed = SlidingSpeed;
-	}
-}
-
 #pragma region AttributeChangeDelegates
 
 void ACharacterBase::OnHealthChanged(const FOnAttributeChangeData& Data)
@@ -265,155 +224,7 @@ void ACharacterBase::OnAirActionsChanged(const FOnAttributeChangeData& Data)
 
 #pragma endregion AttributeChangeDelegates
 
-#pragma endregion CMCAttributeSetChanges
-
 #pragma region Input
-
-void ACharacterBase::InputActionMove_Implementation(const EInputTypes InputType, const FVector2D Input)
-{
-	switch (InputType)
-	{
-		default: return;
-		case EInputTypes::Triggered:
-			if (!AbilitySystemComponent)
-			{
-				return;
-			}
-
-			// Create a gameplay event payload
-			FGameplayEventData EventData;
-			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Movement"));
-
-			// Create TargetData to hold FVector
-			FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
-	    
-			// Populate TargetData with a fake hit result for our input (hacky I know)
-			FHitResult HitResult;
-			HitResult.Location = FVector(Input.X, Input.Y, 0.0f); // Set the FVector here
-			TargetData->HitResult = HitResult;
-
-			// Add TargetData to the GameplayEventData
-			EventData.TargetData = FGameplayAbilityTargetDataHandle(TargetData);
-
-			// Trigger the event
-			AbilitySystemComponent->HandleGameplayEvent(EventData.EventTag, &EventData);
-	}
-}
-
-/** TODO: refactor this as it is a slightly hard coded implementation of wall jumping, air jumping and ground jumping.
-/ * Now, we as a team do not appear to want to change the types of jumps the player can do
-	(or this list would expand quite rapidly) so I have come to this solution
-	Grounded? Ground Jump
-	IsNotWallRunning && IsNotGrounded? Air Jump
-	IsWallRunning? WallRun Jump*/
-void ACharacterBase::InputActionJump_Implementation(EInputTypes InputType, bool Input)
-{
-	switch (InputType)
-	{
-		default: return;
-	case EInputTypes::Started:
-		if (AbilitySystemComponent)
-		{
-			if (!GetCharacterMovement()->IsFalling() &&
-				!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
-			{
-				// Ground jump payload
-				// Define optional event data
-				FGameplayEventData Payload;
-				
-				// Trigger jump ability event
-				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.Jump")), &Payload);
-			}
-			else if (!AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
-			{
-				// Air jump
-				// Define optional event data
-				FGameplayEventData Payload;
-				
-				// Trigger air jump ability event
-				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirJump")), &Payload);
-			}
-			if (AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Effect.Movement.WallRunning"))))
-			{
-				// Wall jump
-				// Define optional event data
-				FGameplayEventData Payload;
-				
-				// Trigger wall jump ability event
-				AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.WallJump")), &Payload);
-			}
-		}
-	}
-}
-
-void ACharacterBase::InputActionDash_Implementation(const EInputTypes InputType, const bool Input)
-{
-	switch (InputType)
-	{
-		case EInputTypes::Started:
-			if (!GetCharacterMovement()->IsFalling())
-			{
-				// Ground dash
-				Execute_CharacterMovementGroundDash(this);
-			}
-			else
-			{
-				// Air dash
-				Execute_CharacterMovementAirDash(this);
-			}
-		case EInputTypes::Triggered:
-			break;
-		case EInputTypes::Ongoing:
-			break;
-		case EInputTypes::Cancelled:
-			break;
-		case EInputTypes::Completed:
-			break;
-	}
-}
-
-void ACharacterBase::InputActionSlide_Implementation(const EInputTypes InputType, const bool Input)
-{
-	switch (InputType)
-	{
-		case EInputTypes::Started:
-			{
-				if (!GetCharacterMovement()->IsFalling())
-				{
-					// Start sliding
-					if (AbilitySystemComponent)
-					{
-						// slide payload
-						FGameplayEventData Payload;
-					
-						// start slide ability event
-						AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StartSlide")), &Payload);
-						break;
-					}
-				}
-			}
-		
-		case EInputTypes::Completed:
-			{
-				// Stop sliding
-				if (AbilitySystemComponent)
-				{
-					// slide payload
-					FGameplayEventData Payload;
-
-					// stop sliding ability event
-					AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.StopSlide")), &Payload);
-					break;
-				}
-			}
-		case EInputTypes::Triggered:
-			break;
-		case EInputTypes::Ongoing:
-			break;
-		case EInputTypes::Cancelled:
-			break;
-	}
-}
 
 FVector ACharacterBase::GetMovementInput_Implementation()
 {
@@ -423,90 +234,12 @@ FVector ACharacterBase::GetMovementInput_Implementation()
 #pragma endregion Input
 
 #pragma region Actions
-void ACharacterBase::CharacterMovementMove_Implementation(FVector MoveInput)
-{
-	AddMovementInput(GetActorRightVector(), MoveInput.X, false);
-	AddMovementInput(GetActorForwardVector(), MoveInput.Y, false);
-}
-
-// Make the character ground jump
-void ACharacterBase::CharacterMovementJump_Implementation(FVector ForceDirection, float Strength, bool bSetZVelocityToZero)
-{
-	if (bSetZVelocityToZero)
-	{
-		FVector CurrentVelocity = GetCharacterMovement()->Velocity;
-		GetCharacterMovement()->Velocity = FVector(CurrentVelocity.X, CurrentVelocity.Y, 0.0f);
-	}
-	GetCharacterMovement()->AddImpulse(ForceDirection * Strength, true);
-}
-
-// Air jump
-void ACharacterBase::CharacterMovementAirJump_Implementation()
-{
-	
-}
 
 // On landed
 void ACharacterBase::Landed(const FHitResult& Hit)
 {
 	Execute_CharacterMovementLanded(this);
 	Super::Landed(Hit);
-}
-
-void ACharacterBase::CharacterMovementLanded_Implementation()
-{
-	if (AbilitySystemComponent)
-	{
-		for (TSubclassOf<UGameplayEffect> Effect : OnLandedEffects)
-		{
-			// Create an outgoing spec for the Gameplay Effect
-			FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Effect, 1.f, AbilitySystemComponent->MakeEffectContext());
-			
-			// Apply the effect to the Ability System Component
-			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
-		}
-	}
-}
-
-// Ground Dash
-void ACharacterBase::CharacterMovementGroundDash_Implementation()
-{
-	if (AbilitySystemComponent)
-	{
-		// Define optional event data
-		FGameplayEventData Payload;
-	
-		// Use dash ability event
-		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.GroundDash")), &Payload);
-	}
-}
-
-void ACharacterBase::CharacterMovementAirDash_Implementation()
-{
-	if (AbilitySystemComponent)
-	{
-		// Define optional event data
-		FGameplayEventData Payload;
-	
-		// Use dash ability event
-		AbilitySystemComponent->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Ability.AirDash")), &Payload);
-	}
-}
-
-void ACharacterBase::CharacterMovementStartSliding_Implementation()
-{
-	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-	
-	MovementComponent->StartSliding();
-}
-
-void ACharacterBase::CharacterMovementStopSliding_Implementation()
-{
-	UCharacterMovementComponentBase* MovementComponent = Cast<UCharacterMovementComponentBase>
-		(GetCharacterMovement());
-	
-	MovementComponent->StopSliding();
 }
 
 void ACharacterBase::Death_Implementation()
@@ -537,12 +270,6 @@ float ACharacterBase::GetMaxHealth() const
 		return HealthAttributeSet->GetMaxHealth();
 	}
 	return -1.0f;
-}
-
-// Get character is airborne
-bool ACharacterBase::IsAirborne_Implementation()
-{
-	return GetCharacterMovement()->IsFalling();
 }
 
 // Get current air actions

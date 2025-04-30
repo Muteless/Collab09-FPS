@@ -68,19 +68,6 @@ public:
 
 #pragma region Input
 	
-	// Input
-	UFUNCTION(Category = "Input")
-	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
-	
-	UFUNCTION(Category = "Input")
-	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
-
-	UFUNCTION(Category = "Input")
-	virtual void InputActionSlide_Implementation(const EInputTypes InputType, const bool Input) override;
-
 	UFUNCTION(Category = "Input")
 	virtual FVector GetMovementInput_Implementation() override;
 
@@ -101,17 +88,6 @@ public:
 	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
 
 #pragma endregion Components
-	
-#pragma region CMCAttributeSetChanges
-	
-	virtual void SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed) override;
-	virtual void SetCMCMaxAcceleration_Implementation(float MaxAcceleration) override;
-	virtual void SetCMCGravityScale_Implementation(float GravityScale) override;
-	virtual void SetCMCGroundFriction_Implementation(float GroundFriction) override;
-	virtual void SetCMCBrakingFriction_Implementation(float BrakingFriction) override;
-	virtual void SetCMCSlidingSpeed_Implementation(float SlidingSpeed) override;
-	
-#pragma endregion CMCAttributeSetChanges
 
 #pragma region AttributeChangeDelegates
 
@@ -127,31 +103,6 @@ public:
 #pragma endregion AttributeChangeDelegates
 	
 #pragma region Actions
-	
-	// Move
-	virtual void CharacterMovementMove_Implementation(FVector MoveInput) override;
-
-	// Jump
-	virtual void CharacterMovementJump_Implementation(FVector ForceDirection, float Strength, bool bSetZVelocityToZero) override;
-
-	// Air Jump
-	virtual void CharacterMovementAirJump_Implementation() override;
-
-	// Ground dash
-	virtual void CharacterMovementGroundDash_Implementation() override;
-
-	// Air dash
-	virtual void CharacterMovementAirDash_Implementation() override;
-
-	// Sliding
-	virtual void CharacterMovementStartSliding_Implementation() override;
-	virtual void CharacterMovementStopSliding_Implementation() override;
-
-	// Landed
-	virtual void CharacterMovementLanded_Implementation() override;
-	
-	// IsAirborne
-	virtual bool IsAirborne_Implementation() override;
 	
 	// Death
 	UFUNCTION(BlueprintNativeEvent,
@@ -232,16 +183,6 @@ protected:
 	UFUNCTION(BlueprintPure,
 		Category = "Default|Actions|")
 	float GetMaxAirActions() const;
-
-	//* CMC *//
-	// Character Movement attribute set
-	UPROPERTY()
-	UCMCAttributeSet* CMCAttributeSet;
-	
-	//* Dash *//
-	// Dash attribute set
-	UPROPERTY()
-	UDashAttributeSet* DashAttributeSet;
 
 	//* Meta Effects *//
 	// Meta effects attribute aet
