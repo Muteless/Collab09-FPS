@@ -86,6 +86,12 @@ public:
 	
 	int SpawnedCount;
 
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category= "Enemy Spawner",
+		meta = (AllowPrivateAccess = "true"))
+	TArray<AActor*> EnemyArray;
+	
 	UPROPERTY()
 	UCapsuleComponent* CapsuleComponent;
 	

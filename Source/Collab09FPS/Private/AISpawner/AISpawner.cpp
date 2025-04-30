@@ -124,7 +124,8 @@ void AAISpawner::SpawnEnemy()
 			if (IsValid(SpawnedEnemy))
 			{
 				SpawnedCount++;
-				
+				EnemyArray.Add(SpawnedEnemy);
+					
 				ABaseAI* AIC = Cast<ABaseAI>(Cast<APawn>(SpawnedEnemy)->GetController());
 
 				if (IsValid(AIC))
