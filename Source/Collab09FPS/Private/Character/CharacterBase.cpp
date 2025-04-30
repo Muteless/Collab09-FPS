@@ -173,6 +173,7 @@ void ACharacterBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 	// if health is less or equal than zero, die
 	if (Data.NewValue <= 0)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Health is less or equal than zero, death."));
 		Death();
 	}
 }
