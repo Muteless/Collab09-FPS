@@ -111,10 +111,15 @@ void AAISpawner::SpawnEnemy()
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
+			FVector ForwardVector = GetActorForwardVector();
+			FRotator SpawnRotation = ForwardVector.Rotation();
+
 			AActor* SpawnedEnemy = World->SpawnActor<AActor>(
-				EnemySpawnType, AdjustedSpawnLocation,
-				FRotationMatrix::MakeFromX(ArrowComponent->GetForwardVector()).Rotator(),
+				EnemySpawnType,
+				AdjustedSpawnLocation,
+				SpawnRotation,
 				SpawnParams);
+
 			
 			if (IsValid(SpawnedEnemy))
 			{
