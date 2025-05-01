@@ -58,15 +58,23 @@ public:
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
-	// Grants initial attribute sets
-	virtual void AddInitialCharacterAttributeSets() override;
-
 	UFUNCTION(BlueprintCallable)
 	void SpawnWeapon();
 	
-	UPROPERTY(VisibleAnywhere,
+	// Grants initial attribute sets
+	virtual void AddInitialCharacterAttributeSets() override;
+
+	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
-	USceneComponent* WeaponLocation;
+	USpringArmComponent* SpringArmComponent;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UCameraComponent* CameraComponent;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	UArrowComponent* WeaponLocation;
 	
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite)

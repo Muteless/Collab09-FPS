@@ -162,7 +162,8 @@ void AWeaponBase::WeaponFire_Implementation()
 	FVector SpawnLocation = ProjectileSpawnLocation->GetComponentLocation();
 	FRotator SpawnRotation = ProjectileSpawnLocation->GetComponentRotation();
 	
-	ABulletBase* BulletSpawned = GetWorld()->SpawnActor<ABulletBase>(ProjectileClass,
+	ABulletBase* BulletSpawned = GetWorld()->SpawnActor<ABulletBase>(
+		ProjectileClass,
 		SpawnLocation,
 		SpawnRotation,
 		SpawnParams);
@@ -226,7 +227,7 @@ bool AWeaponBase::WeaponFireOnCooldown() const
 void AWeaponBase::ConsumeAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - AmmoPerShot, 0, MagazineSize);
-
+	
 	// reload if we are out of ammo
 	if (CurrentAmmo == 0)
 	{

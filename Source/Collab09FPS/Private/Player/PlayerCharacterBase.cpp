@@ -19,9 +19,16 @@ WeaponSocketName("WeaponSocket")
 	
 	// Attribute sets
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
+
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
+	CameraComponent->SetupAttachment(SpringArmComponent);
 	
 	// Weapon location
-	WeaponLocation = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponLocation"));
+	WeaponLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("WeaponLocation"));
+	WeaponLocation->SetupAttachment(CameraComponent);
 }
 
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
@@ -69,6 +76,24 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 }
 
+void APlayerCharacterBase::SpawnWeapon()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+
+	WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass,
+		SpawnParams);
+	
+	if (WeaponInstance)
+	{
+		WeaponInstance->AttachToComponent(
+			WeaponLocation,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+		WeaponInstance->Initialize();
+	}
+}
+
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()
 {
 	Super::AddInitialCharacterAttributeSets();
@@ -78,11 +103,6 @@ void APlayerCharacterBase::AddInitialCharacterAttributeSets()
 		// Stamina
 		AbilitySystemComponent->AddSet<UStaminaAttributeSet>();
 	}
-}
-
-void APlayerCharacterBase::SpawnWeapon()
-{
-	
 }
 
 //* Blueprint Helper functions *//
