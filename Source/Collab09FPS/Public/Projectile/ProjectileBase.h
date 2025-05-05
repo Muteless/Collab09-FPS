@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BulletBase.h"
 
-#include "NiagaraSystem.h"
+#include "AbilitySystemComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -16,49 +16,50 @@ class COLLAB09FPS_API AProjectileBase : public ABulletBase
 {
 public:
 	AProjectileBase();
-	
-protected:
+	virtual void Initialize() override;
+
 	// Sphere collision component
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	USphereComponent* Collision;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	UStaticMeshComponent* ProjectileMesh;
 	
 	UPROPERTY(VisibleAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Components")
+		Category = "Default")
 	UNiagaraComponent* NiagaraSystemComponent;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Movement")
+		Category = "Default")
 	float InitialMovementSpeed;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Movement")
+		Category = "Default")
 	float MaxMovementSpeed;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Movement")
+		Category = "Default")
 	float GravityScale;
 	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet | Rotation")
+		Category = "Default")
 	bool RotationFollowsVelocity;
 	
+protected:
 private:
 	GENERATED_BODY()
 };

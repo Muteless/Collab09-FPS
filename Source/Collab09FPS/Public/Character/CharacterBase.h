@@ -20,13 +20,9 @@
 #include "GAS/AttributeSets/CMCAttributeSet.h"
 #include "GAS/AttributeSets/MetaEffectsAttributeSet.h"
 
-// Gameplay tags
-#include "GameplayTagContainer.h"
-
 // Components
 #include "Engine/DataTable.h"
-#include "Components/CapsuleComponent.h"
-#include "Weapon/WeaponBase.h"
+#include "GameMode/LevelGameState.h"
 
 // Interfaces
 #include "Interfaces/MovementComponentAttributeUpdate.h"
@@ -35,7 +31,6 @@
 
 // Structs
 #include "Collab09FPS/Collab09FPS.h"
-#include "Interfaces/MovementComponentAttributeUpdate.h"
 
 #include "CharacterBase.generated.h"
 
@@ -64,18 +59,21 @@ public:
 	// Sets default values for this character's properties
 	ACharacterBase();
 
-	// Input
-	UFUNCTION(Category = "Input")
-	virtual void InputActionMove_Implementation(EInputTypes InputType, FVector2D Input) override;
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	ALevelGameState* LevelGameState;
+
+	UFUNCTION()
+	virtual void HandleWorldTransition(EWorldState WorldState);
+
+#pragma region Input
 	
 	UFUNCTION(Category = "Input")
-	virtual void InputActionJump_Implementation(EInputTypes InputType, bool Input) override;
+	virtual FVector GetMovementInput_Implementation() override;
 
-	UFUNCTION(Category = "Input")
-	virtual void InputActionDash_Implementation(const EInputTypes InputType, const bool Input) override;
+#pragma endregion Input
 
-	UFUNCTION(Category = "Input")
-	virtual void InputActionCrouch_Implementation(const EInputTypes InputType, const bool Input) override;
+#pragma region Components
 	
 	// Ability System Component. Required to use Gameplay Attributes and Gameplay Abilities.
 	UPROPERTY(VisibleAnywhere,
@@ -86,84 +84,31 @@ public:
 	// Override from IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
-	// Wall capsule detection
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Collision")
-	UCapsuleComponent* WallCapsuleCollision;
-	
-	// Event handlers for overlap
-	UFUNCTION()
-	void OnWallCapsuleBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallCapsuleEndOverlap(UPrimitiveComponent* OverlappedComponent, 
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex);
-
-	// Wall capsule offset radius
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "Collision")
-	float WallCapsuleDetectionOffsetRadius = 10.0f;
-
 	// Get Character Movement Component
 	virtual UCharacterMovementComponent* GetActorCharacterMovementComponent_Implementation() override;
-	
-#pragma region CMCAttributeSetChanges
-	
-	virtual void SetCMCMaxWalkSpeed_Implementation(float MaxWalkSpeed) override;
-	virtual void SetCMCMaxAcceleration_Implementation(float MaxAcceleration) override;
-	virtual void SetCMCGravityScale_Implementation(float GravityScale) override;
-	virtual void SetCMCMaxWallRunSpeed_Implementation(float MaxWallRunSpeed) override;
-	virtual void SetCMCPushOffWallHorizontalSpeed_Implementation(float PushOffWallHorizontalSpeed) override;
-	virtual void SetCMCPushOffWallVerticalSpeed_Implementation(float PushOffWallVerticalSpeed) override;
-	
-#pragma endregion CMCAttributeSetChanges
 
-	UFUNCTION(Category = "Input")
-	virtual FVector GetMovementInput_Implementation() override;
+#pragma endregion Components
 
+#pragma region AttributeChangeDelegates
+
+	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+	
+	virtual void OnFireShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void OnCurseShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void OnBloodShieldChanged(const FOnAttributeChangeData& Data);
+	
+	virtual void OnStaminaChanged(const FOnAttributeChangeData& Data);
+	virtual void OnAirActionsChanged(const FOnAttributeChangeData& Data);
+	
+#pragma endregion AttributeChangeDelegates
 	
 #pragma region Actions
 	
-	// Move
-	virtual void CharacterMovementMove_Implementation(FVector MoveInput) override;
-
-	// Jump
-	virtual void CharacterMovementJump_Implementation(FVector ForceDirection, float Strength, bool bSetZVelocityToZero) override;
-
-	// Air Jump
-	virtual void CharacterMovementAirJump_Implementation() override;
-
-	// Wall running
-	virtual void CharacterMovementWallRun_Implementation() override;
-	virtual void CharacterMovementWallJump_Implementation(FVector Direction, float Strength) override;
-	virtual void CharacterMovementEndWallRun_Implementation() override;
-	
-	// Landed
-	virtual void CharacterMovementLanded_Implementation() override;
-
-	// Ground dash
-	virtual void CharacterMovementGroundDash_Implementation() override;
-
-	// Air dash
-	virtual void CharacterMovementAirDash_Implementation() override;
-	
-	// IsAirborne
-	virtual bool IsAirborne_Implementation() override;
-
-	// Crouch
-	virtual void CharacterMovementCrouch_Implementation() override;
-
-	// Uncrouch
-	virtual void CharacterMovementUncrouch_Implementation() override;
+	// Death
+	UFUNCTION(BlueprintNativeEvent,
+		BlueprintCallable)
+	void Death();
+	void Death_Implementation();
 
 #pragma endregion Actions
 	
@@ -177,44 +122,38 @@ protected:
 		Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> OnLandedEffects;
 
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadWrite)
-	USceneComponent* WeaponLocation;
-	
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite)
-	TSubclassOf<AWeaponBase> WeaponClass;
-	UPROPERTY(BlueprintReadOnly)
-	AWeaponBase* WeaponInstance;
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite)
-	FName WeaponSocketName;
-	
-	UFUNCTION(BlueprintCallable)
-	void SpawnWeapon();
+	#pragma region Initialization
+		
+		// Grants native abilities
+		void AddNativeCharacterAbilities();
+		// Abilities granted when the ability system is initialized
+		UPROPERTY(EditDefaultsOnly, meta = (AdvancedDisplay = "NativeAbilities"))
+		TArray<TSubclassOf<UNativeGameplayAbility>> NativeAbilities;
+		
+		// Grants initial abilities
+		void AddInitialCharacterAbilities();
+		// Abilities granted when the ability system is initialized
+		UPROPERTY(EditDefaultsOnly,
+			BlueprintReadOnly,
+			Category = "GAS")
+		TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
+		
+		// Grant initial gameplay effects
+		void AddInitialCharacterGameplayEffects();
+		// Initial gameplay effects
+		UPROPERTY(EditDefaultsOnly,
+			BlueprintReadOnly,
+			Category = "GAS")
+		TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
 
-	// Grants native abilities
-	void AddNativeCharacterAbilities();
-	// Abilities granted when the ability system is initialized
-	UPROPERTY(EditDefaultsOnly, meta = (AdvancedDisplay = "NativeAbilities"))
-	TArray<TSubclassOf<UNativeGameplayAbility>> NativeAbilities;
+		virtual void BindHealthAttributeSet();
+		virtual void BindAirActionAttributeSet();
+		virtual void BindCMCAttributeSet();
+		virtual void BindDashAttributeSet();
+		virtual void BindMetaEffectsAttributeSet();
+		
+	#pragma endregion Initialization
 	
-	// Grants initial abilities
-	void AddInitialCharacterAbilities();
-	// Abilities granted when the ability system is initialized
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS")
-	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
-	
-	// Grant initial gameplay effects
-	void AddInitialCharacterGameplayEffects();
-	// Initial gameplay effects
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadOnly,
-		Category = "GAS")
-	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
-
 	//* Health *//
 	// Health attribute set
 	UPROPERTY()
@@ -222,12 +161,12 @@ protected:
 	
 	// Get current health
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Health|")
+		Category = "Default|Health|")
 	float GetCurrentHealth() const;
 
 	// Get current health
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Health|")
+		Category = "Default|Health|")
 	float GetMaxHealth() const;
 
 	//* Air Actions *//
@@ -237,23 +176,13 @@ protected:
 	
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Actions|")
+		Category = "Default|Actions|")
 	float GetCurrentAirActions() const;
 
 	// Get current air actions
 	UFUNCTION(BlueprintPure,
-		Category = "Character|Actions|")
+		Category = "Default|Actions|")
 	float GetMaxAirActions() const;
-
-	//* CMC *//
-	// Character Movement attribute set
-	UPROPERTY()
-	UCMCAttributeSet* CMCAttributeSet;
-	
-	//* Dash *//
-	// Dash attribute set
-	UPROPERTY()
-	UDashAttributeSet* DashAttributeSet;
 
 	//* Meta Effects *//
 	// Meta effects attribute aet

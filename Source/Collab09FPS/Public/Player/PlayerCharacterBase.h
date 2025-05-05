@@ -6,15 +6,19 @@
 #include "Character/CharacterBase.h"
 
 // Interfaces
-#include "Interfaces/CharacterInput.h"
+#include "Interfaces/SaveGameInterface.h"
+#include "Interfaces/LoadInterface.h"
 
 // Components
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Weapon/WeaponBase.h"
 
-// Weapon
+// Persistent data
+#include "PersistentData/PlayerSaveDataStruct.h"
 
 // Attribute Sets
+#include "GameFramework/SaveGame.h"
 #include "GAS/AttributeSets/StaminaAttributeSet.h"
 
 #include "PlayerCharacterBase.generated.h"
@@ -29,15 +33,16 @@ class USpringArmComponent;
  */
 
 UCLASS()
-class COLLAB09FPS_API APlayerCharacterBase : public ACharacterBase
+class COLLAB09FPS_API APlayerCharacterBase :
+public ACharacterBase,
+public ILoadInterface
 {
 public:
 	// Sets default values for this character's properties
 	APlayerCharacterBase();
 
-	UFUNCTION(Category = "Input")
-	virtual void InputActionLook_Implementation(EInputTypes InputType, FVector2D Input) override;
-
+	virtual void LoadData_Implementation(USaveGame* SaveGame) override;
+	
 	//* Stamina *//
 	// Stamina attribute set
 	UPROPERTY()
@@ -47,51 +52,38 @@ public:
 	UFUNCTION(BlueprintPure,
 		Category = "Player|Stamina|")
 	float GetCurrentStamina() const;
-	
-	// Runs every frame
-	virtual void Tick(float DeltaTime) override;
+
+	FPlayerData MakePlayerSaveData();
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SpawnWeapon();
+	
 	// Grants initial attribute sets
 	virtual void AddInitialCharacterAttributeSets() override;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
+	USpringArmComponent* SpringArmComponent;
 	
-	//* Camera *//
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Camera")
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite)
 	UCameraComponent* CameraComponent;
-	void UpdateFOVBasedOnSpeed(float DeltaTime) const;
 	
-	// Minimum FOV
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float FOVMinimum;
-
-	// Maximum FOV
-	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float FOVMaximum;
-
-	// Speed thresholds
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float MinFOVSpeedThreshold; // Speed at which FOV starts changing (e.g., idle speed)
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float MaxFOVSpeedThreshold; // Speed at which max FOV is reached (e.g., sprint speed)
+		BlueprintReadWrite)
+	UArrowComponent* WeaponLocation;
 	
-	// FOV interpolation speed
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite,
-		Category = "Camera|FOV")
-	float FOVInterpSpeed;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	TSubclassOf<AWeaponBase> WeaponClass;
+	UPROPERTY(BlueprintReadOnly)
+	AWeaponBase* WeaponInstance;
+	UPROPERTY(EditDefaultsOnly,
+		BlueprintReadWrite)
+	FName WeaponSocketName;
 
 	UPROPERTY(EditDefaultsOnly,
 		BlueprintReadWrite,
@@ -102,12 +94,6 @@ protected:
 		BlueprintReadWrite,
 		Category = "Camera")
 	bool bInvertedPitch;
-
-	// Spring Arm Component
-	UPROPERTY(VisibleAnywhere,
-		BlueprintReadOnly,
-		Category = "Camera")
-	USpringArmComponent* SpringArmComponent;
 
 private:
 	GENERATED_BODY()

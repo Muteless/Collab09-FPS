@@ -3,6 +3,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Runtime/AIModule/Classes/AIController.h"
+#include "Perception/AIPerceptionComponent.h"
 #include "BaseAI.generated.h"
 
 class UBehaviorTreeComponent;
@@ -18,12 +19,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
-
-private:
+	UFUNCTION()
+	void OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus);
+	
 	UPROPERTY(EditDefaultsOnly,
-		BlueprintReadWrite,
-		Category="Base AI",
-		meta = (AllowPrivateAccess = true))
+	BlueprintReadWrite,
+	Category="Base AI",
+	meta = (AllowPrivateAccess = true))
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 
 	UPROPERTY(VisibleAnywhere,
@@ -38,5 +40,6 @@ private:
 		meta = (AllowPrivateAccess = true)
 		)
 	TObjectPtr<UBlackboardComponent> BlackboardComponent;
-	
+
 };
+

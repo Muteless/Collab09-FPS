@@ -2,11 +2,18 @@
 
 
 #include "Projectile/BulletBase.h"
+#include "AbilitySystemComponent.h"
 
 
 // Sets default values
 ABulletBase::ABulletBase():
-	AmmoConsumedOnShot(1)
+AmmoConsumedOnShot(1),
+OnHitSystem(nullptr)
+{
+	
+}
+
+void ABulletBase::Initialize()
 {
 	
 }

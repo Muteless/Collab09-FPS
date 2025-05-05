@@ -2,15 +2,15 @@
 
 
 #include "Weapon/WeaponBase.h"
-
 #include "Projectile/ProjectileBase.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase():
-	bGunMode(false)
+AWeaponBase::AWeaponBase()
 {
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
+
+	MeleeHitbox = CreateDefaultSubobject<UHitbox>(TEXT("MeleeHitbox"));
 
 	ProjectileSpawnLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnLocation"));
 	ProjectileSpawnLocation->SetupAttachment(Mesh);
@@ -33,16 +33,33 @@ void AWeaponBase::Initialize()
 				TEXT("No Ability System Component found on weapon owner."));
 		}
 	}
+
+	LevelGameState = GetWorld()->GetGameState<ALevelGameState>();
+	if (LevelGameState)
+	{
+		switch (LevelGameState->WorldState)
+		{
+			case EWorldState::WorldOne:
+				bGunMode = true;
+				break;
+			case EWorldState::WorldTwo:
+				bGunMode = false;
+				break;
+		}
+		
+        LevelGameState->OnWorldTransition.AddDynamic(this, &AWeaponBase::SwitchMode);
+	}
+
+	SetupGunVariables();
+	SetupMeleeVariables();
 	
 	// Setup weapon mode
 	if (bGunMode)
 	{
-		SetupGunVariables();
 		SetWeaponModeToGun();
 	}
 	else
 	{
-		SetupMeleeVariables();
 		SetWeaponModeToMelee();
 	}
 }
@@ -53,7 +70,18 @@ void AWeaponBase::SetupGunVariables()
 	{
 		if (!GunAssetData->Projectiles.IsEmpty())
 		{
+			// Get projectiles
 			Projectiles = GunAssetData->Projectiles;
+			
+			// Get ammo per shot from projectile
+			if (Projectiles[CurrentProjectileIndex]->IsValidLowLevel())
+			{
+				AmmoPerShot = Projectiles[CurrentProjectileIndex].GetDefaultObject()->AmmoConsumedOnShot;
+			}
+			else
+			{
+				AmmoPerShot = 1;
+			}
 		}
 
 		if (GunAssetData->GunReloadAnimation)
@@ -61,8 +89,6 @@ void AWeaponBase::SetupGunVariables()
 			GunReloadAnimation = GunAssetData->GunReloadAnimation;
 		}
 		
-		GunDamage = GunAssetData->Damage;
-		AmmoPerShot = GunAssetData->AmmoPerShot;
 		RateOfFire = GunAssetData->RateOfFire;
 		MagazineSize = GunAssetData->MagazineSize;
 		CurrentAmmo = GunAssetData->MagazineSize;
@@ -81,6 +107,7 @@ void AWeaponBase::SetupMeleeVariables()
 	if (MeleeAssetData != nullptr)
 	{
 		MeleeDamage = MeleeAssetData->Damage;
+		MeleeHitbox->OnHitGameplayEffects = MeleeAssetData->OnHitGameplayEffects;
 
 		if (!MeleeAssetData->MeleeAnimations.IsEmpty())
 		{
@@ -103,14 +130,12 @@ void AWeaponBase::WeaponPrimaryAction_Implementation()
 	{
 		if (CanFire())
 		{
-			UE_LOG(LogTemp, Log, TEXT("Firing!"));
 			EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Fire"));
 			OwnerActorASC->HandleGameplayEvent(EventData.EventTag, &EventData);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("Melee!"));
 		EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Melee"));
 		OwnerActorASC->HandleGameplayEvent(EventData.EventTag, &EventData);
 	}
@@ -128,7 +153,8 @@ void AWeaponBase::WeaponFire_Implementation()
 		return;
 	}
 
-#pragma region SpawnProjectile
+	#pragma region SpawnProjectile
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
 	SpawnParams.Instigator = GetInstigator();
@@ -136,18 +162,19 @@ void AWeaponBase::WeaponFire_Implementation()
 	FVector SpawnLocation = ProjectileSpawnLocation->GetComponentLocation();
 	FRotator SpawnRotation = ProjectileSpawnLocation->GetComponentRotation();
 	
-	ABulletBase* BulletSpawned = GetWorld()->SpawnActor<ABulletBase>(ProjectileClass,
+	ABulletBase* BulletSpawned = GetWorld()->SpawnActor<ABulletBase>(
+		ProjectileClass,
 		SpawnLocation,
 		SpawnRotation,
 		SpawnParams);
 
-	BulletSpawned->SetOwner(this);
-	
+	BulletSpawned->SetOwner(GetOwner());
+	BulletSpawned->Initialize();
 	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();
 	
-#pragma endregion SpawnProjectile
+	#pragma endregion SpawnProjectile
 
 	// Start Timer
 	GetWorld()->GetTimerManager().SetTimer(
@@ -156,6 +183,8 @@ void AWeaponBase::WeaponFire_Implementation()
 		&AWeaponBase::RateOfFireTimerEnded,
 		RateOfFire,
 		false);
+
+	OnWeaponFire.Broadcast();
 }
 
 void AWeaponBase::RateOfFireTimerEnded()
@@ -187,10 +216,6 @@ bool AWeaponBase::CanFire()
 
 bool AWeaponBase::EnoughAmmoToShoot() const
 {
-	if (CurrentAmmo < AmmoPerShot)
-	{
-		
-	}
 	return CurrentAmmo >= AmmoPerShot;
 }
 
@@ -202,11 +227,43 @@ bool AWeaponBase::WeaponFireOnCooldown() const
 void AWeaponBase::ConsumeAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - AmmoPerShot, 0, MagazineSize);
+	
+	// reload if we are out of ammo
+	if (CurrentAmmo == 0)
+	{
+		Execute_WeaponReload(this);
+	}
+	
+	OnWeaponAmmoConsumed.Broadcast();
 }
 
 void AWeaponBase::WeaponReload_Implementation()
 {
-	
+	if (CanReload())
+	{
+		// Start Timer
+		GetWorld()->GetTimerManager().SetTimer(
+			ReloadTimerHandle,
+			this,
+			&AWeaponBase::ReloadFinished,
+			ReloadTime,
+			false);
+
+		// Broadcast that we have started reloading
+		OnWeaponStartReload.Broadcast();
+	}
+}
+
+bool AWeaponBase::CanReload()
+{
+	return !GetWorldTimerManager().IsTimerActive(ReloadTimerHandle) && CurrentAmmo != MagazineSize;
+}
+
+void AWeaponBase::ReloadFinished()
+{
+	CurrentAmmo = MagazineSize;
+	GetWorld()->GetTimerManager().ClearTimer(ReloadTimerHandle);
+	OnWeaponReloaded.Broadcast();
 }
 
 void AWeaponBase::WeaponMelee_Implementation()
@@ -224,19 +281,32 @@ void AWeaponBase::WeaponReloadInterrupt_Implementation()
 	
 }
 
-void AWeaponBase::WeaponSwitch_Implementation()
+void AWeaponBase::SwitchMode(EWorldState WorldState)
 {
-	bGunMode = !bGunMode;
-
+	UE_LOG(LogTemp, Warning, TEXT("Switching mode to %d"), WorldState);
+	switch (WorldState)
+	{
+		case EWorldState::WorldOne:
+			bGunMode = true;
+			break;
+		case EWorldState::WorldTwo:
+			bGunMode = false;
+			break;
+	}
+	
 	if (bGunMode)
 	{
-		// SetWeaponModeToGun();
+		SetWeaponModeToGun();
+		
 	}
 	else
 	{
-		// SetWeaponModeToMelee();
+		SetWeaponModeToMelee();
 	}
+	
+	OnWeaponModeSwitched.Broadcast();
 }
+
 
 bool AWeaponBase::GetWeaponMode_Implementation()
 {
@@ -245,18 +315,42 @@ bool AWeaponBase::GetWeaponMode_Implementation()
 
 void AWeaponBase::SetWeaponModeToGun()
 {
-	// Gun mesh
-	if (GunAssetData != nullptr && GunAssetData->Mesh)
-	{
-		Mesh->SetSkeletalMesh(GunAssetData->Mesh);
-	}
+	
+}
+
+TArray<TSubclassOf<ABulletBase>> AWeaponBase::GetProjectiles() const
+{
+	return Projectiles;
 }
 
 void AWeaponBase::SetWeaponModeToMelee()
 {
-	// Melee mesh
-	if (MeleeAssetData != nullptr && MeleeAssetData->Mesh)
-	{
-		Mesh->SetSkeletalMesh(MeleeAssetData->Mesh);
-	}
+	
 }
+
+TSubclassOf<ABulletBase> AWeaponBase::GetProjectile() const
+{
+	return Projectiles[CurrentProjectileIndex];
+}
+
+void AWeaponBase::SetProjectile(const TSubclassOf<ABulletBase> Projectile)
+{
+	CurrentProjectileIndex = Projectiles.Find(Projectile);
+	OnWeaponProjectileChanged.Broadcast();
+}
+
+int AWeaponBase::GetMagazineSize() const
+{
+	return MagazineSize;
+}
+
+int AWeaponBase::GetCurrentAmmo() const
+{
+	return CurrentAmmo;
+}
+
+float AWeaponBase::GetReloadTime() const
+{
+	return ReloadTime;
+}
+

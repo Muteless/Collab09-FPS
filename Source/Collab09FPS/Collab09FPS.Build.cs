@@ -8,9 +8,22 @@ public class Collab09FPS : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "AIModule", "NavigationSystem" });
+		PublicDependencyModuleNames.AddRange(new string[] { 
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"EnhancedInput",
+			"Niagara", 
+			"AIModule", 
+			"NavigationSystem"
+		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities", "GameplayTags", "GameplayTasks" });
+		PrivateDependencyModuleNames.AddRange(new string[] { 
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks"
+		});
 		
 		PrivateIncludePaths.AddRange(new string[] { "Collab09FPS/Private" });
 		PublicIncludePaths.AddRange(new string[] { "Collab09FPS/Public" });

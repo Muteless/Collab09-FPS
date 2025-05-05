@@ -11,5 +11,11 @@ public class Collab09FPSTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
 		ExtraModuleNames.Add("Collab09FPS");
+		RegisterModulesCreatedByRider();
+	}
+
+	private void RegisterModulesCreatedByRider()
+	{
+		// ExtraModuleNames.AddRange(new string[] { "SaveManagement" });
 	}
 }

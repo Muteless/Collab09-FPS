@@ -3,53 +3,95 @@
 
 #include "Player/PlayerCharacterBase.h"
 
-#include "MeshPassProcessor.h"
 #include "Collab09FPS/Collab09FPS.h"
+
 #include "Components/CapsuleComponent.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Interfaces/CharacterController.h"
+
 // Constructor
-APlayerCharacterBase::APlayerCharacterBase()
+APlayerCharacterBase::APlayerCharacterBase() :
+WeaponSocketName("WeaponSocket")
 {
-	// CMC
-	GetCharacterMovement()->SetActive(true);
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-
-	// Create and configure a SpringArmComponent
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArmComponent->SetupAttachment(GetCapsuleComponent());  // Attach SpringArm to CapsuleComponent
-	SpringArmComponent->TargetArmLength = 10.0f;						// Set the distance the camera will follow
-	SpringArmComponent->bUsePawnControlRotation = true;					// Rotate arm based on controller movement
-	SpringArmComponent->bDoCollisionTest = false;						// Don't want to collide with the arm
-	SpringArmComponent->bEnableCameraLag = true;						// Enable camera lag
-	SpringArmComponent->CameraLagSpeed = 5.0f;							// Set the camera lag speed
-
-	// Create and configure the CameraComponent
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	CameraComponent->SetupAttachment(SpringArmComponent);      // Attach the camera to the SpringArm
-	CameraComponent->bUsePawnControlRotation = false;          // This disables direct control rotation, relying on spring arm
-
-	// FOV
-	FOVMinimum = 90;
-	FOVMaximum = 110;
-	MinFOVSpeedThreshold = 100.0f;
-	MaxFOVSpeedThreshold = 1100.0f;
-	FOVInterpSpeed = 5.0f;
-	
-	// Ensure the pawn itself doesn't rotate the camera
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = true;
 	
 	// Attribute sets
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
+
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
+	CameraComponent->SetupAttachment(SpringArmComponent);
 	
-	PrimaryActorTick.bCanEverTick = true;
+	// Weapon location
+	WeaponLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("WeaponLocation"));
+	WeaponLocation->SetupAttachment(CameraComponent);
+}
+
+void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
+{
+	FPlayerData PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
+	
+		if (PlayerSaveData.HasWeapon)
+		{
+			SpawnWeapon();
+		}
+
+		if (WeaponInstance->IsValidLowLevel())
+		{
+			WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
+			WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
+			WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
+			WeaponInstance->Initialize();
+		}
+}
+
+FPlayerData APlayerCharacterBase::MakePlayerSaveData()
+{
+	FPlayerData PlayerSaveData;
+
+	if (WeaponInstance)
+	{
+		PlayerSaveData.HasWeapon = true;
+		PlayerSaveData.bGunMode = WeaponInstance->bGunMode;
+		PlayerSaveData.GunAssetData = WeaponInstance->GunAssetData;
+		PlayerSaveData.MeleeAssetData = WeaponInstance->MeleeAssetData;
+	}
+	else
+	{
+		PlayerSaveData.HasWeapon = false;
+		PlayerSaveData.bGunMode = true;
+		PlayerSaveData.GunAssetData = nullptr;
+		PlayerSaveData.MeleeAssetData = nullptr;
+	}
+	
+	return PlayerSaveData;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+}
+
+void APlayerCharacterBase::SpawnWeapon()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+
+	WeaponInstance = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass,
+		SpawnParams);
+	
+	if (WeaponInstance)
+	{
+		WeaponInstance->AttachToComponent(
+			WeaponLocation,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+		WeaponInstance->Initialize();
+	}
 }
 
 void APlayerCharacterBase::AddInitialCharacterAttributeSets()
@@ -61,43 +103,6 @@ void APlayerCharacterBase::AddInitialCharacterAttributeSets()
 		// Stamina
 		AbilitySystemComponent->AddSet<UStaminaAttributeSet>();
 	}
-}
-
-// Tick
-void APlayerCharacterBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	// Update FOV based on speed
-	UpdateFOVBasedOnSpeed(DeltaTime);
-}
-
-// Camera
-void APlayerCharacterBase::InputActionLook_Implementation(EInputTypes InputType, FVector2D Input)
-{
-	AddControllerYawInput(bInvertedYaw ? Input.X : -Input.X);
-	AddControllerPitchInput(bInvertedPitch ? Input.Y : -Input.Y);
-}
-
-void APlayerCharacterBase::UpdateFOVBasedOnSpeed(float DeltaTime) const
-{
-	float CurrentSpeed = GetVelocity().Size();
-
-	// Ensure the camera component is valid
-	if (!CameraComponent) return;
-	
-	// Map speed to FOV
-	float TargetFOV = FMath::Lerp(FOVMinimum,
-		FOVMaximum,
-		FMath::Clamp((CurrentSpeed - MinFOVSpeedThreshold) / (MaxFOVSpeedThreshold - MinFOVSpeedThreshold),
-			0.0f,
-			1.0f));
-
-	float CurrentFOV = CameraComponent->FieldOfView;
-	CameraComponent->FieldOfView = FMath::FInterpTo(CurrentFOV,
-		TargetFOV,
-		DeltaTime,
-		FOVInterpSpeed);
 }
 
 //* Blueprint Helper functions *//

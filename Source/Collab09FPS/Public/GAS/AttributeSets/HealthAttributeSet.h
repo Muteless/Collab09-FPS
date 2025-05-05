@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+
 #include "AbilitySystemComponent.h"
 
 #include "HealthAttributeSet.generated.h"
-
-// Attribute accessors
-
 
 /**
  * @class UHealthAttributeSet
@@ -51,6 +49,67 @@ public:
 	// Current Health Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentHealth)
 
+	#pragma region Elemental Shield
+
+	#pragma region Max
+			
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData MaxFireShield;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MaxFireShield)
+			
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData MaxCurseShield;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MaxCurseShield)
+
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData MaxBloodShield;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MaxBloodShield)
+
+	#pragma endregion Max
+
+	#pragma region Current
+			
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData CurrentFireShield;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentFireShield)
+
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData CurrentCurseShield;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentCurseShield)
+			
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData CurrentBloodShield;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, CurrentBloodShield)
+
+	#pragma endregion Current
+
+	#pragma region Meta
+			
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData MetaElementalFireDamage;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaElementalFireDamage)
+
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData MetaElementalCurseDamage;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaElementalCurseDamage)
+
+		UPROPERTY(BlueprintReadOnly,
+			Category = "Attributes | Shield | ")
+		FGameplayAttributeData MetaElementalBloodDamage;
+		ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaElementalBloodDamage)
+
+	#pragma endregion Meta
+
+	#pragma endregion Elemental Shield
+	
 	//*//
 	// Meta Damage Attribute
 	UPROPERTY(BlueprintReadOnly,
@@ -67,10 +126,12 @@ public:
 
 	// Meta Heal Attribute Accessor
 	ATTRIBUTE_ACCESSORS(UHealthAttributeSet, MetaHeal)
-
+	
 protected:
-	void virtual PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
-	void virtual PostAttributeBaseChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) const override;
+	virtual void PreAttributeBaseChange(
+		const FGameplayAttribute& Attribute,
+		float& NewValue) const override;
+	
 private:
 	GENERATED_BODY()
 };

@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "AbilitySystemComponent.h"
+#include "NiagaraSystem.h"
 #include "GameplayEffect.h"
+#include "Engine/Texture2D.h"
 
 #include "BulletBase.generated.h"
 
@@ -18,6 +19,9 @@ public:
 	// Sets default values for this actor's properties
 	ABulletBase();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void Initialize();
+
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "Target"))
 	void ApplyEffectToAbilitySystemComponent
 		(UAbilitySystemComponent* AbilitySystemComponent,
@@ -27,15 +31,30 @@ public:
 	// Amount of ammo consumed on shot
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet |")
+		Category = "Default")
 	float AmmoConsumedOnShot;
-	
-protected:
+
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
-		Category = "Bullet |")
+		Category = "Default")
 	TMap<TSubclassOf<class UGameplayEffect>, float> OnHitGameplayEffect;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	UNiagaraSystem* OnHitSystem;
 	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	FColor BulletColor = FColor::White;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	UTexture2D* BulletIcon;
+	
+protected:
 private:
 	GENERATED_BODY()
 };

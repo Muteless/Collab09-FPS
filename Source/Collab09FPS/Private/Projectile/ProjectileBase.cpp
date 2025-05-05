@@ -16,10 +16,10 @@ AProjectileBase::AProjectileBase()
 	MaxMovementSpeed = 3500.0;
 	RotationFollowsVelocity = true;
 	
-	
 	// Create the Sphere Collision Component
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->InitSphereRadius(10.0f);
+	
 	Collision->SetCollisionProfileName(TEXT("Projectile"));
 	Collision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 	Collision->SetNotifyRigidBodyCollision(true);
@@ -40,4 +40,12 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovementComponent->MaxSpeed = MaxMovementSpeed;
 	ProjectileMovementComponent->bRotationFollowsVelocity = RotationFollowsVelocity;
 	ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
+}
+
+void AProjectileBase::Initialize()
+{
+	if (GetOwner()->GetOwner())
+	{
+		Collision->IgnoreActorWhenMoving(GetOwner()->GetOwner(), true);
+	}
 }

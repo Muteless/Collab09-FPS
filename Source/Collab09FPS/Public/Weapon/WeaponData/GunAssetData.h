@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 
 #include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimSequence.h"
 #include "Projectile/BulletBase.h"
 
 #include "GunAssetData.generated.h"
@@ -17,43 +18,35 @@ UCLASS()
 class COLLAB09FPS_API UGunAssetData : public UDataAsset
 {
 public:
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	FName Name;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	USkeletalMesh* Mesh;
-
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	TArray<TSubclassOf<ABulletBase>> Projectiles;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	UAnimMontage* GunReloadAnimation;
-	
-	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
-	float Damage;
-
-	UPROPERTY()
-	float AmmoPerShot;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float RateOfFire;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float Range;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	int MagazineSize;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadWrite)
+		BlueprintReadWrite,
+		Category = "Default")
 	float ReloadTime;
 	
 protected:
