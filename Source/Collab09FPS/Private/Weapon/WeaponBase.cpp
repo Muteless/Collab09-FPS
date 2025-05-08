@@ -2,6 +2,7 @@
 
 
 #include "Weapon/WeaponBase.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Projectile/ProjectileBase.h"
 
 // Sets default values
@@ -170,6 +171,19 @@ void AWeaponBase::WeaponFire_Implementation()
 
 	BulletSpawned->SetOwner(GetOwner());
 	BulletSpawned->Initialize();
+
+	// Spawn muzzle flash
+	if (GunAssetData->MuzzleFlash)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAttached(
+			GunAssetData->MuzzleFlash,
+			ProjectileSpawnLocation,
+			FName("MuzzleFlash"),
+			FVector(-50, 0, 0),
+			FRotator::ZeroRotator,
+			EAttachLocation::KeepRelativeOffset,
+			true);
+	}
 	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();
