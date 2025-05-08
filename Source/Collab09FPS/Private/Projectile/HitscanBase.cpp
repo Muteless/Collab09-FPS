@@ -81,7 +81,7 @@ void AHitscanBase::Initialize()
 		// 		End, 
 		// 		FColor::Red, // Make the line red
 		// 		false,  // Don't persist the line
-		// 		1, // Duration (negative means "never auto-delete")
+		// 		1, // Duration
 		// 		ECC_GameTraceChannel1, // This must match the ECC_GameTraceChannel1 from previous lines
 		// 		10.f // Thickness of the line
 		// 	);
