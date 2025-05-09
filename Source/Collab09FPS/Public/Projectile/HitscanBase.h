@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
-	float Range = 1000;
+	float Range = 4000;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
