@@ -2,6 +2,7 @@
 
 
 #include "Weapon/WeaponBase.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Projectile/ProjectileBase.h"
 
 // Sets default values
@@ -47,7 +48,7 @@ void AWeaponBase::Initialize()
 				break;
 		}
 		
-        LevelGameState->OnWorldTransition.AddDynamic(this, &AWeaponBase::SwitchMode);
+        // TODO: LevelGameState->OnWorldTransition.AddDynamic(this, &AWeaponBase::SwitchMode);
 	}
 
 	SetupGunVariables();
@@ -80,8 +81,13 @@ void AWeaponBase::SetupGunVariables()
 			}
 			else
 			{
-				AmmoPerShot = 1;
+				UE_LOG(LogTemp, Warning, TEXT("Invalid Projectile Index or Class in GunAssetData."));
+				AmmoPerShot = 1; // Fallback value
 			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Projectiles array is empty!"));
 		}
 
 		if (GunAssetData->GunReloadAnimation)
@@ -98,7 +104,7 @@ void AWeaponBase::SetupGunVariables()
 	{
 		UE_LOG(LogTemp, Error, TEXT("GunAssetData is not set!"));
 		UE_LOG(LogTemp, Error, TEXT("Destroying WeaponBase"))
-		this->Destroy();
+		this->Destroy(); // This could be avoided for better error handling - dan
 	}
 }
 
@@ -170,6 +176,19 @@ void AWeaponBase::WeaponFire_Implementation()
 
 	BulletSpawned->SetOwner(GetOwner());
 	BulletSpawned->Initialize();
+
+	// Spawn muzzle flash
+	if (GunAssetData->MuzzleFlash)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAttached(
+			GunAssetData->MuzzleFlash,
+			ProjectileSpawnLocation,
+			FName("MuzzleFlash"),
+			FVector(-50, 0, 0),
+			FRotator::ZeroRotator,
+			EAttachLocation::KeepRelativeOffset,
+			true);
+	}
 	
 	AmmoPerShot = BulletSpawned->AmmoConsumedOnShot;
 	ConsumeAmmo();

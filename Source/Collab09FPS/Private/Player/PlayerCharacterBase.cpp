@@ -19,7 +19,9 @@ WeaponSocketName("WeaponSocket")
 	
 	// Attribute sets
 	StaminaAttributeSet = CreateDefaultSubobject<UStaminaAttributeSet>(TEXT("Stamina Attribute Set"));
-
+	DashAttributeSet = CreateDefaultSubobject<UDashAttributeSet>(TEXT("Dash Attribute Set"));
+	AirActionAttributeSet = CreateDefaultSubobject<UAirActionAttributeSet>(TEXT("Air Action Attribute Set"));
+	
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 
@@ -34,19 +36,23 @@ WeaponSocketName("WeaponSocket")
 void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 {
 	FPlayerData PlayerSaveData = ISaveGameInterface::Execute_GetPlayerSaveData(SaveGame);
-	
-		if (PlayerSaveData.HasWeapon)
-		{
-			SpawnWeapon();
-		}
 
-		if (WeaponInstance->IsValidLowLevel())
-		{
-			WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
-			WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
-			WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
-			WeaponInstance->Initialize();
-		}
+	if (PlayerSaveData.HasWeapon)
+	{
+		SpawnWeapon();
+	}
+
+	if (WeaponInstance && WeaponInstance->IsValidLowLevel())
+	{
+		WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
+		WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
+		WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
+		WeaponInstance->Initialize();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("WeaponInstance is null or invalid in LoadData_Implementation!"));
+	}
 }
 
 FPlayerData APlayerCharacterBase::MakePlayerSaveData()
@@ -78,6 +84,12 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 
 void APlayerCharacterBase::SpawnWeapon()
 {
+	if (!WeaponClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WeaponClass is not set!"));
+		return; // Prevent further execution because it would crash the game - dan
+	}
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
 
@@ -91,6 +103,9 @@ void APlayerCharacterBase::SpawnWeapon()
 			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
 		WeaponInstance->Initialize();
+
+		// Notify controller of weapon spawning (UI Purposes)
+		ICharacterController::Execute_WeaponSpawned(Controller, WeaponInstance);
 	}
 }
 
@@ -102,6 +117,9 @@ void APlayerCharacterBase::AddInitialCharacterAttributeSets()
 	{
 		// Stamina
 		AbilitySystemComponent->AddSet<UStaminaAttributeSet>();
+
+		// Dashing
+		AbilitySystemComponent->AddSet<UDashAttributeSet>();
 	}
 }
 

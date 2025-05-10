@@ -23,10 +23,6 @@
 
 #include "PlayerCharacterBase.generated.h"
 
-// Forward declarations
-class UCameraComponent;
-class USpringArmComponent;
-
 /**
  * APlayerCharacterBase class represents the player-controlled character in the game.
  * It inherits from ACharacterBase and implements ICharacterInput.
@@ -48,6 +44,11 @@ public:
 	UPROPERTY()
 	UStaminaAttributeSet* StaminaAttributeSet;
 
+	//* Dash *//
+	// Dashing attribute set
+	UPROPERTY()
+	UDashAttributeSet* DashAttributeSet;
+	
 	// Get current stamina
 	UFUNCTION(BlueprintPure,
 		Category = "Player|Stamina|")

@@ -23,7 +23,7 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-// Get character movement component
+// Get the character movement component
 UCharacterMovementComponent* ACharacterBase::GetActorCharacterMovementComponent_Implementation()
 {
 	return GetCharacterMovement();
@@ -68,6 +68,8 @@ void ACharacterBase::AddInitialCharacterAttributeSets()
 	{
 		AbilitySystemComponent->AddSet<UHealthAttributeSet>();
 		BindHealthAttributeSet();
+
+		AbilitySystemComponent->AddSet<UAirActionAttributeSet>();
 		AbilitySystemComponent->AddSet<UMetaEffectsAttributeSet>();
 	}
 }

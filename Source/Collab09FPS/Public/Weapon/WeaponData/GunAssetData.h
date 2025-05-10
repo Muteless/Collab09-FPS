@@ -32,6 +32,11 @@ public:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite,
 		Category = "Default")
+	UNiagaraSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
 	float RateOfFire;
 
 	UPROPERTY(EditAnywhere,
