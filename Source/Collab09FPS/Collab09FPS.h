@@ -29,7 +29,8 @@ UENUM(BlueprintType)
 enum class ERespawnMode : uint8
 {
 	Never UMETA(DisplayName = "Never"),
-	OnTimer UMETA(DisplayName = "On Timer")
+	OnTimer UMETA(DisplayName = "On Timer"),
+	Sometimes UMETA(DisplayName = "Sometimes")
 };
 
 UENUM(BlueprintType)
