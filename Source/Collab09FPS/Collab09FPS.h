@@ -14,8 +14,7 @@ enum class EEnemyTypes : uint8
 	DeepSeek UMETA(DisplayName = "DeepSeek"),
 	Ranger UMETA(DisplayName = "Ranger"),
 	HeavyRanger UMETA(DisplayName = "HeavyRanger"),
-	Melee UMETA(DisplayName = "Melee"),
-	HeavyMelee UMETA(DisplayName = "HeavyMelee")
+	Support UMETA(DisplayName = "Support"),
 };
 
 
