@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4a8b2277-2eb3-4898-90e4-4ff41c51d95f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Collab09FPS.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/AI/AINodes/Tasks/BTTask_ShootProjectile.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/AI/AINodes/Tasks/BTTask_ShootProjectile.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Map/AI_TestLevel.umap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +26,7 @@
     <setting file="file://F:/Epic Games/UE_5.4/Engine/Source/Runtime/AIModule/Classes/Navigation/NavLinkProxy.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://F:/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Controller.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://F:/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/GameplayStatics.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Collab09FPS.Build.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Collab09FPS/Private/Character/CharacterBase.cpp" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -156,6 +155,7 @@
       <workItem from="1741739520695" duration="1000" />
       <workItem from="1742062784208" duration="1488000" />
       <workItem from="1746041805695" duration="1572000" />
+      <workItem from="1746658856181" duration="6974000" />
     </task>
     <servers />
   </component>
