@@ -55,7 +55,7 @@ void AAISpawner::SpawnEnemy()
 {
 	if (!IsActive) return;
 
-	
+		
 		// If spawner is never meant to spawn and spawned count is greater than zero
 		if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
 
@@ -78,19 +78,17 @@ void AAISpawner::SpawnEnemy()
 		// Set the right type of enemy to spawn based on EnemyBlueprints array
 		switch (Enemy)
 		{
-		case EEnemyTypes::Melee:
-			break;
 		case EEnemyTypes::Ranger:
 			EnemySpawnType = EnemyBlueprints[1];
 			break;
 		case EEnemyTypes::DeepSeek:
 			EnemySpawnType = EnemyBlueprints[0];
 			break;
-		case EEnemyTypes::HeavyMelee:
-			break;
 		case EEnemyTypes::HeavyRanger:
 			EnemySpawnType = EnemyBlueprints[2];
 			break;
+		case EEnemyTypes::Support:
+			EnemySpawnType = EnemyBlueprints[3];
 		default:
 			break;
 		}

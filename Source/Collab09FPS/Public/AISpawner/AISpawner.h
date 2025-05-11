@@ -22,7 +22,10 @@ class COLLAB09FPS_API AAISpawner : public AActor
 public:
 	AAISpawner();
 	
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Enemy Spawner",
+		meta = (AllowPrivateAccess = "true"))
 	bool IsActive;
 
 	UPROPERTY()
@@ -45,25 +48,25 @@ public:
 	TMap<TSubclassOf<UGameplayEffect>, float> InitialGameplayEffects;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
+		BlueprintReadWrite,
 		Category = "Default",
 		meta = (AllowPrivateAccess = "true"))
 	EDefaultSpawnBehaviour EnemyStartBehaviour;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly,
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,
 		Category = "Default",
 		meta = (AllowPrivateAccess = "true"))
 	ESpawnMode SpawnMode;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
+		BlueprintReadWrite,
 		Category = "Default",
 		meta = (EditCondition = "FEnemySpawnEntry.RespawnMode==ERespawnMode::OnTimer",
 			EditConditionHides, ClampMin=1)) 
 	float SpawnTime = 1;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
+		BlueprintReadWrite,
 		Category = "Default",
 		meta = (EditCondition = "SpawnMode==ESpawnMode::OnEvent || RespawnMode==ERespawnMode::OnTimer",
 			EditConditionHides, ClampMin=1, SliderExponent=1, Delta=1, Multiple=1)) 
@@ -79,7 +82,7 @@ public:
 	
 	//TArray of all the enemy blueprints relating to the Enum
 	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
+		BlueprintReadWrite,
 		Category = "Enemy Spawner",
 		meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<AActor>> EnemyBlueprints;
@@ -87,7 +90,7 @@ public:
 	int SpawnedCount;
 
 	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
+		BlueprintReadWrite,
 		Category= "Enemy Spawner",
 		meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> EnemyArray;
@@ -104,7 +107,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void SpawnEnemy();
+	UFUNCTION(BlueprintCallable, Category = "Spawner")
+	void SpawnEnemy();
+	
 	void DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour Behaviour);
 	
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
