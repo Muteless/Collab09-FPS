@@ -104,7 +104,7 @@ void AAISpawner::SpawnEnemy()
 
 		if (FoundLocation)
 		{
-			FVector AdjustedSpawnLocation = ClosestNavPoint.Location + FVector(0, 0, 50); // Raise by 50 units
+			FVector AdjustedSpawnLocation = ClosestNavPoint.Location + FVector(0, 0, 60); // Raise by 50 units
 
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
