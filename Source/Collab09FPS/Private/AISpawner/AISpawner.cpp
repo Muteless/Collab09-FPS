@@ -40,10 +40,18 @@ void AAISpawner::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("ArrowComponent is missing from AISpawner %d!"), SpawnerID);
 	}
 
-	// Apply initial active state safely
+	// Apply the initial active state safely
 	if (bStartActive)
 	{
-		EnableSpawner();
+		// Delay for navigation system initialization
+		FTimerHandle NavCheckTimerHandle;
+		GetWorldTimerManager().SetTimer(
+			NavCheckTimerHandle,
+			this,
+			&AAISpawner::EnableSpawner, // Delayed initialization
+			2.f,  // Small delay can be fine-tuned if needed
+			false
+		);
 	}
 	else
 	{
@@ -56,10 +64,10 @@ void AAISpawner::SpawnEnemy()
 	if (!IsActive) return;
 
 		
-		// If spawner is never meant to spawn and spawned count is greater than zero
+		// If spawner is never meant to spawn, and the spawned count is greater than zero
 		if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
 
-		// if we have spawned everything there is to spawn
+		// if we have spawned everything, there is to spawn
 		if (SpawnedCount >= MaxEnemyCount)
 		{
 			if (RespawnMode == ERespawnMode::OnTimer)
@@ -93,10 +101,11 @@ void AAISpawner::SpawnEnemy()
 			break;
 		}
 
-		// Find navigation system
+		// Find the navigation system
 		UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
-		if (!NavSystem) return;
+		if (!NavSystem) { return; }
 
+		
 		FVector SpawnLocation = GetActorLocation();
 		FNavLocation ClosestNavPoint;
 
