@@ -48,6 +48,8 @@
  * - Binding player input functions and managing possession by controllers.
  */
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterDeath, AActor*, Actor);
+
 UCLASS(Abstract)
 class COLLAB09FPS_API ACharacterBase : public ACharacter,
 public ICharacterInput,
@@ -59,6 +61,9 @@ public:
 	// Sets default values for this character's properties
 	ACharacterBase();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnCharacterDeath OnCharacterDeath;
+	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadWrite)
 	ALevelGameState* LevelGameState;

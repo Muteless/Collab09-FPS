@@ -70,7 +70,7 @@ public:
 		Category = "Default",
 		meta = (EditCondition = "SpawnMode==ESpawnMode::OnEvent || RespawnMode==ERespawnMode::OnTimer",
 			EditConditionHides, ClampMin=1, SliderExponent=1, Delta=1, Multiple=1)) 
-	int MaxEnemyCount = 5;
+	int MaxEnemyCount = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,
 	Category = "Default",
@@ -104,13 +104,21 @@ public:
 	void StartSpawnTimer();
 
 protected:
+	virtual void Tick(float DeltaTime) override;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void RemoveDeadEnemy(AActor* DeadActor);
+	
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void SpawnEnemy();
 	
 	void DelayedSetBlackboardValue(ABaseAI* AIC, EDefaultSpawnBehaviour Behaviour);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+	TArray<AActor*> TriggerOnFinishedActors;
 	
 	UFUNCTION(BlueprintCallable, Category = "Spawner")
 	void EnableSpawner();

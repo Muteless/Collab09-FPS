@@ -6,6 +6,8 @@
 #include "AbilitySystemComponent.h"
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Interfaces/IPortalEnableInterface.h"
+#include "Character/CharacterBase.h"
 
 // Sets default values
 AAISpawner::AAISpawner()
@@ -29,6 +31,11 @@ void AAISpawner::StartSpawnTimer()
 			SpawnTime,
 			true);
 	}
+}
+
+void AAISpawner::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 void AAISpawner::BeginPlay()
@@ -59,14 +66,19 @@ void AAISpawner::BeginPlay()
 	}
 }
 
+void AAISpawner::RemoveDeadEnemy(AActor* DeadActor)
+{
+	EnemyArray.Remove(DeadActor);
+	if (SpawnedCount >= MaxEnemyCount) {DisableSpawner(); }
+}
+
 void AAISpawner::SpawnEnemy()
 {
 	if (!IsActive) return;
-
-		
-		// If spawner is never meant to spawn, and the spawned count is greater than zero
-		if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
-
+	
+	// If spawner is never meant to spawn, and the spawned count is greater than zero
+	if (RespawnMode == ERespawnMode::Never && SpawnedCount > 0) return;
+	
 		// if we have spawned everything, there is to spawn
 		if (SpawnedCount >= MaxEnemyCount)
 		{
@@ -77,7 +89,7 @@ void AAISpawner::SpawnEnemy()
 			}
 			return;
 		}
-
+	
 		UWorld* World = GetWorld();
 		if (!World) return;
 
@@ -132,7 +144,12 @@ void AAISpawner::SpawnEnemy()
 			{
 				SpawnedCount++;
 				EnemyArray.Add(SpawnedEnemy);
-					
+				
+				if (ACharacterBase* CharacterBase = Cast<ACharacterBase>(SpawnedEnemy))
+				{
+					CharacterBase->OnCharacterDeath.AddDynamic(this, &AAISpawner::RemoveDeadEnemy);
+				}
+				
 				ABaseAI* AIC = Cast<ABaseAI>(Cast<APawn>(SpawnedEnemy)->GetController());
 
 				if (IsValid(AIC))
@@ -254,10 +271,20 @@ void AAISpawner::EnableSpawner()
 
 void AAISpawner::DisableSpawner()
 {
-	this->IsActive = false;
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
+
+	if (TriggerOnFinishedActors.Num() > 0)
+	{
+		for (AActor* Portal : TriggerOnFinishedActors)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Disabling Portal %s"), *Portal->GetName());
+			IIPortalEnableInterface::Execute_EnablePortal(Portal);
+		}
+	}
+	
 	UE_LOG(LogTemp, Log, TEXT("Spawner %d disabled"), SpawnerID);
+	Destroy();
 }
 
 void AAISpawner::ToggleSpawner()

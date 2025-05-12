@@ -247,6 +247,7 @@ void ACharacterBase::Landed(const FHitResult& Hit)
 
 void ACharacterBase::Death_Implementation()
 {
+	OnCharacterDeath.Broadcast(this);
 	Destroy();
 }
 
