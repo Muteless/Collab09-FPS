@@ -7,7 +7,6 @@
 #include "GameFramework/Actor.h"
 
 #include "Components/BoxComponent.h"
-#include "Components/BillboardComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -24,11 +23,6 @@ public:
 		Category = "Default")
 	int Id;
 	
-	UPROPERTY(EditAnywhere,
-    		BlueprintReadWrite,
-    		Category = "Components")
-	UBillboardComponent* PlayerSpawnLocation;
-
 protected:
 
 #pragma region Components
@@ -60,7 +54,7 @@ protected:
 	UPROPERTY()
 	UArrowComponent* ArrowComponent;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* CapsuleComponent;
 
 #pragma endregion Components

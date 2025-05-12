@@ -40,18 +40,18 @@ void APlayerCharacterBase::LoadData_Implementation(USaveGame* SaveGame)
 	if (PlayerSaveData.HasWeapon)
 	{
 		SpawnWeapon();
-	}
 
-	if (WeaponInstance && WeaponInstance->IsValidLowLevel())
-	{
-		WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
-		WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
-		WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
-		WeaponInstance->Initialize();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("WeaponInstance is null or invalid in LoadData_Implementation!"));
+		if (WeaponInstance && WeaponInstance->IsValidLowLevel())
+		{
+			WeaponInstance->bGunMode = PlayerSaveData.bGunMode;
+			WeaponInstance->GunAssetData = PlayerSaveData.GunAssetData;
+			WeaponInstance->MeleeAssetData = PlayerSaveData.MeleeAssetData;
+			WeaponInstance->Initialize();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("WeaponInstance is null or invalid in LoadData_Implementation!"));
+		}
 	}
 }
 

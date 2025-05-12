@@ -34,7 +34,7 @@ AActor* ALevelGameMode::ChoosePlayerStart_Implementation(AController* Player)
 		ACheckpoint* CheckpointActor = Cast<ACheckpoint>(Checkpoint);
 		if (CheckpointActor->Id == CheckpointIndex)
 		{
-			Player->SetControlRotation(CheckpointActor->PlayerSpawnLocation->GetComponentRotation());
+			Player->SetControlRotation(CheckpointActor->GetRootComponent()->GetComponentRotation());
 			return CheckpointActor;
 		}
 	}

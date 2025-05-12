@@ -11,19 +11,17 @@
 // Sets default values
 ACheckpoint::ACheckpoint()
 {
-	PlayerSpawnLocation = CreateDefaultSubobject<UBillboardComponent>(TEXT("PlayerSpawnLocation"));
-	RootComponent = PlayerSpawnLocation;
-
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	RootComponent = CapsuleComponent;
 	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CapsuleComponent->SetCapsuleSize(34, 88);
-	CapsuleComponent->SetupAttachment(PlayerSpawnLocation);
 	
 	ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
-	ArrowComponent->SetupAttachment(CapsuleComponent);
+	ArrowComponent->SetupAttachment(RootComponent);
 	ArrowComponent->ArrowColor = FColor::Green;
 	
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	BoxComponent->SetupAttachment(RootComponent);
 	BoxComponent->SetBoxExtent(FVector(100, 100, 100));
 	BoxComponent->SetCollisionProfileName(TEXT("Checkpoint"));
 	BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -33,7 +31,6 @@ ACheckpoint::ACheckpoint()
 	BoxComponent->SetLineThickness(5);
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnBoxBeginOverlap);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACheckpoint::OnBoxEndOverlap);
-	BoxComponent->SetWorldLocation(PlayerSpawnLocation->GetComponentLocation());
 }
 
 #pragma region BoxComponent
