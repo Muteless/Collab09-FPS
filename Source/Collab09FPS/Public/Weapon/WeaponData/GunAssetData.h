@@ -53,6 +53,11 @@ public:
 		BlueprintReadWrite,
 		Category = "Default")
 	float ReloadTime;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadWrite,
+		Category = "Default")
+	USoundBase* FireSound;
 	
 protected:
 private:

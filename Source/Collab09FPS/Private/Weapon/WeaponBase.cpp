@@ -3,6 +3,7 @@
 
 #include "Weapon/WeaponBase.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Projectile/ProjectileBase.h"
 
 // Sets default values
@@ -195,6 +196,9 @@ void AWeaponBase::WeaponFire_Implementation()
 	
 	#pragma endregion SpawnProjectile
 
+	// Play fire sound
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), GunAssetData->FireSound, GetActorLocation());
+	
 	// Start Timer
 	GetWorld()->GetTimerManager().SetTimer(
 		RateOfFireTimerHandle,
